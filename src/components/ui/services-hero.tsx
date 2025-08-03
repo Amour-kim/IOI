@@ -96,7 +96,7 @@ const ServicesHero = () => {
           <div className="relative">
             <div className="flex items-center gap-4 px-8 py-4 bg-white/80 backdrop-blur-xl rounded-2xl shadow-xl border border-white/20">
               <div className={`p-3 rounded-xl bg-gradient-to-r ${services[currentService].color} shadow-lg`}>
-                \{services[currentService].icon && <services[currentService].icon className="w-6 h-6 text-white" />}
+                {services[currentService].icon && <services[currentService].icon className="w-6 h-6 text-white" />}
               </div>
               <div className="text-left">
                 <div className="text-sm text-gray-500 font-medium">Service Actuel</div>
