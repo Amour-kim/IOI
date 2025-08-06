@@ -100,7 +100,7 @@ const CarouselContact = () => {
             {/* Background Video */}
             <div className="absolute inset-0 overflow-hidden">
               <video
-                // src={slide.video}
+                src={slide.video}
                 autoPlay
                 loop
                 muted
