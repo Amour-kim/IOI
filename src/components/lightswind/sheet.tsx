@@ -50,21 +50,9 @@ const SheetTrigger = React.forwardRef<HTMLButtonElement, SheetTriggerProps>(
   ({ children, ...props }, forwardedRef) => { // Renamed ref to forwardedRef for clarity
     const { setOpen } = React.useContext(SheetContext) || { setOpen: () => { } };
 
-    if (props.asChild) {
-      // Ensure children is a single React element for asChild functionality
-      const child = React.Children.only(children); // React.Children.only will throw if not single
-
-      // Type check the child element to ensure it's valid for cloning
-      if (!React.isValidElement(child)) {
-        // Handle invalid child type, e.g., return null or throw an error
-        console.error("SheetTrigger with `asChild` expects a single valid React element child.");
-        return null; // Return null if the child is not a valid element
-      }
-
-      // Merge the forwarded ref with the child's existing ref
-      const childRef = (child as any).ref; // Get the ref directly from the child (can be function or object ref)
-
-      const mergedRef = React.useCallback(
+    // Create a ref merger function that can be used conditionally
+    const createMergedRef = (childRef: any) => {
+      return React.useCallback(
         (node: HTMLElement | null) => {
           // Call the forwarded ref
           if (typeof forwardedRef === 'function') {
@@ -82,6 +70,22 @@ const SheetTrigger = React.forwardRef<HTMLButtonElement, SheetTriggerProps>(
         },
         [forwardedRef, childRef]
       );
+    };
+
+    if (props.asChild) {
+      // Ensure children is a single React element for asChild functionality
+      const child = React.Children.only(children); // React.Children.only will throw if not single
+
+      // Type check the child element to ensure it's valid for cloning
+      if (!React.isValidElement(child)) {
+        // Handle invalid child type, e.g., return null or throw an error
+        console.error("SheetTrigger with `asChild` expects a single valid React element child.");
+        return null; // Return null if the child is not a valid element
+      }
+
+      // Merge the forwarded ref with the child's existing ref
+      const childRef = (child as any).ref; // Get the ref directly from the child (can be function or object ref)
+      const mergedRef = createMergedRef(childRef);
 
       return React.cloneElement(child, {
         ...child.props,

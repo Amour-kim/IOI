@@ -104,7 +104,8 @@ const NavigationMenuTrigger = React.forwardRef<
   HTMLButtonElement,
   NavigationMenuTriggerProps
 >(({ className, children, id, ...props }, ref) => {
-  const menuId = id || React.useId();
+  const generatedId = React.useId();
+  const menuId = id || generatedId;
   const ctx = React.useContext(NavigationMenuContext);
 
   if (!ctx) {
@@ -146,7 +147,8 @@ const NavigationMenuContent = React.forwardRef<
   HTMLDivElement,
   NavigationMenuContentProps
 >(({ className, children, id, forceMount = false, ...props }, ref) => {
-  const menuId = id || React.useId();
+  const generatedId = React.useId();
+  const menuId = id || generatedId;
   const ctx = React.useContext(NavigationMenuContext);
 
   if (!ctx) {

@@ -3,6 +3,8 @@
 import { useState } from "react"
 import { ChevronDown, Handshake } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import FAQ from "@/components/ui/faq"
+import { developmentFAQs } from "@/lib/faq-data"
 
 export default function Valeur() {
   const [openFaq, setOpenFaq] = useState<number | null>(null)
@@ -59,30 +61,14 @@ export default function Valeur() {
         </div>
 
         {/* Questions Fréquentes Section */}
-        <div className="mb-8 sm:mb-12 lg:mb-16">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-orange-600 text-center mb-8 sm:mb-10 lg:mb-12">Questions Fréquentes</h2>
-
-          <div className="space-y-3 sm:space-y-4">
-            {faqItems.map((item, index) => (
-              <div key={index} className="bg-[#ffffff] rounded-lg border border-[#e5e7eb] overflow-hidden">
-                <button
-                  onClick={() => toggleFaq(index)}
-                  className="w-full px-4 sm:px-6 py-4 sm:py-6 text-left flex items-center justify-between hover:bg-orange-50 transition-colors"
-                >
-                  <span className="text-sm sm:text-base lg:text-lg font-medium text-[#000000] pr-2">{item.question}</span>
-                  <ChevronDown
-                    className={`w-4 h-4 sm:w-5 sm:h-5 text-[#4b5563] transition-transform flex-shrink-0 ${openFaq === index ? "rotate-180" : ""}`}
-                  />
-                </button>
-                {openFaq === index && (
-                  <div className="px-4 sm:px-6 pb-4 sm:pb-6">
-                    <p className="text-sm sm:text-base text-[#4b5563]">{item.answer}</p>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
+        {/* FAQ Section */}
+        <FAQ 
+          faqs={developmentFAQs}
+          title="Questions Fréquentes"
+          subtitle="Trouvez les réponses aux questions les plus courantes sur nos services de développement"
+          titleClassName="text-4xl font-bold bg-gradient-to-r from-blue-600 to-green-500 bg-clip-text text-transparent mb-4"
+          iconClassName="w-5 h-5 text-blue-500 transition-transform duration-200 flex-shrink-0"
+        />
 
         {/* Call to Action Section */}
         <div className="bg-green-900 rounded-xl sm:rounded-2xl p-6 sm:p-8 lg:p-12 text-center">

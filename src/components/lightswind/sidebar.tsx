@@ -492,7 +492,8 @@ export function SidebarMenuButton({
     setActiveMenuItem,
     updateIndicatorPosition,
   } = useSidebar();
-  const menuItemId = value || React.useId();
+  const generatedId = React.useId();
+  const menuItemId = value || generatedId;
   const isActive = activeMenuItem === menuItemId;
 
   const handleClick = React.useCallback(() => {

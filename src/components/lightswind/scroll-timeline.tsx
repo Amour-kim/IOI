@@ -300,11 +300,6 @@ export const ScrollTimeline = ({
 
           <div className="relative z-20">
             {events.map((event, index) => {
-              const yOffset = useTransform(
-                smoothProgress,
-                [0, 1],
-                [parallaxIntensity * 100, -parallaxIntensity * 100]
-              );
               return (
                 <div
                   key={event.id || index}
@@ -365,7 +360,7 @@ export const ScrollTimeline = ({
                     initial="initial"
                     whileInView="whileInView"
                     viewport={{ once: false, margin: "-100px" }}
-                    style={parallaxIntensity > 0 ? { y: yOffset } : undefined}
+                    style={parallaxIntensity > 0 ? { y: 0 } : undefined}
                   >
                     <Card className="bg-background border">
                       <CardContent className="p-6">
