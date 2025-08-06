@@ -1,0 +1,156 @@
+/* Navbar container */
+.navbarContainer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 50;
+  transition: all 700ms ease-out;
+}
+
+.navbarHidden {
+  transform: translateY(-100%);
+}
+
+/* Hover states */
+.hoverEffect {
+  transition: all 0.2s ease;
+}
+
+.hoverEffect:hover {
+  color: #ffedd5; /* orange-100 */
+}
+
+.hoverScale {
+  transition: transform 0.2s ease;
+}
+
+.hoverScale:hover {
+  transform: scale(1.1);
+}
+
+.hoverRotate {
+  transition: transform 0.3s ease;
+}
+
+.hoverRotate:hover {
+  transform: rotate(12deg);
+}
+
+.hoverBounce {
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(-25%);
+    animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+  }
+  50% {
+    transform: translateY(0);
+    animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+  }
+}
+
+/* Top bar with animated gradient */
+.topBar {
+  position: relative;
+  overflow: hidden;
+}
+
+.gradientBg {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, #f59e0b, #f97316, #ef4444);
+  animation: gradientX 3s ease infinite;
+  background-size: 200% 200%;
+}
+
+@keyframes gradientX {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.shineEffect {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transform: skewX(-12deg);
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%) skewX(-12deg); }
+  100% { transform: translateX(100%) skewX(-12deg); }
+}
+
+/* Contact info */
+.contactInfo {
+  position: relative;
+  color: white;
+  padding: 0.5rem 1rem;
+}
+
+.contactItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.contactItem:hover {
+  color: #fed7aa; /* orange-200 */
+}
+
+.contactIcon {
+  width: 1rem;
+  height: 1rem;
+  transition: transform 0.2s ease;
+}
+
+.contactItem:hover .contactIcon {
+  transform: scale(1.1);
+}
+
+/* Responsive adjustments */
+@media (min-width: 640px) {
+  .contactInfo {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  
+  .contactItem {
+    flex-direction: row;
+  }
+}
+
+/* Hover variants */
+.hoverGlass {
+  transition: background-color 0.2s ease;
+}
+
+.hoverGlass:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.hoverDark {
+  transition: background-color 0.2s ease;
+}
+
+.hoverDark:hover {
+  background-color: rgba(31, 41, 55, 0.5);
+}
+
+.hoverDefault {
+  transition: background-color 0.2s ease;
+}
+
+.hoverDefault:hover {
+  background-color: rgba(249, 250, 251, 0.8);
+}

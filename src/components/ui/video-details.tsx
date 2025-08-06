@@ -27,24 +27,24 @@ export default function VideoDetails({ video }: VideoDetailsProps) {
             <div className="font-semibold">{video.channel}</div>
             <div className="text-xs text-muted-foreground">70K subscribers</div> {/* Placeholder for subscribers */}
           </div>
-          <Button variant="default" className="rounded-full px-4 py-2 ml-2">
+          <Button className="rounded-full px-4 py-2 ml-2 bg-primary text-primary-foreground hover:bg-primary/90">
             Subscribe
           </Button>
         </div>
         <div className="flex items-center gap-2 md:ml-auto">
-          <Button variant="ghost" className="flex items-center gap-1 rounded-full bg-muted hover:bg-muted/80 px-3">
+          <Button className="flex items-center gap-1 rounded-full bg-muted hover:bg-muted/80 px-3">
             <ThumbsUp className="w-5 h-5" />
             <span>12K</span> {/* Placeholder for likes */}
           </Button>
-          <Button variant="ghost" className="flex items-center gap-1 rounded-full bg-muted hover:bg-muted/80 px-3">
+          <Button className="flex items-center gap-1 rounded-full bg-muted hover:bg-muted/80 px-3">
             <ThumbsDown className="w-5 h-5" />
             <span>Dislike</span>
           </Button>
-          <Button variant="ghost" className="flex items-center gap-1 rounded-full bg-muted hover:bg-muted/80 px-3">
+          <Button className="flex items-center gap-1 rounded-full bg-muted hover:bg-muted/80 px-3">
             <Share2 className="w-5 h-5" />
             <span>Share</span>
           </Button>
-          <Button size="icon" variant="ghost" className="rounded-full bg-muted hover:bg-muted/80">
+          <Button className="rounded-full bg-muted hover:bg-muted/80">
             <MoreHorizontal className="w-5 h-5" />
             <span className="sr-only">More actions</span>
           </Button>
@@ -61,7 +61,6 @@ export default function VideoDetails({ video }: VideoDetailsProps) {
         </div>
         {isDescriptionLong && (
           <Button
-            variant="link"
             className="p-0 h-auto text-muted-foreground hover:no-underline"
             onClick={() => setShowFullDescription(!showFullDescription)}
           >

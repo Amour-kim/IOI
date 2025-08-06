@@ -1,0 +1,122 @@
+/* Service Page Container */
+.serviceContainer {
+  min-height: 100vh;
+  background-color: #1a1a1a;
+  padding: 3rem 1rem;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Animated Logo Background */
+.logoBackground {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.floatingLogo {
+  position: absolute;
+  animation: floating-logo 20s ease-in-out infinite;
+  filter: brightness(0.9) saturate(0.8) opacity(0.07) blur(1px);
+}
+
+@keyframes floating-logo {
+  0%, 100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  25% {
+    transform: translate(30px, 30px) rotate(5deg);
+  }
+  50% {
+    transform: translate(0, 60px) rotate(0deg);
+  }
+  75% {
+    transform: translate(-30px, 30px) rotate(-5deg);
+  }
+}
+
+/* Responsive logo sizing */
+.logoImage {
+  width: 24rem;
+  height: 24rem;
+}
+
+@media (min-width: 640px) {
+  .logoImage {
+    width: 500px;
+    height: 500px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .logoImage {
+    width: 600px;
+    height: 600px;
+  }
+}
+
+/* Content Container */
+.contentContainer {
+  max-width: 64rem;
+  margin-left: auto;
+  margin-right: auto;
+  position: relative;
+  z-index: 10;
+}
+
+/* Animation Classes */
+.animatePulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.animateBounce {
+  animation: bounce 2s infinite;
+}
+
+.animateFloat {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(-25%);
+    animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+  }
+  50% {
+    transform: translateY(0);
+    animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Icon Colors */
+.iconOrange400 {
+  color: #f97316;
+}
+
+.iconAmber500 {
+  color: #f59e0b;
+}

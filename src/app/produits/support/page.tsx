@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, ReactElement } from 'react';
+import Image from 'next/image';
 import ModernNavbar from '@/components/ui/navbar';
 import Footer from '@/components/ui/footer';
 import SocialSidebar from '@/components/ui/social-sidebar';
@@ -18,7 +19,7 @@ const documents = [
   { title: "Kit de formation équipe", category: "Documents collaboratifs", url: "/docs/kit-formation.pdf" },
 ];
 
-const categoryIcons: Record<string, JSX.Element> = {
+const categoryIcons: Record<string, ReactElement> = {
   "Guides d'utilisation": <BookOpen className="w-7 h-7 text-blue-500" />,
   "Tutoriels pas à pas": <FileText className="w-7 h-7 text-amber-500" />,
   "FAQ & Astuces": <HelpCircle className="w-7 h-7 text-pink-500" />,
@@ -54,12 +55,17 @@ export default function SupportPage() {
       {/* Hero Section */}
       <section className="relative w-full py-16 md:py-24 bg-gradient-to-br from-blue-500/90 to-cyan-500/90 flex flex-col items-center justify-center text-center overflow-hidden">
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
-          <img
-            src={LOGO_URL}
-            alt="Logo IOI"
-            className="w-[60vw] max-w-3xl opacity-10 blur-[2px] animate-spin-slow drop-shadow-2xl"
-            style={{ animationDuration: "22s" }}
-          />
+          <div className="relative w-[60vw] max-w-3xl h-[60vw] max-h-[48rem]">
+            <Image
+              src={LOGO_URL}
+              alt="Logo IOI"
+              fill
+              sizes="(max-width: 768px) 80vw, 60vw"
+              className="opacity-10 blur-[2px] animate-spin-slow drop-shadow-2xl"
+              style={{ animationDuration: "22s" }}
+              priority
+            />
+          </div>
         </div>
         <div className="relative z-10 max-w-2xl mx-auto px-4">
           <h1 className="text-4xl md:text-6xl font-extrabold text-white mb-6 drop-shadow-lg animate-slide-down">Support & Documentation IOI</h1>
@@ -135,7 +141,7 @@ export default function SupportPage() {
             <span className="relative z-10">Voir plus de ressources sur support-ioi.fr</span>
             <span className="absolute inset-0 rounded-full bg-blue-400/30 opacity-0 group-hover/button:opacity-100 group-hover/button:scale-110 transition-all duration-300 blur-lg" />
           </a>
-          <span className="text-xs text-slate-400 mt-2">Support humain & documentation à jour</span>
+          <span className="text-xs text-slate-400 mt-2">Support humain &amp; documentation à jour</span>
         </div>
       </main>
       <ContactUs />

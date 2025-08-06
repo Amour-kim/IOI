@@ -112,7 +112,7 @@ export default function Suivis() {
               {/* Content */}
               <div className="p-6">
                 <div className="flex items-center gap-4 mb-4">
-                  <Badge variant="secondary" className="bg-[#f2f2f2] text-[#4d4d4d] text-xs font-medium">
+                  <Badge className="bg-[#f2f2f2] text-[#4d4d4d] text-xs font-medium">
                     {post.category}
                   </Badge>
                   {post.readTime && <span className="text-xs text-[#4d4d4d] font-medium">{post.readTime}</span>}

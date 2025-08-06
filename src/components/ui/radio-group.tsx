@@ -23,11 +23,11 @@ const RadioGroup = React.forwardRef<HTMLDivElement, RadioGroupProps>(
     return (
       <div ref={ref} className={cn("flex flex-col space-y-2", className)} {...props}>
         {React.Children.map(children, (child) => {
-          if (React.isValidElement(child) && child.type === RadioGroupItem) {
-            return React.cloneElement(child, {
+          if (React.isValidElement<RadioGroupItemProps>(child) && child.type === RadioGroupItem) {
+            return React.cloneElement<RadioGroupItemProps>(child, {
               checked: value === child.props.value,
               onChange: () => handleChange(child.props.value),
-            })
+            } as Partial<RadioGroupItemProps>)
           }
           return child
         })}

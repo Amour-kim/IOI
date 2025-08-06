@@ -1,10 +1,10 @@
 import Link from "next/link"
 import Image from "next/image"
-import type { VideoCardData } from "@/lib/data"
+import type { VideoCardType } from "@/lib/data"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 interface VideoGridCardProps {
-  video: VideoCardData
+  video: VideoCardType
 }
 
 export function VideoGridCard({ video }: VideoGridCardProps) {

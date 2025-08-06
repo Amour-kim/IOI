@@ -30,14 +30,14 @@ export default function VideoPlayer({ src, title }: VideoPlayerProps) {
     }
   }, [isPlaying])
 
-  const handleVolumeChange = useCallback((value: number[]) => {
+  const handleVolumeChange = (value: number) => {
     if (videoRef.current) {
-      const newVolume = value[0] / 100
+      const newVolume = value / 100
       videoRef.current.volume = newVolume
       setVolume(newVolume)
       setIsMuted(newVolume === 0)
     }
-  }, [])
+  }
 
   const toggleMute = useCallback(() => {
     if (videoRef.current) {
@@ -125,11 +125,11 @@ export default function VideoPlayer({ src, title }: VideoPlayerProps) {
         />
         {/* Control Buttons */}
         <div className="flex items-center gap-3 text-white [&_svg]:text-white">
-          <Button size="icon" variant="ghost" className="w-9 h-9 hover:bg-white/20" onClick={togglePlay}>
+          <Button className="w-9 h-9 hover:bg-white/20" onClick={togglePlay}>
             {isPlaying ? <Pause className="w-6 h-6 fill-white" /> : <Play className="w-6 h-6 fill-white" />}
           </Button>
           <div className="flex items-center gap-1">
-            <Button size="icon" variant="ghost" className="w-9 h-9 hover:bg-white/20" onClick={toggleMute}>
+            <Button  className="w-9 h-9 hover:bg-white/20" onClick={toggleMute}>
               {isMuted || volume === 0 ? <VolumeX className="w-6 h-6" /> : <Volume2 className="w-6 h-6" />}
             </Button>
             <Slider
@@ -137,20 +137,20 @@ export default function VideoPlayer({ src, title }: VideoPlayerProps) {
               value={isMuted ? 0 : volume * 100}
               max={100}
               step={1}
-              onChange={handleVolumeChange}
+              onChange={(value) => handleVolumeChange(value)}
             />
           </div>
           <div className="text-sm">
             {formatTime(currentTime)} / {formatTime(duration)}
           </div>
           <div className="ml-auto flex items-center gap-1">
-            <Button size="icon" variant="ghost" className="w-9 h-9 hover:bg-white/20">
+            <Button className="w-9 h-9 hover:bg-white/20">
               <Settings className="w-5 h-5" />
             </Button>
-            <Button size="icon" variant="ghost" className="w-9 h-9 hover:bg-white/20">
+            <Button className="w-9 h-9 hover:bg-white/20">
               <PictureInPicture2 className="w-5 h-5" />
             </Button>
-            <Button size="icon" variant="ghost" className="w-9 h-9 hover:bg-white/20" onClick={toggleFullScreen}>
+            <Button className="w-9 h-9 hover:bg-white/20" onClick={toggleFullScreen}>
               {isFullScreen ? <Minimize className="w-6 h-6" /> : <Maximize className="w-6 h-6" />}
             </Button>
           </div>

@@ -1,9 +1,13 @@
 import Image from "next/image"
-import type { ImageCardData } from "@/lib/data"
+import type { ArticleImage } from "@/types/article"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
 interface ImageCardProps {
-  image: ImageCardData
+  image: ArticleImage & {
+    title?: string;
+    imageUrl?: string;
+    altText: string;
+  }
 }
 
 export function ImageCard({ image }: ImageCardProps) {

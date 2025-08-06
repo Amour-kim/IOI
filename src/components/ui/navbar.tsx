@@ -1,7 +1,8 @@
 "use client"
 
-import React, { useState, useRef, useEffect } from "react"
+import React, { useState, useRef, useEffect, ReactNode } from "react"
 import Link from "next/link"
+import { LucideIcon } from "lucide-react"
 import {
   Youtube,
   Linkedin,
@@ -44,12 +45,64 @@ import {
 } from "lucide-react"
 import { usePathname } from "next/navigation"
 
-const ModernNavbar = ({
+// Types pour les éléments de menu
+type SubMenuItem = {
+  id: string;
+  label: string;
+  href: string;
+  icon: LucideIcon;
+  description?: string;
+};
+
+type MenuItem = {
+  id: string;
+  label: string;
+  href: string;
+  icon: LucideIcon;
+  subItems: SubMenuItem[];
+};
+
+type SocialLink = {
+  icon: LucideIcon;
+  href: string;
+  label: string;
+};
+
+type CompanyInfo = {
+  email: string;
+  phone: string;
+  address: string;
+  hours: string;
+};
+
+type ActiveBg = {
+  left: number;
+  top: number;
+  width: number;
+  height: number;
+  visible: boolean;
+};
+
+interface ModernNavbarProps {
+  logo?: string;
+  activeItem?: string | null;
+  activeSubItem?: string | null;
+  onItemClick?: (item: MenuItem) => void;
+  onSubItemClick?: (subItem: SubMenuItem) => void;
+  className?: string;
+  variant?: 'default' | 'glass' | 'dark';
+  showTopBar?: boolean;
+  companyInfo?: Partial<CompanyInfo>;
+  socialLinks?: SocialLink[];
+  menuItems?: MenuItem[];
+}
+
+const ModernNavbar: React.FC<ModernNavbarProps> = ({
   logo = "IOI",
   activeItem: _activeItem = null,
-  activeSubItem: _activeSubItem = null,
-  onItemClick = (_item: any) => {},
-  onSubItemClick = (_subItem: any) => {},
+  activeSubItem: _subItem = null,
+  onItemClick = () => {},
+  onSubItemClick = () => {},
   className = "",
   variant = "default",
   showTopBar = true,
@@ -236,7 +289,9 @@ const ModernNavbar = ({
 }) => {
   const pathname = usePathname()
 
-  const findActiveItem = () => {
+  const findActiveItem = (): string | null => {
+    if (!menuItems) return null
+    
     for (const item of menuItems) {
       if (item.href && pathname.startsWith(item.href) && item.href !== "/") {
         return item.id
@@ -248,9 +303,11 @@ const ModernNavbar = ({
     return null
   }
 
-  const findActiveSubItem = () => {
+  const findActiveSubItem = (): string | null => {
+    if (!menuItems) return null
+    
     for (const item of menuItems) {
-      if (item.subItems) {
+      if (item.subItems && item.subItems.length > 0) {
         for (const sub of item.subItems) {
           if (sub.href && pathname.startsWith(sub.href)) {
             return sub.id
@@ -260,23 +317,31 @@ const ModernNavbar = ({
     }
     return null
   }
-
-  const activeItem = findActiveItem()
-  const activeSubItem = findActiveSubItem()
-  const [hoveredItem, setHoveredItem] = useState<string | null>(null)
-  const [submenuTimeout, setSubmenuTimeout] = useState<NodeJS.Timeout | null>(null)
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const [hoveredSocial, setHoveredSocial] = useState<number | null>(null)
-  const navRef = React.useRef<HTMLElement | null>(null)
-  const itemRefs = React.useRef<Record<string, HTMLDivElement | null>>({})
-  const [activeBg, setActiveBg] = useState({ left: 0, top: 0, width: 0, height: 0, visible: false })
-  const [animating, setAnimating] = useState(false)
+  // Références aux éléments du DOM
+  const navRef = useRef<HTMLElement>(null)
   const menuContainerRef = useRef<HTMLDivElement>(null)
+  const itemRefs = useRef<Record<string, HTMLDivElement | null>>({})
   const lastScrollY = useRef(0)
+  const scrollTimeout = useRef<NodeJS.Timeout | null>(null)
+
+  // États du composant
+  const [activeItem, setActiveItem] = useState<string | null>(_activeItem || findActiveItem())
+  const [activeSubItem, setActiveSubItem] = useState<string | null>(_subItem || findActiveSubItem())
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [hoveredItem, setHoveredItem] = useState<string | null>(null)
+  const [hoveredSocial, setHoveredSocial] = useState<number | null>(null)
+  const [navbarBlur, setNavbarBlur] = useState(0)
   const [showNavbar, setShowNavbar] = useState(true)
   const [isScrolling, setIsScrolling] = useState(false)
-  const [navbarBlur, setNavbarBlur] = useState(0)
-  const scrollTimeout = useRef<NodeJS.Timeout | null>(null)
+  const [submenuTimeout, setSubmenuTimeout] = useState<NodeJS.Timeout | null>(null)
+  const [animating, setAnimating] = useState(false)
+  const [activeBg, setActiveBg] = useState<ActiveBg>({ 
+    left: 0, 
+    top: 0, 
+    width: 0, 
+    height: 0, 
+    visible: false 
+  })
 
   useEffect(() => {
     const handleScroll = () => {
@@ -353,9 +418,16 @@ const ModernNavbar = ({
     }
   }, [activeItem])
 
-  const handleAnimatedClick = (item: any) => {
-    if (item.id === activeItem) return onItemClick(item)
-    if (!activeItem || !item.id) return onItemClick(item)
+  const handleAnimatedClick = (item: MenuItem) => {
+    if (item.id === activeItem) {
+      onItemClick(item)
+      return
+    }
+    
+    if (!activeItem) {
+      onItemClick(item)
+      return
+    }
 
     const fromEl = itemRefs.current[activeItem]
     const toEl = itemRefs.current[item.id]

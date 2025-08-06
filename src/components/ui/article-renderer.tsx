@@ -1,5 +1,5 @@
 import Image from "next/image"
-import type { Article, ArticleSection } from "../types/article"
+import type { Article, ArticleSection } from "@/types/article"
 
 interface ArticleRendererProps {
   article: Article
@@ -149,9 +149,15 @@ export default function ArticleRenderer({ article }: ArticleRendererProps) {
         </div>
 
         {/* Dynamic Sections */}
-        {article.sections.map((section) => (
-          <SectionRenderer key={section.id} section={section} />
-        ))}
+        {article.sections && article.sections.length > 0 ? (
+          article.sections.map((section) => (
+            <SectionRenderer key={section.id || section.title} section={section} />
+          ))
+        ) : (
+          <div className="text-center text-gray-500 py-8">
+            <p>Aucune section à afficher pour le moment.</p>
+          </div>
+        )}
 
         {/* Closing section */}
         <div className="text-center">

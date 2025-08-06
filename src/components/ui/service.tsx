@@ -4,9 +4,17 @@ import { ChevronRight } from "lucide-react"
 import { Card, CardHeader, CardTitle, CardContent } from './card';
 import { Rocket, Shield, Heart, Sparkles, Users, Globe, Lightbulb, FileText, Languages, Accessibility, Headphones, Bot, ExternalLink } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
+import styles from "./service.module.css";
+
+// Interface pour les props du compteur animé
+interface AnimatedCounterProps {
+  value: number;
+  duration?: number;
+  suffix?: string;
+}
 
 // Compteur animé
-function AnimatedCounter({ value, duration = 2000, suffix = '' }) {
+function AnimatedCounter({ value, duration = 2000, suffix = '' }: AnimatedCounterProps) {
   const [count, setCount] = useState(0);
   const ref = useRef(0);
   useEffect(() => {
@@ -108,15 +116,14 @@ export default function Service() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#1a1a1a] px-4 py-12 relative overflow-hidden">
+    <div className={styles.serviceContainer}>
       {/* Animated floating logo background */}
-      <div className="absolute inset-0 pointer-events-none select-none overflow-hidden z-0">
-        <div className="absolute animate-floating-logo-service">
+      <div className={styles.logoBackground}>
+        <div className={styles.floatingLogo}>
           <img
             src="/logo.png"
             alt="IOI Logo"
-            className="w-96 h-96 sm:w-[500px] sm:h-[500px] lg:w-[600px] lg:h-[600px] object-contain"
-            style={{ filter: 'brightness(0.9) saturate(0.8) opacity(0.07) blur(1px)' }}
+            className={`${styles.logoImage} object-contain`}
           />
         </div>
       </div>
