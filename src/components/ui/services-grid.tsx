@@ -242,16 +242,38 @@ const ServicesGrid = () => {
       ([entry]) => {
         if (entry.isIntersecting) {
           setIsVisible(true)
+          // Forcer le reflow pour s'assurer que les animations se déclenchent
+          if (sectionRef.current) {
+            sectionRef.current.style.animation = 'none';
+            sectionRef.current.offsetHeight; // Trigger reflow
+            sectionRef.current.style.animation = '';
+          }
         }
       },
-      { threshold: 0.3 },
+      { 
+        threshold: 0.1, // Seuil réduit pour un déclenchement plus précoce
+        rootMargin: '-50px 0px' // Détecter légèrement avant l'arrivée dans la vue
+      },
     )
 
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current)
+    const currentRef = sectionRef.current;
+    
+    if (currentRef) {
+      // Désactiver temporairement les animations pour les appareils mobiles
+      if (window.innerWidth < 768) {
+        currentRef.style.opacity = '1';
+        currentRef.style.transform = 'none';
+      }
+      observer.observe(currentRef);
     }
 
-    return () => observer.disconnect()
+    // Nettoyage
+    return () => {
+      if (currentRef) {
+        observer.unobserve(currentRef);
+      }
+      observer.disconnect();
+    }
   }, [])
 
   const ServiceModal = ({ service }: { service: (typeof services)[0] }) => (
@@ -261,6 +283,7 @@ const ServicesGrid = () => {
         <button
           onClick={() => setSelectedService(null)}
           className="absolute top-6 right-6 w-10 h-10 rounded-full bg-gray-100/80 hover:bg-gray-200/80 flex items-center justify-center text-gray-500 hover:text-gray-700 transition-all duration-200 hover:scale-110 z-10"
+          aria-label="Close modal"
         >
           <X className="w-5 h-5" />
         </button>
@@ -371,44 +394,56 @@ const ServicesGrid = () => {
   )
 
   return (
-    <section ref={sectionRef} className="relative py-20 overflow-hidden">
+    <section 
+      ref={sectionRef} 
+      className="relative py-12 md:py-20 overflow-hidden w-full"
+      style={{
+        opacity: isVisible ? 1 : 0,
+        transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
+        transition: 'opacity 0.6s ease-out, transform 0.6s ease-out'
+      }}
+    >
       {/* Background Effects */}
-      <div className="absolute inset-0">
-        <div className="absolute top-40 left-10 w-64 h-64 bg-gradient-to-r from-blue-400/10 to-purple-400/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-40 right-10 w-80 h-80 bg-gradient-to-r from-pink-400/10 to-orange-400/10 rounded-full blur-3xl" />
+      <div className="absolute inset-0 -z-10">
+        <div className="absolute top-40 left-4 md:left-10 w-48 md:w-64 h-48 md:h-64 bg-gradient-to-r from-blue-400/10 to-purple-400/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-40 right-4 md:right-10 w-60 md:w-80 h-60 md:h-80 bg-gradient-to-r from-pink-400/10 to-orange-400/10 rounded-full blur-3xl" />
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         {/* Header */}
-        <div className="text-center mb-16">
+        <div className="text-center mb-8 md:mb-16 px-2">
           <div
-            className={`inline-flex items-center gap-2 px-4 py-2 bg-white/60 backdrop-blur-sm rounded-full border border-white/20 shadow-lg mb-6 transition-all duration-1000 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
+            className={`inline-flex items-center gap-2 px-4 py-2 bg-white/60 backdrop-blur-sm rounded-full border border-white/20 shadow-lg mb-4 md:mb-6 transition-all duration-1000 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
           >
-            <Code className="w-5 h-5 text-blue-600" />
-            <span className="text-sm font-medium text-gray-700">Nos Services</span>
+            <Code className="w-4 h-4 md:w-5 md:h-5 text-blue-600" />
+            <span className="text-xs md:text-sm font-medium text-gray-700">Nos Services</span>
           </div>
           <h2
-            className={`text-4xl md:text-6xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600 bg-clip-text text-transparent mb-6 transition-all duration-1000 delay-200 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
+            className={`text-3xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600 bg-clip-text text-transparent mb-4 md:mb-6 transition-all duration-1000 delay-200 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
           >
             Solutions Complètes
           </h2>
           <p
-            className={`text-xl text-gray-600 max-w-3xl mx-auto transition-all duration-1000 delay-400 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
+            className={`text-base md:text-xl text-gray-600 max-w-3xl mx-auto transition-all duration-1000 delay-400 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
           >
-            De la conception à la réalisation, nous vous accompagnons dans tous vos projets digitaux avec expertise et
-            passion
+            De la conception à la réalisation, nous vous accompagnons dans tous vos projets digitaux avec expertise et passion
           </p>
         </div>
 
         {/* Services Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {services.map((service, index) => (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 px-2 sm:px-0 w-full">
+          {services.map((service, index) => {
+            const delay = isVisible ? `${Math.min(index * 50, 300)}ms` : '0ms';
+            return (
             <div
               key={service.id}
-              className={`group relative bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl border border-white/20 overflow-hidden hover:shadow-2xl transition-all duration-500 hover:scale-105 cursor-pointer ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"}`}
+              className="group relative bg-white/90 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-lg sm:shadow-xl border border-white/20 overflow-hidden hover:shadow-2xl transition-all duration-300 hover:scale-[1.02] cursor-pointer"
               style={{
-                animationDelay: `${index * 0.1}s`,
-                boxShadow: `0 10px 40px ${service.shadowColor}`,
+                opacity: isVisible ? 1 : 0,
+                transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
+                transition: `opacity 0.5s ease-out ${delay}, transform 0.5s ease-out ${delay}, box-shadow 0.3s ease`,
+                boxShadow: `0 5px 25px ${service.shadowColor}`,
+                willChange: 'opacity, transform',
               }}
               onClick={() => setSelectedService(service.id)}
             >
@@ -418,49 +453,50 @@ const ServicesGrid = () => {
               />
 
               {/* Ripple effect */}
-              <div className="absolute inset-0 overflow-hidden rounded-3xl">
+              <div className="absolute inset-0 overflow-hidden rounded-xl sm:rounded-2xl">
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
               </div>
 
-              <div className="relative p-8">
+              <div className="relative p-5 sm:p-6 md:p-8">
                 {/* Icon */}
                 <div
-                  className={`inline-flex w-16 h-16 rounded-2xl bg-gradient-to-br ${service.color} items-center justify-center shadow-lg mb-6 group-hover:shadow-xl group-hover:scale-110 transition-all duration-300`}
+                  className={`inline-flex w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-xl sm:rounded-2xl bg-gradient-to-br ${service.color} items-center justify-center shadow-lg mb-4 sm:mb-6 group-hover:shadow-xl group-hover:scale-105 transition-all duration-300`}
                 >
-                  <service.icon className="w-8 h-8 text-white" />
+                  <service.icon className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 text-white" />
                 </div>
 
                 {/* Content */}
-                <h3 className="text-2xl font-bold text-gray-900 mb-2 group-hover:text-blue-700 transition-colors duration-300">
+                <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-1 sm:mb-2 group-hover:text-blue-700 transition-colors duration-300">
                   {service.title}
                 </h3>
-                <p className="text-blue-600 font-semibold mb-4">{service.subtitle}</p>
-                <p className="text-gray-600 leading-relaxed mb-6">{service.description}</p>
+                <p className="text-sm sm:text-base text-blue-600 font-semibold mb-3 sm:mb-4">{service.subtitle}</p>
+                <p className="text-sm text-gray-600 leading-relaxed mb-4 sm:mb-6 line-clamp-3">{service.description}</p>
 
                 {/* Features */}
-                <div className="space-y-2 mb-6">
+                <div className="space-y-1.5 sm:space-y-2 mb-4 sm:mb-6">
                   {service.features.slice(0, 3).map((feature, idx) => (
-                    <div key={idx} className="flex items-center gap-2 text-sm text-gray-600">
-                      <CheckCircle className="w-4 h-4 text-green-500" />
-                      <span>{feature}</span>
+                    <div key={idx} className="flex items-center gap-2 text-xs sm:text-sm text-gray-600">
+                      <CheckCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-500 flex-shrink-0" />
+                      <span className="line-clamp-1">{feature}</span>
                     </div>
                   ))}
                 </div>
 
                 {/* Price & CTA */}
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-4">
                   <div>
-                    <div className="text-lg font-bold text-gray-900">{service.pricing}</div>
-                    <div className="text-sm text-gray-500">{service.duration}</div>
+                    <div className="text-base sm:text-lg font-bold text-gray-900">{service.pricing}</div>
+                    <div className="text-xs sm:text-sm text-gray-500">{service.duration}</div>
                   </div>
-                  <div className="flex items-center gap-2 text-blue-600 font-semibold group-hover:gap-3 transition-all duration-300">
+                  <div className="flex items-center gap-1.5 sm:gap-2 text-blue-600 font-semibold text-sm sm:text-base group-hover:gap-2.5 sm:group-hover:gap-3 transition-all duration-300">
                     <span>Découvrir</span>
-                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-200" />
+                    <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-0.5 sm:group-hover:translate-x-1 transition-transform duration-200" />
                   </div>
                 </div>
               </div>
             </div>
-          ))}
+            );
+          })}
         </div>
       </div>
 

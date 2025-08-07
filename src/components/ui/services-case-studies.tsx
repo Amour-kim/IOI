@@ -151,29 +151,29 @@ const ServicesCaseStudies = () => {
   const currentCase = caseStudies[activeCase]
 
   return (
-    <section ref={sectionRef} className="relative py-20 overflow-hidden">
+    <section ref={sectionRef} className="relative py-12 md:py-20 overflow-hidden">
       {/* Background Effects */}
       <div className="absolute inset-0">
-        <div className="absolute top-40 left-20 w-80 h-80 bg-gradient-to-r from-blue-400/10 to-purple-400/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-40 right-20 w-96 h-96 bg-gradient-to-r from-pink-400/10 to-orange-400/10 rounded-full blur-3xl" />
+        <div className="absolute top-40 left-4 md:left-20 w-60 md:w-80 h-60 md:h-80 bg-gradient-to-r from-blue-400/10 to-purple-400/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-40 right-4 md:right-20 w-72 md:w-96 h-72 md:h-96 bg-gradient-to-r from-pink-400/10 to-orange-400/10 rounded-full blur-3xl" />
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         {/* Header */}
-        <div className="text-center mb-16">
+        <div className="text-center mb-8 md:mb-16 px-2">
           <div
-            className={`inline-flex items-center gap-2 px-4 py-2 bg-white/60 backdrop-blur-sm rounded-full border border-white/20 shadow-lg mb-6 transition-all duration-1000 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
+            className={`inline-flex items-center gap-2 px-4 py-2 bg-white/60 backdrop-blur-sm rounded-full border border-white/20 shadow-lg mb-4 md:mb-6 transition-all duration-1000 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
           >
-            <Award className="w-5 h-5 text-blue-600" />
-            <span className="text-sm font-medium text-gray-700">Études de Cas</span>
+            <Award className="w-4 h-4 md:w-5 md:h-5 text-blue-600" />
+            <span className="text-xs md:text-sm font-medium text-gray-700">Études de Cas</span>
           </div>
           <h2
-            className={`text-4xl md:text-6xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600 bg-clip-text text-transparent mb-6 transition-all duration-1000 delay-200 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
+            className={`text-3xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600 bg-clip-text text-transparent mb-4 md:mb-6 transition-all duration-1000 delay-200 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
           >
             Projets Réalisés
           </h2>
           <p
-            className={`text-xl text-gray-600 max-w-3xl mx-auto transition-all duration-1000 delay-400 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
+            className={`text-base md:text-xl text-gray-600 max-w-3xl mx-auto transition-all duration-1000 delay-400 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
           >
             Découvrez comment nous avons aidé nos clients à atteindre leurs objectifs avec des solutions innovantes
           </p>
@@ -181,41 +181,44 @@ const ServicesCaseStudies = () => {
 
         {/* Main Case Study */}
         <div
-          className={`relative transition-all duration-1000 delay-600 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"}`}
+          className={`relative transition-all duration-1000 delay-600 mx-2 sm:mx-0 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}
         >
-          <div className="bg-white/90 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 overflow-hidden">
-            <div className="grid lg:grid-cols-2 gap-0">
+          <div className="bg-white/90 backdrop-blur-xl rounded-2xl md:rounded-3xl shadow-xl md:shadow-2xl border border-white/20 overflow-hidden">
+            <div className="flex flex-col lg:grid lg:grid-cols-2 gap-0">
               {/* Image */}
-              <div className="relative h-64 lg:h-full min-h-[400px]">
+              <div className="relative h-64 sm:h-80 md:h-96 lg:h-auto lg:min-h-[400px]">
                 <img
                   src={currentCase.image || "/placeholder.svg"}
                   alt={currentCase.title}
                   className="w-full h-full object-cover"
+                  loading="lazy"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
 
                 {/* Category Badge */}
-                <div className="absolute top-6 left-6">
+                <div className="absolute top-4 left-4 md:top-6 md:left-6">
                   <div
-                    className={`px-4 py-2 bg-gradient-to-r ${currentCase.color} text-white text-sm font-semibold rounded-full shadow-lg`}
+                    className={`px-3 py-1.5 md:px-4 md:py-2 bg-gradient-to-r ${currentCase.color} text-white text-xs md:text-sm font-semibold rounded-full shadow-lg`}
                   >
                     {currentCase.category}
                   </div>
                 </div>
 
                 {/* Navigation */}
-                <div className="absolute bottom-6 right-6 flex gap-2">
+                <div className="absolute bottom-4 right-4 md:bottom-6 md:right-6 flex gap-2">
                   <button
                     onClick={prevCase}
-                    className="p-3 bg-white/20 backdrop-blur-md rounded-full hover:bg-white/30 transition-all duration-300 hover:scale-110"
+                    className="p-2 md:p-3 bg-white/20 backdrop-blur-md rounded-full hover:bg-white/30 transition-all duration-300 hover:scale-110"
+                    aria-label="Projet précédent"
                   >
-                    <ChevronLeft className="w-5 h-5 text-white" />
+                    <ChevronLeft className="w-4 h-4 md:w-5 md:h-5 text-white" />
                   </button>
                   <button
                     onClick={nextCase}
-                    className="p-3 bg-white/20 backdrop-blur-md rounded-full hover:bg-white/30 transition-all duration-300 hover:scale-110"
+                    className="p-2 md:p-3 bg-white/20 backdrop-blur-md rounded-full hover:bg-white/30 transition-all duration-300 hover:scale-110"
+                    aria-label="Projet suivant"
                   >
-                    <ChevronRight className="w-5 h-5 text-white" />
+                    <ChevronRight className="w-4 h-4 md:w-5 md:h-5 text-white" />
                   </button>
                 </div>
               </div>

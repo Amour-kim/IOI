@@ -127,10 +127,20 @@ export default function Component() {
             <nav className="space-y-3">
               <Link href="/services/consulting" className="block text-sm hover:text-[#3884ff] transition-colors">Consulting</Link>
               <Link href="/services/development" className="block text-sm hover:text-[#3884ff] transition-colors">Développement</Link>
-              <Link href="/services/support" className="block text-sm hover:text-[#3884ff] transition-colors">Support</Link>
-              <Link href="/services/maintenance" className="block text-sm hover:text-[#3884ff] transition-colors">Maintenance</Link>
               <Link href="/services/design" className="block text-sm hover:text-[#3884ff] transition-colors">Design</Link>
               <Link href="/services/marketing" className="block text-sm hover:text-[#3884ff] transition-colors">Marketing</Link>
+              <Link href="/services/formation" className="block text-sm hover:text-[#3884ff] transition-colors">Formation</Link>
+              <Link href="/services/maintenance" className="block text-sm hover:text-[#3884ff] transition-colors">Maintenance</Link>
+              <Link href="/services/support" className="block text-sm hover:text-[#3884ff] transition-colors">Support</Link>
+              <Link href="/services/media" className="block text-sm hover:text-[#3884ff] transition-colors">Media</Link>
+              <Link href="/services/securite-reseau" className="block text-sm hover:text-[#3884ff] transition-colors">Sécurité Réseau</Link>
+              <Link href="/services/architecture-reseau" className="block text-sm hover:text-[#3884ff] transition-colors">Architecture Réseau</Link>
+              <Link href="/services/maintenance-equipements-reseau" className="block text-sm hover:text-[#3884ff] transition-colors">Maintenance Équipements</Link>
+              <Link href="/services/deploiement-reseau" className="block text-sm hover:text-[#3884ff] transition-colors">Déploiement Réseau</Link>
+              <Link href="/services/cybersecurite" className="block text-sm hover:text-[#3884ff] transition-colors">Cybersécurité</Link>
+              <Link href="/services/solutions-cloud" className="block text-sm hover:text-[#3884ff] transition-colors">Solutions Cloud</Link>
+              <Link href="/services/solutions-vpn" className="block text-sm hover:text-[#3884ff] transition-colors">Solutions VPN</Link>
+              <Link href="/services/ia-intelligence-artificielle" className="block text-sm text-[#3884ff] font-medium hover:underline transition-colors">IA & Intelligence Artificielle</Link>
             </nav>
           </div>
 

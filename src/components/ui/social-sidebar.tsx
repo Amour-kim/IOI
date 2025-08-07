@@ -72,6 +72,8 @@ const SocialSidebar = ({
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
   const [isVisible, setIsVisible] = useState(true)
   const [isHovered, setIsHovered] = useState(false)
+  const [isExpanded, setIsExpanded] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   // Auto-hide après 5 secondes
@@ -80,23 +82,19 @@ const SocialSidebar = ({
       clearTimeout(timeoutRef.current)
     }
     timeoutRef.current = setTimeout(() => {
-      if (!isHovered) {
-        // Ne se cache pas si la souris est encore dessus
+      if (!isHovered && !isMobile) { // Ne se cache pas automatiquement sur mobile
         setIsVisible(false)
       }
     }, 5000)
-  }, [isHovered])
+  }, [isHovered, isMobile])
 
   // Gestion du scroll
   useEffect(() => {
-    let lastScrollY = window.scrollY
-
     const handleScroll = () => {
-      const currentScrollY = window.scrollY
-      if (Math.abs(currentScrollY - lastScrollY) > 50) {
-        // Détecte un scroll significatif
-        setIsVisible(false)
-        lastScrollY = currentScrollY
+      setIsVisible(false)
+      // Réinitialise l'expansion quand on scroll
+      if (isExpanded) {
+        setIsExpanded(false)
       }
       // Réinitialise le timer si on scroll après être revenu en visible
       if (isVisible) {
@@ -106,7 +104,18 @@ const SocialSidebar = ({
 
     window.addEventListener("scroll", handleScroll, { passive: true })
     return () => window.removeEventListener("scroll", handleScroll)
-  }, [isVisible, startHideTimer])
+  }, [isVisible, isExpanded, startHideTimer])
+  
+  // Détection du mode mobile
+  useEffect(() => {
+    const checkIfMobile = () => {
+      setIsMobile(window.innerWidth < 1024) // lg breakpoint
+    }
+    
+    checkIfMobile()
+    window.addEventListener('resize', checkIfMobile)
+    return () => window.removeEventListener('resize', checkIfMobile)
+  }, [])
 
   // Démarrer le timer au montage
   useEffect(() => {
@@ -120,6 +129,8 @@ const SocialSidebar = ({
 
   // Gestion du hover sur le container (pour desktop)
   const handleMouseEnter = () => {
+    if (isMobile) return
+    
     setIsHovered(true)
     setIsVisible(true)
     if (timeoutRef.current) {
@@ -128,46 +139,59 @@ const SocialSidebar = ({
   }
 
   const handleMouseLeave = () => {
+    if (isMobile) return
+    
     setIsHovered(false)
     startHideTimer()
+  }
+  
+  // Gestion du clic sur mobile
+  const handleSidebarClick = (e: React.MouseEvent) => {
+    if (!isMobile) return
+    
+    if (!isExpanded) {
+      // Premier clic : on déplie complètement
+      e.preventDefault()
+      e.stopPropagation()
+      setIsExpanded(true)
+      setIsVisible(true)
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current)
+      }
+    }
+    // Si déjà déplié, le clic sur les liens fonctionne normalement
   }
 
   return (
     <>
-      {/* Bouton "Trappe" pour les écrans mobiles */}
-      {!isVisible && (
-        <button
-          className="
-            fixed right-0 top-1/2 transform -translate-y-1/2 z-40
-            block lg:hidden /* Visible sur mobile, caché sur desktop */
-            w-12 h-12 rounded-full bg-blue-600/70 flex items-center justify-center
-            transition-all duration-300 ease-in-out hover:bg-blue-700 hover:scale-105
-            shadow-lg cursor-pointer
-          "
-          onClick={() => {
-            setIsVisible(true)
-            startHideTimer() // Redémarre le timer après un clic
-          }}
-          aria-label="Show Social Sidebar"
-          title="Afficher la barre latérale sociale"
-        >
-          <PanelLeft className="w-6 h-6 text-white" />
-        </button>
-      )}
-
       {/* Conteneur principal de la barre latérale sociale */}
       <div
         className={`
           fixed right-0 top-1/2 transform -translate-y-1/2 z-50 
           transition-all duration-700 ease-in-out
-          ${isVisible ? "translate-x-0 opacity-100" : "translate-x-[calc(100%-64px)] opacity-40"}
+          ${isVisible ? "translate-x-0" : "translate-x-[calc(100%-20px)]"} 
+          ${isMobile ? 'opacity-100' : (isVisible ? (isExpanded ? 'opacity-100' : 'opacity-80') : 'opacity-80')}
           ${className}
         `}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
+        onClick={handleSidebarClick}
       >
         {/* Social Links */}
-        <div className="flex flex-col space-y-1.5 sm:space-y-2 lg:space-y-3 p-2 sm:p-3 lg:p-4 bg-white/95 backdrop-blur-xl rounded-l-xl lg:rounded-l-2xl shadow-2xl border border-gray-200/50 relative overflow-hidden">
+        <div 
+          className={`
+            flex flex-col space-y-1.5 sm:space-y-2 lg:space-y-3 p-2 sm:p-3 lg:p-4 
+            bg-white/95 backdrop-blur-xl rounded-l-xl lg:rounded-l-2xl shadow-2xl 
+            border border-gray-200/50 relative overflow-hidden
+            ${isMobile && !isExpanded ? 'pointer-events-none' : 'pointer-events-auto'}
+            transition-opacity duration-300
+          `}
+          style={{
+            opacity: isMobile 
+              ? (isExpanded ? 1 : 0.8)
+              : (isVisible ? (isExpanded ? 1 : 0.8) : 0.8)
+          }}
+        >
           {/* Effet de brillance animé */}
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12 animate-shimmer" />
 

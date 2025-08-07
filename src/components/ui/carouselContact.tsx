@@ -4,71 +4,55 @@ import React, { useState, useEffect } from 'react';
 const CarouselContact = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
-  // const slides = [
-  //   {
-  //     id: 1,
-  //     video: "https://videos.pexels.com/video-files/3129957/3129957-uhd_2560_1440_30fps.mp4",
-  //     title: "Intelligence Artificielle",
-  //     description: "Découvrez comment l'IA révolutionne notre quotidien avec des algorithmes avancés et des solutions innovantes pour l'avenir.",
-  //     tag: "IA"
-  //   },
-  //   {
-  //     id: 2,
-  //     video: "https://videos.pexels.com/video-files/3141211/3141211-uhd_2560_1440_30fps.mp4",
-  //     title: "Développement Web Moderne",
-  //     description: "Explorez les dernières technologies web qui transforment la façon dont nous créons et interagissons avec les applications digitales.",
-  //     tag: "Web Dev"
-  //   },
-  //   {
-  //     id: 3,
-  //     video: "https://videos.pexels.com/video-files/3130284/3130284-uhd_2560_1440_30fps.mp4",
-  //     title: "Cybersécurité Avancée",
-  //     description: "Plongez dans l'univers de la sécurité numérique où chaque ligne de code protège notre monde connecté des menaces cybernétiques.",
-  //     tag: "Sécurité"
-  //   },
-  //   {
-  //     id: 4,
-  //     video: "https://videos.pexels.com/video-files/3141209/3141209-uhd_2560_1440_30fps.mp4",
-  //     title: "Innovation Technologique",
-  //     description: "Voyez comment les nouvelles technologies façonnent l'avenir avec des solutions disruptives et des percées scientifiques.",
-  //     tag: "Innovation"
-  //   },
-  //   {
-  //     id: 5,
-  //     video: "https://videos.pexels.com/video-files/3129671/3129671-uhd_2560_1440_30fps.mp4",
-  //     title: "Réalité Virtuelle & AR",
-  //     description: "Immergez-vous dans des expériences immersives qui repoussent les limites entre le monde réel et virtuel.",
-  //     tag: "VR/AR"
-  //   }
-  // ];
   const slides = [
     {
       id: 1,
-      video: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-      title: "Découvrez des paysages époustouflants",
-      description: "Explorez des destinations uniques à travers le monde et vivez des expériences inoubliables. Chaque voyage est une nouvelle aventure qui vous attend.",
-      tag: "Voyage"
+      video: "https://videos.pexels.com/video-files/3130284/3130284-uhd_2560_1440_30fps.mp4",
+      title: "Intelligence Artificielle",
+      description: "Découvrez comment l'IA révolutionne notre quotidien avec des algorithmes avancés et des solutions innovantes pour l'avenir.",
+      tag: "IA"
     },
     {
       id: 2,
-      video: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
-      title: "La nature à l'état pur",
-      description: "Immergez-vous dans des environnements naturels préservés où la faune et la flore s'épanouissent en harmonie parfaite.",
-      tag: "Nature"
+      video: "https://videos.pexels.com/video-files/3130284/3130284-uhd_2560_1440_30fps.mp4",
+      title: "Développement Web Moderne",
+      description: "Explorez les dernières technologies web qui transforment la façon dont nous créons et interagissons avec les applications digitales.",
+      tag: "Web Dev"
     },
     {
       id: 3,
-      video: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
-      title: "Architecture moderne",
-      description: "Découvrez les merveilles architecturales contemporaines qui redéfinissent nos espaces urbains avec innovation et créativité.",
-      tag: "Architecture"
+      video: "https://videos.pexels.com/video-files/3130284/3130284-uhd_2560_1440_30fps.mp4",
+      title: "Cybersécurité Avancée",
+      description: "Plongez dans l'univers de la sécurité numérique où chaque ligne de code protège notre monde connecté des menaces cybernétiques.",
+      tag: "Sécurité"
     },
     {
       id: 4,
-      video: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
-      title: "Aventures extraordinaires",
-      description: "Partez à la conquête de nouveaux horizons et repoussez vos limites dans des expériences qui marqueront votre vie à jamais.",
-      tag: "Aventure"
+      video: "https://videos.pexels.com/video-files/3130284/3130284-uhd_2560_1440_30fps.mp4",
+      title: "Cloud Computing",
+      description: "Découvrez comment le cloud transforme l'infrastructure informatique et permet une évolutivité sans précédent pour les entreprises.",
+      tag: "Cloud"
+    },
+    {
+      id: 5,
+      video: "https://videos.pexels.com/video-files/3130284/3130284-uhd_2560_1440_30fps.mp4",
+      title: "Réalité Virtuelle & AR",
+      description: "Immergez-vous dans des expériences immersives qui repoussent les limites entre le monde réel et virtuel.",
+      tag: "VR/AR"
+    },
+    {
+      id: 6,
+      video: "https://videos.pexels.com/video-files/3130284/3130284-uhd_2560_1440_30fps.mp4",
+      title: "Big Data & Analytics",
+      description: "Transformez vos données en informations exploitables avec des solutions d'analyse avancées et des tableaux de bord intuitifs.",
+      tag: "Data"
+    },
+    {
+      id: 7,
+      video: "https://videos.pexels.com/video-files/3130284/3130284-uhd_2560_1440_30fps.mp4",
+      title: "Blockchain & Crypto",
+      description: "Explorez la technologie derrière les cryptomonnaies et les contrats intelligents qui révolutionnent les transactions numériques.",
+      tag: "Blockchain"
     }
   ];
 

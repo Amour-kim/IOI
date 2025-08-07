@@ -9,13 +9,42 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { ArrowRight, Check, Star, Users, Sparkles } from "lucide-react"
 import Image from "next/image"
 
+// Composant réutilisable pour les cases à cocher de service
+interface ServiceCheckboxProps {
+  service: string
+  index: number
+  formData: {
+    services: string[]
+  }
+  handleServiceChange: (service: string, checked: boolean) => void
+}
+
+const ServiceCheckbox = ({ service, index, formData, handleServiceChange }: ServiceCheckboxProps) => (
+  <div className="flex items-start space-x-3 group">
+    <div className="flex items-center h-5 mt-0.5">
+      <Checkbox
+        id={`service-${index}`}
+        checked={formData.services.includes(service)}
+        onCheckedChange={(checked) => handleServiceChange(service, checked as boolean)}
+        className="border-blue-300 group-hover:border-blue-500 transition-colors duration-200"
+      />
+    </div>
+    <Label 
+      htmlFor={`service-${index}`} 
+      className="text-blue-800 text-sm leading-snug cursor-pointer group-hover:text-blue-900 transition-colors duration-200"
+    >
+      {service}
+    </Label>
+  </div>
+)
+
 export default function Meet() {
   const [formData, setFormData] = useState({
-    name: "John Smith",
-    firm: "Company GmbH",
-    email: "john.smith@mail.com",
-    telephone: "+49 123 45 67 890",
-    isDirector: "yes",
+    name: "",
+    firm: "",
+    email: "",
+    telephone: "",
+    isDirector: "",
     services: [] as string[],
     agreedToTerms: false,
   })
@@ -23,12 +52,35 @@ export default function Meet() {
   const [success, setSuccess] = useState(false)
 
   const services = [
-    "Website & Landing Page creation",
-    "Webflow Development",
-    "Branding & Web Design",
+    // Développement Web
+    "Site Vitrine",
+    "Site E-commerce",
+    "Application Web Progressive (PWA)",
+    "Application Mobile",
+    "Développement Webflow",
+    "Site Multilingue",
+    
+    // Design & Marque
+    "Identité Visuelle",
+    "Charte Graphique",
+    "UI/UX Design",
+    "Design d'Interface",
+    "Motion Design",
+    
+    // Marketing Digital
+    "Référencement (SEO)",
+    "Publicité en Ligne (SEA)",
     "Google Ads",
-    "SEO - Search Engine Optimization",
-    "Multilingual Website",
+    "Réseaux Sociaux",
+    "Email Marketing",
+    "Stratégie de Contenu",
+    
+    // Solutions d'Entreprise
+    "Système de Gestion (ERP)",
+    "CRM Personnalisé",
+    "Automatisation",
+    "Formation & Support",
+    "Maintenance & Hébergement"
   ]
 
   const handleServiceChange = (service: string, checked: boolean) => {
@@ -78,8 +130,9 @@ export default function Meet() {
                 <Input
                   id="name"
                   value={formData.name}
-                  onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))}
-                  className="bg-blue-50 border-2 border-transparent focus:border-blue-400 rounded-full px-6 py-4 text-blue-700 h-14 transition-all focus:shadow-lg"
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  className="bg-white/5 border-white/10 focus:ring-2 focus:ring-blue-500/50"
+                  placeholder="Votre nom complet"
                   required
                 />
               </div>
@@ -90,8 +143,9 @@ export default function Meet() {
                 <Input
                   id="firm"
                   value={formData.firm}
-                  onChange={(e) => setFormData((prev) => ({ ...prev, firm: e.target.value }))}
-                  className="bg-blue-50 border-2 border-transparent focus:border-blue-400 rounded-full px-6 py-4 text-blue-700 h-14 transition-all focus:shadow-lg"
+                  onChange={(e) => setFormData({ ...formData, firm: e.target.value })}
+                  className="bg-white/5 border-white/10 focus:ring-2 focus:ring-blue-500/50"
+                  placeholder="Nom de votre entreprise"
                   required
                 />
               </div>
@@ -106,8 +160,9 @@ export default function Meet() {
                   id="email"
                   type="email"
                   value={formData.email}
-                  onChange={(e) => setFormData((prev) => ({ ...prev, email: e.target.value }))}
-                  className="bg-blue-50 border-2 border-transparent focus:border-blue-400 rounded-full px-6 py-4 text-blue-700 h-14 transition-all focus:shadow-lg"
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  className="bg-white/5 border-white/10 focus:ring-2 focus:ring-blue-500/50"
+                  placeholder="votre@email.com"
                   required
                 />
               </div>
@@ -118,8 +173,9 @@ export default function Meet() {
                 <Input
                   id="telephone"
                   value={formData.telephone}
-                  onChange={(e) => setFormData((prev) => ({ ...prev, telephone: e.target.value }))}
-                  className="bg-blue-50 border-2 border-transparent focus:border-blue-400 rounded-full px-6 py-4 text-blue-700 h-14 transition-all focus:shadow-lg"
+                  onChange={(e) => setFormData({ ...formData, telephone: e.target.value })}
+                  className="bg-white/5 border-white/10 focus:ring-2 focus:ring-blue-500/50"
+                  placeholder="+33 1 23 45 67 89"
                   required
                 />
               </div>
@@ -147,22 +203,74 @@ export default function Meet() {
               </RadioGroup>
             </div>
             {/* Services */}
-            <div className="space-y-4">
-              <Label className="text-blue-900 font-medium">Quels services vous intéressent ?</Label>
-              <div className="grid md:grid-cols-2 gap-4">
-                {services.map((service, index) => (
-                  <div key={index} className="flex items-center space-x-3">
-                    <Checkbox
-                      id={`service-${index}`}
-                      checked={formData.services.includes(service)}
-                      onCheckedChange={(checked) => handleServiceChange(service, checked as boolean)}
-                      className="border-blue-400"
+            <div className="space-y-6">
+              <div className="text-center mb-4">
+                <Label className="text-blue-900 font-bold text-lg">Quels services vous intéressent ?</Label>
+                <p className="text-blue-700 text-sm mt-1">Sélectionnez un ou plusieurs services</p>
+              </div>
+              
+              {/* Catégorie : Développement Web */}
+              <div className="space-y-3">
+                <h4 className="text-blue-800 font-semibold text-sm uppercase tracking-wider">Développement Web</h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  {services.slice(0, 6).map((service, index) => (
+                    <ServiceCheckbox 
+                      key={index}
+                      service={service}
+                      index={index}
+                      formData={formData}
+                      handleServiceChange={handleServiceChange}
                     />
-                    <Label htmlFor={`service-${index}`} className="text-blue-700 text-sm leading-relaxed">
-                      {service}
-                    </Label>
-                  </div>
-                ))}
+                  ))}
+                </div>
+              </div>
+              
+              {/* Catégorie : Design & Marque */}
+              <div className="space-y-3 pt-4 border-t border-blue-50">
+                <h4 className="text-blue-800 font-semibold text-sm uppercase tracking-wider">Design & Marque</h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  {services.slice(6, 11).map((service, index) => (
+                    <ServiceCheckbox 
+                      key={index + 6}
+                      service={service}
+                      index={index + 6}
+                      formData={formData}
+                      handleServiceChange={handleServiceChange}
+                    />
+                  ))}
+                </div>
+              </div>
+              
+              {/* Catégorie : Marketing Digital */}
+              <div className="space-y-3 pt-4 border-t border-blue-50">
+                <h4 className="text-blue-800 font-semibold text-sm uppercase tracking-wider">Marketing Digital</h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  {services.slice(11, 17).map((service, index) => (
+                    <ServiceCheckbox 
+                      key={index + 11}
+                      service={service}
+                      index={index + 11}
+                      formData={formData}
+                      handleServiceChange={handleServiceChange}
+                    />
+                  ))}
+                </div>
+              </div>
+              
+              {/* Catégorie : Solutions d'Entreprise */}
+              <div className="space-y-3 pt-4 border-t border-blue-50">
+                <h4 className="text-blue-800 font-semibold text-sm uppercase tracking-wider">Solutions d'Entreprise</h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  {services.slice(17).map((service, index) => (
+                    <ServiceCheckbox 
+                      key={index + 17}
+                      service={service}
+                      index={index + 17}
+                      formData={formData}
+                      handleServiceChange={handleServiceChange}
+                    />
+                  ))}
+                </div>
               </div>
             </div>
             {/* Terms Agreement */}
