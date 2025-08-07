@@ -1,4 +1,6 @@
-import type { Metadata } from "next";
+'use client';
+
+import { LanguageProvider } from "@/contexts/LanguageContext";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -12,20 +14,8 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  title: "IOI - Innovation & Digital Solutions",
-  description: "Solutions innovantes et digitales pour votre entreprise. Services de développement, design, marketing et conseil.",
-  icons: {
-    icon: "/logo.png",
-    shortcut: "/logo.png",
-    apple: "/logo.png",
-  },
-  openGraph: {
-    title: "IOI - Innovation & Digital Solutions",
-    description: "Solutions innovantes et digitales pour votre entreprise",
-    images: ["/logo.png"],
-  },
-};
+// Les métadonnées doivent être définies dans un fichier séparé pour les pages statiques
+// ou dans un fichier layout.tsx sans 'use client'
 
 export default function RootLayout({
   children,
@@ -33,11 +23,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="fr">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <LanguageProvider>
+          {children}
+        </LanguageProvider>
       </body>
     </html>
   );

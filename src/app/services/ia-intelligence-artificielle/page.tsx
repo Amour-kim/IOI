@@ -353,7 +353,6 @@ const AIPage = () => {
           <ContactUs />
         </div>
       </section>
-
       <Footer />
     </div>
   );

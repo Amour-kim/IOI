@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useRef, useEffect } from "react"
+import Image from "next/image"
 import {
   ExternalLink,
   TrendingUp,
@@ -27,7 +28,7 @@ const ServicesCaseStudies = () => {
       category: "E-commerce & UX",
       image: "/placeholder.svg?height=400&width=600",
       description:
-        "Transformation digitale complète d'une maison de couture parisienne avec création d'une plateforme e-commerce haut de gamme.",
+        "Transformation digitale complète d&apos;une maison de couture parisienne avec création d&apos;une plateforme e-commerce haut de gamme.",
       challenge:
         "Digitaliser une marque centenaire tout en préservant son identité luxueuse et son savoir-faire artisanal.",
       solution:

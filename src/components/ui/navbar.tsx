@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useRef, useEffect, ReactNode } from "react"
+import React, { useState, useRef, useEffect, ReactNode, useCallback } from "react"
 import Link from "next/link"
 import { LucideIcon } from "lucide-react"
 import {
@@ -23,6 +23,26 @@ import {
   Home,
   User,
   Settings,
+  Package,
+  Briefcase,
+  Lightbulb,
+  Code2,
+  Paintbrush,
+  Megaphone,
+  GraduationCap,
+  Settings2,
+  Headset,
+  Video,
+  ShieldCheck,
+  Wrench,
+  Server,
+  ShieldAlert,
+  LockKeyhole,
+  Brain,
+  BookOpenText,
+  Newspaper,
+  CalendarCheck,
+  Contact2,
   FileText,
   Mail,
   Phone,
@@ -38,12 +58,18 @@ import {
   Clock,
   Shield,
   Network,
-  Wrench,
   Rocket,
   Cloud,
   Lock,
 } from "lucide-react"
 import { usePathname } from "next/navigation"
+import dynamic from 'next/dynamic'
+
+// Chargement dynamique côté client uniquement
+const LanguageSwitcher = dynamic(
+  () => import('./LanguageSwitcher'),
+  { ssr: false }
+)
 
 // Types pour les éléments de menu
 type SubMenuItem = {
@@ -130,77 +156,77 @@ const ModernNavbar: React.FC<ModernNavbarProps> = ({
     {
       id: "produits",
       label: "Produits",
-      icon: Grid,
+      icon: Package,
       href: "/produits",
-      subItems: [], // plus de sous-options
+      subItems: [],
     },
     {
       id: "services",
       label: "Services",
-      icon: Star,
+      icon: Briefcase,
       href: "/services",
       subItems: [
         {
           id: "consulting",
           label: "Consulting",
           href: "/services/consulting",
-          icon: User,
+          icon: Lightbulb,
           description: "Conseil stratégique",
         },
         {
           id: "development",
           label: "Développement",
           href: "/services/development",
-          icon: Code,
+          icon: Code2,
           description: "Développement sur mesure",
         },
         {
           id: "design",
           label: "Design",
           href: "/services/design",
-          icon: Palette,
+          icon: Paintbrush,
           description: "Design créatif"
         },
         {
           id: "marketing",
           label: "Marketing",
           href: "/services/marketing",
-          icon: TrendingUp,
+          icon: Megaphone,
           description: "Marketing digital",
         },
         {
           id: "formation",
           label: "Formation",
           href: "/services/formation",
-          icon: BookOpen,
+          icon: GraduationCap,
           description: "Formations sur-mesure"
         },
         {
           id: "maintenance",
           label: "Maintenance",
           href: "/services/maintenance",
-          icon: Settings,
+          icon: Settings2,
           description: "Maintenance préventive",
         },
         {
           id: "support",
           label: "Support",
           href: "/services/support",
-          icon: Heart,
+          icon: Headset,
           description: "Support client premium",
         },
         {
           id: "media",
           label: "Media",
           href: "/services/media",
-          icon: PlayCircle,
+          icon: Video,
           description: "Production média"
         },
         {
           id: "securite-reseau",
           label: "Sécurité Réseau",
           href: "/services/securite-reseau",
-          icon: Shield,
+          icon: ShieldCheck,
           description: "Protection réseau avancée",
         },
         {
@@ -221,14 +247,14 @@ const ModernNavbar: React.FC<ModernNavbarProps> = ({
           id: "deploiement-reseau",
           label: "Déploiement Réseau",
           href: "/services/deploiement-reseau",
-          icon: Rocket,
+          icon: Server,
           description: "Installation et migration réseau",
         },
         {
           id: "cybersecurite",
           label: "Cybersécurité",
           href: "/services/cybersecurite",
-          icon: Shield,
+          icon: ShieldAlert,
           description: "Protection cybersécurité avancée",
         },
         {
@@ -242,14 +268,14 @@ const ModernNavbar: React.FC<ModernNavbarProps> = ({
           id: "solutions-vpn",
           label: "Solutions VPN",
           href: "/services/solutions-vpn",
-          icon: Lock,
+          icon: LockKeyhole,
           description: "Connectivité sécurisée VPN",
         },
         {
           id: "ia-intelligence-artificielle",
           label: "Intelligence Artificielle",
           href: "/services/ia-intelligence-artificielle",
-          icon: Sparkles,
+          icon: Brain,
           description: "Solutions IA sur mesure pour votre entreprise",
         },
       ],
@@ -257,7 +283,7 @@ const ModernNavbar: React.FC<ModernNavbarProps> = ({
     {
       id: "ressources",
       label: "Ressources",
-      icon: FileText,
+      icon: BookOpenText,
       href: "/ressources",
       subItems: [
         {
@@ -267,28 +293,40 @@ const ModernNavbar: React.FC<ModernNavbarProps> = ({
           icon: FileText,
           description: "Guides complets",
         },
-        { id: "blog", label: "Blog", href: "/ressources/blog", icon: Edit, description: "Articles et actualités" },
+        { 
+          id: "blog", 
+          label: "Blog", 
+          href: "/ressources/blog", 
+          icon: Newspaper, 
+          description: "Articles et actualités" 
+        },
         {
           id: "tutorials",
           label: "Tutoriels",
           href: "/ressources/tutorials",
-          icon: PlayCircle,
+          icon: Video,
           description: "Tutoriels vidéo",
         },
-        { id: "faq", label: "FAQ", href: "/ressources/faq", icon: HelpCircle, description: "Questions fréquentes" },
+        { 
+          id: "faq", 
+          label: "FAQ", 
+          href: "/ressources/faq", 
+          icon: HelpCircle, 
+          description: "Questions fréquentes" 
+        },
       ],
     },
     {
       id: "rendez-vous",
       label: "Rendez-vous",
-      icon: Calendar,
+      icon: CalendarCheck,
       href: "/rendez-vous",
       subItems: [],
     },
     {
       id: "contacts",
       label: "Contacts",
-      icon: Mail,
+      icon: Contact2,
       href: "/contacts",
       subItems: [],
     },
@@ -324,19 +362,32 @@ const ModernNavbar: React.FC<ModernNavbarProps> = ({
     }
     return null
   }
+  // Les références ont été déplacées plus haut pour maintenir l'ordre des hooks
+  
   // Références aux éléments du DOM
   const navRef = useRef<HTMLElement>(null)
   const menuContainerRef = useRef<HTMLDivElement>(null)
   const itemRefs = useRef<Record<string, HTMLDivElement | null>>({})
   const lastScrollY = useRef(0)
   const scrollTimeout = useRef<NodeJS.Timeout | null>(null)
-
-  // États du composant
-  const [activeItem, setActiveItem] = useState<string | null>(_activeItem || findActiveItem())
-  const [activeSubItem, setActiveSubItem] = useState<string | null>(_subItem || findActiveSubItem())
+  
+  // État pour la détection du montage côté client
+  const [isMounted, setIsMounted] = useState(false)
+  
+  // S'assurer que le rendu côté navigateur est effectif
+  useEffect(() => {
+    setIsMounted(true)
+    return () => {
+      setIsMounted(false)
+    }
+  }, [])
+  
+  const [hoveredSocial, setHoveredSocial] = useState<number | null>(null)
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [activeItem, setActiveItem] = useState<string | null>(_activeItem)
+  const [activeSubItem, setActiveSubItem] = useState<string | null>(_subItem)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [hoveredItem, setHoveredItem] = useState<string | null>(null)
-  const [hoveredSocial, setHoveredSocial] = useState<number | null>(null)
   const [navbarBlur, setNavbarBlur] = useState(0)
   const [showNavbar, setShowNavbar] = useState(true)
   const [isScrolling, setIsScrolling] = useState(false)
@@ -403,27 +454,31 @@ const ModernNavbar: React.FC<ModernNavbarProps> = ({
     }
   }, [])
 
-  const updateActiveBg = (itemId: string) => {
+  const updateActiveBg = useCallback((itemId: string) => {
     const el = itemRefs.current[itemId]
     const container = menuContainerRef.current
     if (el && container) {
+      // Obtenir les dimensions de l'élément et du conteneur
       const elRect = el.getBoundingClientRect()
       const containerRect = container.getBoundingClientRect()
-      setActiveBg({
-        left: elRect.left - containerRect.left,
-        top: elRect.top - containerRect.top,
-        width: elRect.width,
-        height: elRect.height,
+      
+      // Ajouter un petit padding pour que le background soit légèrement plus grand que le bouton
+      const padding = 2 // 2px de padding de chaque côté
+      
+      const left = elRect.left - containerRect.left - padding + 5
+      const width = elRect.width + (padding * 2) + 20
+      const height = elRect.height + (padding * 2)
+      
+      setActiveBg(prev => ({
+        ...prev,
+        left,
+        top: elRect.top - containerRect.top - padding,
+        width,
+        height,
         visible: true,
-      })
+      }))
     }
-  }
-
-  useEffect(() => {
-    if (activeItem) {
-      updateActiveBg(activeItem)
-    }
-  }, [activeItem])
+  }, [])
 
   const handleAnimatedClick = (item: MenuItem) => {
     if (item.id === activeItem) {
@@ -445,22 +500,35 @@ const ModernNavbar: React.FC<ModernNavbarProps> = ({
       const toRect = toEl.getBoundingClientRect()
       const containerRect = container.getBoundingClientRect()
 
+      // Même padding pour la cohérence
+      const padding = 2
+
+      // Position de départ avec padding
+      const fromLeft = fromRect.left - containerRect.left - padding
+      const fromWidth = fromRect.width + (padding * 2)
+      const fromHeight = fromRect.height + (padding * 2)
+
       setActiveBg({
-        left: fromRect.left - containerRect.left,
-        top: fromRect.top - containerRect.top,
-        width: fromRect.width,
-        height: fromRect.height,
+        left: fromLeft,
+        top: fromRect.top - containerRect.top - padding,
+        width: fromWidth,
+        height: fromHeight,
         visible: true,
       })
 
       setAnimating(true)
 
       setTimeout(() => {
+        // Position d'arrivée avec padding
+        const toLeft = toRect.left - containerRect.left - padding
+        const toWidth = toRect.width + (padding * 2)
+        const toHeight = toRect.height + (padding * 2)
+
         setActiveBg({
-          left: toRect.left - containerRect.left,
-          top: toRect.top - containerRect.top,
-          width: toRect.width,
-          height: toRect.height,
+          left: toLeft,
+          top: toRect.top - containerRect.top - padding,
+          width: toWidth,
+          height: toHeight,
           visible: true,
         })
         setAnimating(false)
@@ -470,6 +538,20 @@ const ModernNavbar: React.FC<ModernNavbarProps> = ({
       onItemClick(item)
     }
   }
+
+  useEffect(() => {
+    const activeItemId = findActiveItem()
+    if (activeItemId) {
+      setActiveItem(activeItemId)
+      updateActiveBg(activeItemId)
+    }
+    
+    const activeSubItemId = findActiveSubItem()
+    if (activeSubItemId) {
+      setActiveSubItem(activeSubItemId)
+    }
+  }, [pathname, updateActiveBg])
+
 
   React.useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -557,6 +639,7 @@ const ModernNavbar: React.FC<ModernNavbarProps> = ({
 
               {/* Social Links avec effets hover sophistiqués */}
               <div className="flex items-center space-x-1">
+                <LanguageSwitcher />
                 <span className="text-orange-100 mr-3 hidden md:inline font-medium">Suivez-nous:</span>
                 {socialLinks.map((social, index) => {
                   const SocialIcon = social.icon
@@ -622,13 +705,13 @@ const ModernNavbar: React.FC<ModernNavbarProps> = ({
                 <div
                   className="absolute z-0 transition-all duration-500 ease-out"
                   style={{
-                    left: activeBg.left,
-                    top: activeBg.top,
-                    width: activeBg.width,
-                    height: activeBg.height,
-                    borderRadius: animating ? "9999px" : "12px",
+                    left: `${activeBg.left}px`,
+                    top: `${activeBg.top}px`,
+                    width: `${activeBg.width}px`,
+                    height: `${activeBg.height}px`,
+                    borderRadius: "9999px",
                     background: "linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)",
-                    transform: animating ? "scale(0.8)" : "scale(1)",
+                    transform: animating ? "scale(0.9)" : "scale(1)",
                     boxShadow: "0 8px 25px rgba(59, 130, 246, 0.3)",
                     transition: "all 0.5s cubic-bezier(0.4,0,0.2,1)",
                   }}
@@ -666,7 +749,7 @@ const ModernNavbar: React.FC<ModernNavbarProps> = ({
                       href={item.href}
                       onClick={() => handleAnimatedClick(item)}
                       className={`
-                        flex items-center space-x-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 group
+                        flex items-center space-x-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 group relative z-10
                         ${isActive ? "text-white shadow-lg" : `${getTextClasses()} ${getHoverClasses()}`}
                         transform hover:scale-105 active:scale-95 hover:shadow-lg
                       `}
