@@ -245,6 +245,13 @@ const ModernNavbar: React.FC<ModernNavbarProps> = ({
           icon: Lock,
           description: "Connectivité sécurisée VPN",
         },
+        {
+          id: "ia-intelligence-artificielle",
+          label: "Intelligence Artificielle",
+          href: "/services/ia-intelligence-artificielle",
+          icon: Sparkles,
+          description: "Solutions IA sur mesure pour votre entreprise",
+        },
       ],
     },
     {
