@@ -35,7 +35,7 @@ export function TextCard({ text }: TextCardProps) {
           </div>
         </CardHeader>
         <CardContent className="flex-1">
-          <span className="mt-auto text-orange-600 hover:underline text-sm font-semibold">Lire l'article</span>
+          <span className="mt-auto text-orange-600 hover:underline text-sm font-semibold">Lire l&apos;article</span>
         </CardContent>
       </Card>
     </Link>

@@ -2,7 +2,8 @@
 
 import type React from "react"
 import { useState, useEffect, useCallback, useRef } from "react"
-import { Facebook, Twitter, Instagram, Linkedin, Youtube, Mail, Phone, MapPin, PanelLeft } from "lucide-react"
+import { Facebook, Twitter, Instagram, Linkedin, Youtube, Mail, Phone, MapPin } from "lucide-react"
+import styles from "./SocialSidebar.module.css"
 
 interface SocialLink {
   icon: React.ComponentType<{ className?: string }>

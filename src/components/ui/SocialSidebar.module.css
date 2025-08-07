@@ -1,0 +1,84 @@
+.socialSidebar {
+  position: fixed;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 50;
+  transition: all 700ms ease-in-out;
+}
+
+.socialSidebar.hidden {
+  transform: translateY(-50%) translateX(calc(100% - 20px));
+}
+
+.socialSidebar.visible {
+  transform: translateY(-50%) translateX(0);
+}
+
+.socialSidebar.opacityFull {
+  opacity: 1;
+}
+
+.socialSidebar.opacityMedium {
+  opacity: 0.8;
+}
+
+.socialLinksContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  background-color: rgba(255, 255, 255, 0.95);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border-radius: 0 0.75rem 0.75rem 0;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(229, 231, 235, 0.5);
+  position: relative;
+  overflow: hidden;
+}
+
+.socialLinksContainer.mobileCollapsed {
+  pointer-events: none;
+}
+
+.socialLinksContainer.mobileExpanded {
+  pointer-events: auto;
+}
+
+.shimmerEffect {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transform: skewX(-12deg);
+  animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%) skewX(-12deg);
+  }
+  100% {
+    transform: translateX(100%) skewX(-12deg);
+  }
+}
+
+/* Responsive styles */
+@media (min-width: 640px) {
+  .socialLinksContainer {
+    padding: 0.75rem;
+    gap: 0.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .socialLinksContainer {
+    padding: 1rem;
+    gap: 0.75rem;
+  }
+}

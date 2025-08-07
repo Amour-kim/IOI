@@ -3,21 +3,33 @@
 import { useState, useRef, useEffect } from "react"
 import {
   Code,
+  Server,
   Smartphone,
+  Globe,
+  Shield,
+  BarChart2,
+  Database,
+  Zap,
+  Lock,
+  ArrowRight,
+  ChevronRight,
+  CheckCircle2,
+  X,
+  ArrowLeft,
+  ArrowRight as ArrowRightIcon,
   Palette,
   TrendingUp,
-  Shield,
   Cloud,
-  ArrowRight,
-  Star,
-  CheckCircle,
-  X,
-  ExternalLink,
   Network,
   Wrench,
   Rocket,
-  Lock,
+  Star,
+  ExternalLink,
+  CheckCircle,
 } from "lucide-react"
+import { motion, AnimatePresence } from "framer-motion"
+import { cn } from "@/lib/utils"
+import styles from "./ServicesGrid.module.css"
 
 const ServicesGrid = () => {
   const [selectedService, setSelectedService] = useState<number | null>(null)
@@ -244,8 +256,9 @@ const ServicesGrid = () => {
           setIsVisible(true)
           // Forcer le reflow pour s'assurer que les animations se déclenchent
           if (sectionRef.current) {
+            // Réinitialisation de l'animation pour forcer un reflow
             sectionRef.current.style.animation = 'none';
-            sectionRef.current.offsetHeight; // Trigger reflow
+            void sectionRef.current.offsetHeight; // Utilisation de void pour éviter l'avertissement
             sectionRef.current.style.animation = '';
           }
         }
@@ -396,56 +409,49 @@ const ServicesGrid = () => {
   return (
     <section 
       ref={sectionRef} 
-      className="relative py-12 md:py-20 overflow-hidden w-full"
-      style={{
-        opacity: isVisible ? 1 : 0,
-        transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
-        transition: 'opacity 0.6s ease-out, transform 0.6s ease-out'
-      }}
+      className={`${styles.servicesSection} ${isVisible ? styles.visible : ''}`}
     >
       {/* Background Effects */}
-      <div className="absolute inset-0 -z-10">
-        <div className="absolute top-40 left-4 md:left-10 w-48 md:w-64 h-48 md:h-64 bg-gradient-to-r from-blue-400/10 to-purple-400/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-40 right-4 md:right-10 w-60 md:w-80 h-60 md:h-80 bg-gradient-to-r from-pink-400/10 to-orange-400/10 rounded-full blur-3xl" />
+      <div className={styles.backgroundEffects}>
+        <div className={styles.backgroundGradient1} />
+        <div className={styles.backgroundGradient2} />
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+      <div className={styles.container}>
         {/* Header */}
-        <div className="text-center mb-8 md:mb-16 px-2">
-          <div
-            className={`inline-flex items-center gap-2 px-4 py-2 bg-white/60 backdrop-blur-sm rounded-full border border-white/20 shadow-lg mb-4 md:mb-6 transition-all duration-1000 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
-          >
+        <div className={styles.header}>
+          <div className={`${styles.badge} ${isVisible ? styles.visible : ''}`}>
             <Code className="w-4 h-4 md:w-5 md:h-5 text-blue-600" />
             <span className="text-xs md:text-sm font-medium text-gray-700">Nos Services</span>
           </div>
-          <h2
-            className={`text-3xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600 bg-clip-text text-transparent mb-4 md:mb-6 transition-all duration-1000 delay-200 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
-          >
+          <h2 className={styles.title}>
             Solutions Complètes
           </h2>
-          <p
-            className={`text-base md:text-xl text-gray-600 max-w-3xl mx-auto transition-all duration-1000 delay-400 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
-          >
+          <p className={styles.description}>
             De la conception à la réalisation, nous vous accompagnons dans tous vos projets digitaux avec expertise et passion
           </p>
         </div>
 
         {/* Services Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 px-2 sm:px-0 w-full">
+        <div className={styles.grid}>
           {services.map((service, index) => {
-            const delay = isVisible ? `${Math.min(index * 50, 300)}ms` : '0ms';
+            const delay = isVisible ? Math.min(index * 50, 300) : 0;
             return (
-            <div
+            <motion.div
               key={service.id}
-              className="group relative bg-white/90 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-lg sm:shadow-xl border border-white/20 overflow-hidden hover:shadow-2xl transition-all duration-300 hover:scale-[1.02] cursor-pointer"
+              className={`${styles.serviceCard} ${isVisible ? styles.visible : ''}`}
               style={{
-                opacity: isVisible ? 1 : 0,
-                transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
-                transition: `opacity 0.5s ease-out ${delay}, transform 0.5s ease-out ${delay}, box-shadow 0.3s ease`,
-                boxShadow: `0 5px 25px ${service.shadowColor}`,
-                willChange: 'opacity, transform',
-              }}
+                '--service-shadow-color': service.shadowColor,
+                '--delay': `${delay}ms`,
+              } as React.CSSProperties}
               onClick={() => setSelectedService(service.id)}
+              initial={{ opacity: 0, y: 20 }}
+              animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+              transition={{ 
+                opacity: { duration: 0.5, delay: delay / 1000, ease: 'easeOut' },
+                y: { duration: 0.5, delay: delay / 1000, ease: 'easeOut' },
+                boxShadow: { duration: 0.3, ease: 'easeInOut' }
+              }}
             >
               {/* Gradient overlay */}
               <div
@@ -494,7 +500,7 @@ const ServicesGrid = () => {
                   </div>
                 </div>
               </div>
-            </div>
+            </motion.div>
             );
           })}
         </div>
