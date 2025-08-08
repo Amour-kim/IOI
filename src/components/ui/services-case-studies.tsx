@@ -17,7 +17,6 @@ import {
 
 const ServicesCaseStudies = () => {
   const [activeCase, setActiveCase] = useState(0)
-  const [isVisible, setIsVisible] = useState(false)
   const sectionRef = useRef<HTMLElement>(null)
 
   const caseStudies = [
@@ -26,7 +25,7 @@ const ServicesCaseStudies = () => {
       title: "E-commerce Luxe",
       client: "Maison Élégance",
       category: "E-commerce & UX",
-      image: "/placeholder.svg?height=400&width=600",
+      image: "", // Removed placeholder.svg reference
       description:
         "Transformation digitale complète d&apos;une maison de couture parisienne avec création d&apos;une plateforme e-commerce haut de gamme.",
       challenge:
@@ -52,7 +51,7 @@ const ServicesCaseStudies = () => {
       title: "App Fitness Revolution",
       client: "FitTech Pro",
       category: "Application Mobile",
-      image: "/placeholder.svg?height=400&width=600",
+      image: "", // Removed placeholder.svg reference
       description:
         "Développement d'une application mobile révolutionnaire pour le coaching sportif personnalisé avec IA.",
       challenge:
@@ -77,7 +76,7 @@ const ServicesCaseStudies = () => {
       title: "Plateforme SaaS B2B",
       client: "DataFlow Solutions",
       category: "SaaS & Dashboard",
-      image: "/placeholder.svg?height=400&width=600",
+      image: "", // Removed placeholder.svg reference
       description:
         "Création d'une plateforme SaaS complète pour la gestion et l'analyse de données en temps réel pour les entreprises.",
       challenge:
@@ -103,7 +102,7 @@ const ServicesCaseStudies = () => {
       title: "Transformation Digitale",
       client: "Groupe Industriel Alpha",
       category: "Digital Transformation",
-      image: "/placeholder.svg?height=400&width=600",
+      image: "", // Removed placeholder.svg reference
       description:
         "Modernisation complète du système d'information d'un groupe industriel avec migration cloud et automatisation.",
       challenge: "Moderniser un système legacy de 20 ans sans interrompre les opérations critiques de production.",
@@ -124,22 +123,7 @@ const ServicesCaseStudies = () => {
     },
   ]
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true)
-        }
-      },
-      { threshold: 0.3 },
-    )
 
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current)
-    }
-
-    return () => observer.disconnect()
-  }, [])
 
   const nextCase = () => {
     setActiveCase((prev) => (prev + 1) % caseStudies.length)
@@ -163,27 +147,25 @@ const ServicesCaseStudies = () => {
         {/* Header */}
         <div className="text-center mb-8 md:mb-16 px-2">
           <div
-            className={`inline-flex items-center gap-2 px-4 py-2 bg-white/60 backdrop-blur-sm rounded-full border border-white/20 shadow-lg mb-4 md:mb-6 transition-all duration-1000 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
+            className="inline-flex items-center gap-2 px-4 py-2 bg-white/60 backdrop-blur-sm rounded-full border border-white/20 shadow-lg mb-4 md:mb-6"
           >
             <Award className="w-4 h-4 md:w-5 md:h-5 text-blue-600" />
             <span className="text-xs md:text-sm font-medium text-gray-700">Études de Cas</span>
           </div>
           <h2
-            className={`text-3xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600 bg-clip-text text-transparent mb-4 md:mb-6 transition-all duration-1000 delay-200 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
+            className="text-3xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600 bg-clip-text text-transparent mb-4 md:mb-6"
           >
             Projets Réalisés
           </h2>
           <p
-            className={`text-base md:text-xl text-gray-600 max-w-3xl mx-auto transition-all duration-1000 delay-400 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
+            className="text-base md:text-xl text-gray-600 max-w-3xl mx-auto"
           >
             Découvrez comment nous avons aidé nos clients à atteindre leurs objectifs avec des solutions innovantes
           </p>
         </div>
 
         {/* Main Case Study */}
-        <div
-          className={`relative transition-all duration-1000 delay-600 mx-2 sm:mx-0 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}
-        >
+        <div className="relative mx-2 sm:mx-0">
           <div className="bg-white/90 backdrop-blur-xl rounded-2xl md:rounded-3xl shadow-xl md:shadow-2xl border border-white/20 overflow-hidden">
             <div className="flex flex-col lg:grid lg:grid-cols-2 gap-0">
               {/* Image */}
@@ -320,9 +302,7 @@ const ServicesCaseStudies = () => {
         </div>
 
         {/* Case Studies Thumbnails */}
-        <div
-          className={`mt-12 transition-all duration-1000 delay-800 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
-        >
+        <div className="mt-12">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {caseStudies.map((caseStudy, index) => (
               <button
@@ -357,9 +337,7 @@ const ServicesCaseStudies = () => {
         </div>
 
         {/* Stats Section */}
-        <div
-          className={`mt-20 transition-all duration-1000 delay-1000 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
-        >
+        <div className="mt-20">
           <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl border border-white/20 p-8">
             <div className="text-center mb-8">
               <h3 className="text-2xl font-bold text-gray-900 mb-2">Résultats Globaux</h3>
