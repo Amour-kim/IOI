@@ -240,29 +240,43 @@ const ConsultingPage = () => {
     <div className="min-h-screen bg-black">
       <ModernNavbar />
       <SocialSidebar />
-      {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 text-white py-24 overflow-hidden mt-24">
-        <div className="absolute inset-0 bg-black/10"></div>
-        <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-yellow-400/20 to-orange-500/20 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-orange-400/20 to-blue-500/20 rounded-full blur-3xl"></div>
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className={`flex flex-col md:flex-row items-center gap-12 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}> 
-            {/* Partie gauche : texte et CTA */}
-            <div className="flex-1 text-left">
+      {/* Hero Section with Video Background */}
+      <section className="relative h-[90vh] flex items-center justify-center overflow-hidden mt-24">
+        {/* Video Background */}
+        <div className="absolute inset-0 w-full h-full">
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="absolute inset-0 w-full h-full object-cover"
+          >
+            <source src="https://assets.mixkit.co/videos/preview/mixkit-business-people-in-a-meeting-4460-large.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+          {/* Dark overlay */}
+          <div className="absolute inset-0 bg-black/60"></div>
+        </div>
+        
+        {/* Content */}
+        <div className="relative z-10 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8">
+          <div className={`flex flex-col lg:flex-row items-center gap-12 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+            {/* Left side: Text and CTA */}
+            <div className="flex-1 text-center lg:text-left text-white">
               <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">
                 Consulting IOI
               </h1>
-              <p className="text-xl sm:text-2xl text-blue-100 max-w-xl mb-6">
+              <p className="text-xl sm:text-2xl text-blue-100 max-w-xl mb-6 mx-auto lg:mx-0">
                 Expertise stratégique pour optimiser votre entreprise et accélérer votre croissance
               </p>
-              <div className="flex flex-wrap gap-3 mb-8">
+              <div className="flex flex-wrap justify-center lg:justify-start gap-3 mb-8">
                 {['Stratégie', 'Transformation', 'Digital', 'RH', 'Innovation', 'Performance'].map((mot, i) => (
                   <span key={i} className="bg-gradient-to-r from-yellow-400 via-orange-400 to-blue-500 text-white px-4 py-2 rounded-full font-semibold text-sm shadow animate-pulse">
                     {mot}
                   </span>
                 ))}
               </div>
-              <div className="flex flex-col sm:flex-row gap-4">
+              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
                 <button className="group bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white font-semibold px-8 py-4 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg">
                   Prendre rendez-vous
                   <ArrowRight className="inline ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -272,23 +286,18 @@ const ConsultingPage = () => {
                 </button>
               </div>
             </div>
-            {/* Partie droite : image PNG + avatars animés */}
-            <div className="flex-1 flex items-center justify-center relative min-h-[320px]">
-              <img
-                src="/consulting-hero.png"
-                alt="Consulting IOI"
-                className="w-[340px] h-[340px] object-contain drop-shadow-2xl animate-fade-in"
-                style={{ background: 'transparent' }}
-              />
-              {/* Avatars animés en overlay */}
-              <div className="absolute top-10 left-10 animate-bounce">
-                <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="avatar1" className="w-14 h-14 rounded-full border-4 border-white shadow-lg" />
-              </div>
-              <div className="absolute bottom-10 right-10 animate-pulse">
-                <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="avatar2" className="w-14 h-14 rounded-full border-4 border-white shadow-lg" />
-              </div>
-              <div className="absolute bottom-16 left-24 animate-spin-slow">
-                <img src="https://randomuser.me/api/portraits/men/45.jpg" alt="avatar3" className="w-12 h-12 rounded-full border-4 border-white shadow-lg" />
+            
+            {/* Right side: Image */}
+            <div className="flex-1 flex items-center justify-center relative min-h-[400px] w-full">
+              <div className="relative w-full h-full max-w-md">
+                <img
+                  src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80"
+                  alt="Consulting IOI"
+                  className="w-full h-full object-cover rounded-xl shadow-2xl border-4 border-white/20"
+                />
+                {/* Decorative elements */}
+                <div className="absolute -top-6 -left-6 w-24 h-24 bg-yellow-400 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
+                <div className="absolute -bottom-6 -right-6 w-24 h-24 bg-blue-400 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
               </div>
             </div>
           </div>

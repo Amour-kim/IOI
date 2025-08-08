@@ -24,24 +24,7 @@ export default function Valeur() {
     }
   ];
 
-  const faqItems = [
-    {
-      question: "Comment démarrer une collaboration avec vous ?",
-      answer: "Contactez-nous via notre formulaire en ligne ou appelez-nous directement. Nous serons ravis d'échanger sur votre projet.",
-    },
-    {
-      question: "Quels sont vos domaines d'expertise ?",
-      answer: "Nous couvrons un large éventail de services informatiques, du développement web à la cybersécurité en passant par l'infrastructure réseau.",
-    },
-    {
-      question: "Quelle est votre méthodologie de travail ?",
-      answer: "Nous suivons une approche agile, avec des itérations courtes et une communication transparente à chaque étape du projet.",
-    },
-    {
-      question: "Proposez-vous un support après la livraison ?",
-      answer: "Oui, nous offrons différentes formules de support et de maintenance pour répondre à vos besoins spécifiques.",
-    },
-  ];
+
 
   return (
     <div className="min-h-screen bg-gray-50 py-8 sm:py-12 lg:py-16 px-4 sm:px-6 lg:px-8">
@@ -61,19 +44,6 @@ export default function Valeur() {
                 <p className="text-gray-600 leading-relaxed">
                   {valeur.description}
                 </p>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* Section FAQ */}
-        <section className="mb-16">
-          <h2 className="text-2xl sm:text-3xl font-bold text-center mb-8">Questions Fréquentes</h2>
-          <div className="max-w-3xl mx-auto space-y-4">
-            {faqItems.map((item, index) => (
-              <div key={index} className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">{item.question}</h3>
-                <p className="text-gray-600">{item.answer}</p>
               </div>
             ))}
           </div>

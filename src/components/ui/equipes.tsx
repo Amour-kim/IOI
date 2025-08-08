@@ -348,8 +348,8 @@ const ModernEmployeeCarousel = ({
         <div
           className={`
             relative bg-white/90 backdrop-blur-xl rounded-3xl shadow-2xl overflow-hidden
-            w-80 h-[500px] md:w-96 md:h-[550px]
-            transform transition-all duration-500 hover:shadow-3xl
+            w-80 min-h-[500px] md:w-96 md:min-h-[550px] h-auto
+            transform transition-all duration-500 hover:shadow-3xl flex flex-col
             ${isCenter ? "hover:scale-105" : "hover:scale-90"}
             ${isHovered ? "ring-4 ring-blue-500/30" : ""}
             border border-white/20
@@ -368,7 +368,7 @@ const ModernEmployeeCarousel = ({
           )}
 
           {/* Image Section */}
-          <div className="relative h-64 md:h-72 overflow-hidden">
+          <div className="relative h-56 md:h-64 overflow-hidden flex-shrink-0">
             <img
               src={employee.image || "/placeholder.svg"}
               alt={employee.name}
@@ -424,7 +424,7 @@ const ModernEmployeeCarousel = ({
           </div>
 
           {/* Content Section */}
-          <div className="p-6 space-y-4">
+          <div className="p-6 space-y-4 flex-1 flex flex-col">
             {/* Name and Position */}
             <div className="text-center">
               <h3 className="text-2xl font-bold text-gray-900 mb-1 flex items-center justify-center gap-2">
@@ -447,10 +447,12 @@ const ModernEmployeeCarousel = ({
             </div>
 
             {/* Bio */}
-            <p className="text-gray-600 text-sm leading-relaxed line-clamp-3">{employee.bio}</p>
+            <div className="flex-1">
+              <p className="text-gray-600 text-sm leading-relaxed line-clamp-4">{employee.bio}</p>
+            </div>
 
             {/* Skills */}
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2 mt-2">
               {employee.skills.slice(0, 4).map((skill, idx) => (
                 <span
                   key={idx}
@@ -469,7 +471,7 @@ const ModernEmployeeCarousel = ({
 
             {/* Action Button */}
             {isCenter && (
-              <div className="pt-2">
+              <div className="pt-4 mt-auto">
                 <button className="w-full py-3 px-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-300 hover:scale-105 flex items-center justify-center gap-2 group">
                   Voir le profil
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" />

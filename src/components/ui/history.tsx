@@ -55,13 +55,8 @@ export default function History() {
   ];
   const slidesCount = timelinePeriods.length;
 
-  // Auto-scroll pour les carrousels
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % slidesCount)
-    }, 5000)
-    return () => clearInterval(interval)
-  }, [slidesCount])
+  // Désactivation du défilement automatique
+  // Le défilement se fait uniquement au clic sur les boutons de période
 
   return (
     <div className="min-h-[60vh] bg-gradient-to-br
@@ -106,7 +101,7 @@ export default function History() {
                 <div className="relative">
                 <div className="overflow-hidden rounded-2xl md:rounded-3xl shadow-2xl bg-white">
                     <div
-                    className="flex transition-transform duration-700 ease-in-out"
+                    className="flex transition-transform duration-500 ease-in-out select-none touch-pan-x"
                     style={{ transform: `translateX(-${currentSlide * 100}%)` }}
                     >
                     {/* Période 2018-2020 : Genèse & Réflexion */}
