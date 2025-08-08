@@ -187,14 +187,13 @@ const ServicesCaseStudies = () => {
           <div className="bg-white/90 backdrop-blur-xl rounded-2xl md:rounded-3xl shadow-xl md:shadow-2xl border border-white/20 overflow-hidden">
             <div className="flex flex-col lg:grid lg:grid-cols-2 gap-0">
               {/* Image */}
-              <div className="relative h-64 sm:h-80 md:h-96 lg:h-auto lg:min-h-[400px]">
-                <img
-                  src={currentCase.image || "/placeholder.svg"}
-                  alt={currentCase.title}
-                  className="w-full h-full object-cover"
-                  loading="lazy"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+              <div className="relative h-64 sm:h-80 md:h-96 lg:h-auto lg:min-h-[400px] min-h-[300px] bg-gray-100">
+                <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-blue-50 to-purple-50">
+                  <span className="text-gray-400 text-lg font-medium">
+                    {currentCase.client}
+                  </span>
+                </div>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent" />
 
                 {/* Category Badge */}
                 <div className="absolute top-4 left-4 md:top-6 md:left-6">
@@ -334,11 +333,11 @@ const ServicesCaseStudies = () => {
                 }`}
               >
                 <div className="aspect-video relative">
-                  <img
-                    src={caseStudy.image || "/placeholder.svg"}
-                    alt={caseStudy.title}
-                    className="w-full h-full object-cover"
-                  />
+                  <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-50 to-purple-50">
+                    <span className="text-gray-400 text-sm">
+                      {caseStudy.client}
+                    </span>
+                  </div>
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                   <div className="absolute bottom-3 left-3 right-3">
                     <h4 className="text-white font-semibold text-sm mb-1">{caseStudy.title}</h4>
