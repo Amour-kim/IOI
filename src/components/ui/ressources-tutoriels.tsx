@@ -1,7 +1,8 @@
 "use client";
 import React from "react";
 import Link from 'next/link';
-import { allCards } from '@/lib/data';
+import Image from 'next/image';
+import { allCards, VideoCardType } from '@/lib/data';
 import { format } from 'date-fns';
 
 const LOGO_URL = "/logo.png";
@@ -9,53 +10,69 @@ const LOGO_URL = "/logo.png";
 export default function RessourcesTutoriels() {
   // Récupérer les vidéos depuis allCards
   const tutorials = allCards
-    .filter(card => card.type === 'video')
+    .filter((card): card is VideoCardType => card.type === 'video')
     .slice(0, 3) // Limiter à 3 tutoriels pour l'affichage
-    .sort((a, b) => new Date((b as any).publishedAt).getTime() - new Date((a as any).publishedAt).getTime());
+    .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
 
   return (
-    <section className="relative py-20 px-4 sm:px-8 md:px-16 lg:px-32 overflow-hidden bg-white rounded-3xl mb-16">
+    <section className="relative py-12 overflow-hidden bg-white">
       {/* Logo animé en arrière-plan */}
       <div className="pointer-events-none absolute inset-0 flex items-center justify-center z-0">
-        <img
+        <Image
           src={LOGO_URL}
           alt="Logo IOI"
+          width={800}
+          height={800}
           className="w-[60vw] max-w-3xl opacity-10 blur-[2px] animate-spin-slow drop-shadow-2xl"
           style={{ animationDuration: "22s" }}
+          priority
         />
       </div>
-      <div className="relative z-10 flex flex-col items-center">
-        <h2 className="text-3xl md:text-4xl font-extrabold text-gray-800 mb-2 tracking-tight drop-shadow-lg">Tutoriels</h2>
-        <p className="text-lg md:text-xl text-gray-600 mb-8 text-center max-w-2xl">Progressez à votre rythme grâce à nos tutoriels interactifs, adaptés à tous les niveaux et besoins métiers.</p>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full">
+      <div className="container mx-auto px-4">
+        <div className="flex flex-col items-center mb-10">
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">Tutoriels</h2>
+          <div className="w-16 h-0.5 bg-gradient-to-r from-blue-500 to-purple-600 mb-4"></div>
+          <p className="text-base text-gray-600 text-center max-w-2xl">Progressez à votre rythme grâce à nos tutoriels interactifs, adaptés à tous les niveaux et besoins métiers.</p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {tutorials.map((tuto, idx) => (
             <Link
               key={tuto.id}
               href={`/ressources/tutorials/${tuto.id}`}
-              className="group relative bg-gray-50/90 rounded-2xl overflow-hidden transition-transform hover:-translate-y-2 border border-gray-200"
+              className="group relative bg-white border border-gray-200 hover:shadow-md transition-all duration-200 h-full flex flex-col"
             >
-              <div className="h-48 w-full overflow-hidden">
-                <img
+              <div className="relative h-40 w-full overflow-hidden">
+                <Image
                   src={tuto.thumbnail}
                   alt={tuto.title}
-                  className="object-cover w-full h-full scale-105 group-hover:scale-110 transition-transform duration-500"
+                  width={400}
+                  height={225}
+                  className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
                 />
-              </div>
-              <div className="p-5 flex flex-col gap-2">
-                <div className="flex gap-2 mb-1">
-                  <span className="bg-gray-100 text-gray-700 text-xs font-semibold px-2 py-1 rounded-full shadow-sm">{tuto.duration}</span>
-                  <span className="bg-gray-100 text-gray-700 text-xs font-semibold px-2 py-1 rounded-full shadow-sm">{tuto.views}</span>
-                </div>
-                <h3 className="text-lg font-bold text-gray-900 group-hover:text-gray-600 transition-colors">{tuto.title}</h3>
-                <p className="text-gray-600 text-sm line-clamp-2">{tuto.description}</p>
-                <div className="flex items-center justify-between mt-2">
-                  <span className="text-xs text-gray-400">{tuto.channel}</span>
-                  <span className="text-xs text-gray-400">{format(new Date(tuto.publishedAt), 'dd/MM/yyyy')}</span>
+                <div className="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-2 py-1">
+                  {tuto.duration}
                 </div>
               </div>
-              {/* Effet lumineux au survol */}
-              <div className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                <div className="absolute inset-0 bg-gradient-to-br from-gray-200/40 to-gray-300/30 blur-2xl animate-pulse" />
+              <div className="p-4 flex-1 flex flex-col">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-xs font-medium text-blue-600">{tuto.channel}</span>
+                  <span className="text-xs text-gray-400">•</span>
+                  <span className="text-xs text-gray-500">{format(new Date(tuto.publishedAt), 'dd MMM yyyy')}</span>
+                </div>
+                <h3 className="text-sm font-semibold text-gray-900 mb-1 line-clamp-2">{tuto.title}</h3>
+                <p className="text-xs text-gray-500 mb-3 line-clamp-2">{tuto.description}</p>
+                <div className="mt-auto pt-2 border-t border-gray-100 flex items-center justify-between">
+                  <span className="text-xs text-gray-500 flex items-center">
+                    <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"></path>
+                      <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd"></path>
+                    </svg>
+                    {tuto.views}
+                  </span>
+                  <span className="text-xs font-medium text-blue-600 group-hover:text-blue-700 transition-colors">
+                    Voir plus →
+                  </span>
+                </div>
               </div>
             </Link>
           ))}

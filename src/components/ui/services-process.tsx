@@ -119,7 +119,7 @@ const ServicesProcess = () => {
       }, 4000)
       return () => clearInterval(interval)
     }
-  }, [isVisible])
+  }, [isVisible, processSteps.length])
 
   return (
     <section ref={sectionRef} className="relative py-20 bg-gradient-to-br from-gray-50 to-blue-50/30 overflow-hidden">

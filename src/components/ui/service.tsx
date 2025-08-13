@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useEffect, useRef, useState } from 'react';
+import { servicesData } from '@/data/services/services.data';
 import { 
   ChevronRight, 
   X, 
@@ -12,15 +13,8 @@ import {
   Globe, 
   Lightbulb, 
   FileText, 
-  Languages, 
-  Accessibility, 
-  Headphones, 
-  Bot, 
   ExternalLink, 
-  Phone, 
-  Mail,
-  ShoppingCart,
-  ShieldCheck,
+  Phone,
   TrendingUp,
   Search,
   BarChart2,
@@ -28,38 +22,42 @@ import {
   Brain,
   Zap,
   Lock,
-  Settings2,
+  Settings,
   Wrench,
   EyeOff,
   Cloud,
   Server,
-  Code2,
-  Smartphone,
+  Code,
+  Smartphone as PhoneIcon,
   Paintbrush,
-  GraduationCap
+  GraduationCap,
+  Monitor,
+  Terminal,
+  MessageSquare,
+  Clock,
+  Settings2,
+  User,
+  Linkedin,
+  type LucideIcon,
+  Briefcase
 } from 'lucide-react';
+import styles from './service.module.css';
+import type { 
+  Service, 
+  ServiceType, 
+  ServiceValue, 
+  ServiceDomain, 
+  ServiceApproach,
+  ServicePricingTier,
+  ServiceFaq,
+  ServiceTestimonial
+} from '@/types/services.types';
 
 // Interface pour les props du compteur animé
 interface AnimatedCounterProps {
   value: number;
   duration?: number;
   suffix?: string;
-}
-
-// Interface pour les services
-interface Service {
-  id: string;
-  title: string;
-  shortDescription: string;
-  fullDescription: string;
-  image: string;
-  values: Array<{
-    icon: React.ReactNode;
-    label: string;
-  }>;
-  link: string;
-  features: string[];
-  price?: string;
 }
 
 // Compteur animé
@@ -172,11 +170,25 @@ function ServiceModal({ service, isOpen, onClose }: { service: Service | null; i
             {/* Valeurs/avantages */}
             <div className="flex flex-wrap gap-2 mb-4">
               {service.values.map((value, index) => {
-                const iconElement = React.isValidElement(value.icon) 
-                  ? React.cloneElement(value.icon as React.ReactElement<{className?: string}>, { 
-                      className: 'w-3 h-3' 
-                    })
-                  : value.icon;
+                let iconElement: React.ReactNode = null;
+                
+                if (value.icon) {
+                  if (typeof value.icon === 'string') {
+                    // Si c'est une chaîne, on l'affiche telle quelle
+                    iconElement = <span className="text-xs font-medium">{value.icon}</span>;
+                  } else if (React.isValidElement(value.icon)) {
+                    // Si c'est un élément React, on le clone avec la bonne classe
+                    const iconProps = {
+                      ...(value.icon.props || {}),
+                      className: 'w-3 h-3'
+                    } as React.HTMLAttributes<HTMLElement>;
+                    iconElement = React.cloneElement(value.icon, iconProps);
+                  } else {
+                    // Si c'est un composant d'icône, on le rend avec la classe
+                    const IconComponent = value.icon as React.ComponentType<{ className?: string }>;
+                    iconElement = <IconComponent className="w-3 h-3" />;
+                  }
+                }
                 
                 return (
                   <div key={index} className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-amber-50 border border-amber-200">
@@ -208,10 +220,205 @@ function ServiceModal({ service, isOpen, onClose }: { service: Service | null; i
             
             {/* Prix si disponible */}
             {service.price && (
-              <div className="mb-4 p-3 rounded-lg bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200">
+              <div className="mb-6 p-3 rounded-lg bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200">
                 <div className="text-center">
                   <div className="text-xl font-bold text-amber-700">{service.price}</div>
                   <div className="text-xs text-amber-600">À partir de</div>
+                </div>
+              </div>
+            )}
+            
+            {/* Cas d'Usage & Industries */}
+            {service.useCases && service.useCases.length > 0 && (
+              <div className="mb-6">
+                <h3 className="text-base font-semibold text-gray-900 mb-3">Cas d'Usage & Industries</h3>
+                <div className="grid grid-cols-1 gap-4">
+                  {service.useCases.map((useCase) => (
+                    <div key={useCase.id} className="p-3 border rounded-lg bg-white shadow-sm hover:shadow transition-shadow">
+                      <div className="flex items-start gap-3">
+                        <div className="p-1.5 bg-amber-100 rounded-lg">
+                          {useCase.icon && (
+                            <span className="text-amber-600">
+                              {(() => {
+                                const icon = useCase.icon;
+                                if (!icon) return null;
+                                
+                                if (typeof icon === 'string') {
+                                  return <span className="text-sm font-medium">{icon}</span>;
+                                }
+                                
+                                if (React.isValidElement(icon)) {
+                                  return React.cloneElement(icon, { 
+                                    className: 'w-4 h-4' 
+                                  } as React.HTMLAttributes<HTMLElement>);
+                                }
+                                
+                                // Si c'est un composant d'icône
+                                const IconComponent = icon as React.ComponentType<{ className?: string }>;
+                                return <IconComponent className="w-4 h-4" />;
+                              })()}
+                            </span>
+                          )}
+                        </div>
+                        <div className="flex-1">
+                          <h4 className="font-medium text-gray-900">{useCase.title}</h4>
+                          <p className="text-xs text-gray-600 mb-2">{useCase.description}</p>
+                          
+                          {useCase.industries && useCase.industries.length > 0 && (
+                            <div className="mt-1">
+                              <span className="text-xs font-medium text-gray-500">Industries : </span>
+                              <span className="text-xs text-gray-700">
+                                {useCase.industries.join(', ')}
+                              </span>
+                            </div>
+                          )}
+                          
+                          {useCase.benefits && useCase.benefits.length > 0 && (
+                            <div className="mt-2">
+                              <ul className="space-y-1">
+                                {useCase.benefits.map((benefit, idx) => (
+                                  <li key={idx} className="flex items-start">
+                                    <span className="text-amber-500 mr-1">•</span>
+                                    <span className="text-xs text-gray-700">{benefit}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+            
+            {/* Nos Experts Consulting */}
+            {service.experts && service.experts.length > 0 && (
+              <div className="mb-6">
+                <h3 className="text-base font-semibold text-gray-900 mb-3">Nos Experts Consulting</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {service.experts.map((expert) => (
+                    <div key={expert.id} className="flex items-start gap-3 p-3 border rounded-lg bg-white">
+                      <div className="w-12 h-12 rounded-full bg-gray-100 overflow-hidden flex-shrink-0">
+                        {expert.avatar ? (
+                          <img 
+                            src={expert.avatar} 
+                            alt={expert.name}
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center bg-amber-100 text-amber-600">
+                            <User className="w-5 h-5" />
+                          </div>
+                        )}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex justify-between items-start">
+                          <div>
+                            <h4 className="font-medium text-gray-900">{expert.name}</h4>
+                            <p className="text-xs text-amber-600">{expert.role}</p>
+                          </div>
+                          {expert.linkedinUrl && (
+                            <a 
+                              href={expert.linkedinUrl} 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="text-gray-400 hover:text-amber-500 transition-colors"
+                              aria-label={`Profil LinkedIn de ${expert.name}`}
+                            >
+                              <Linkedin className="w-4 h-4" />
+                            </a>
+                          )}
+                        </div>
+                        
+                        <p className="text-xs text-gray-600 mt-1 line-clamp-2">{expert.bio}</p>
+                        
+                        {expert.skills && expert.skills.length > 0 && (
+                          <div className="mt-2 flex flex-wrap gap-1">
+                            {expert.skills.slice(0, 3).map((skill, idx) => (
+                              <span 
+                                key={idx} 
+                                className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-amber-50 text-amber-700"
+                              >
+                                {skill}
+                              </span>
+                            ))}
+                            {expert.skills.length > 3 && (
+                              <span className="text-xs text-gray-500 self-center">
+                                +{expert.skills.length - 3} autres
+                              </span>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+            
+            {/* Nos Technologies */}
+            {service.serviceTechnologies && service.serviceTechnologies.length > 0 && (
+              <div className="mb-6">
+                <h3 className="text-base font-semibold text-gray-900 mb-3">Nos Technologies</h3>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                  {service.serviceTechnologies.map((tech) => (
+                    <div 
+                      key={tech.id} 
+                      className="p-3 border rounded-lg bg-white hover:bg-gray-50 transition-colors"
+                    >
+                      <div className="flex items-center gap-2 mb-1">
+                        {tech.icon && (
+                          <span className="text-amber-500">
+                            {(() => {
+                              const icon = tech.icon;
+                              if (!icon) return null;
+                              
+                              if (typeof icon === 'string') {
+                                return <span className="text-sm font-medium">{icon}</span>;
+                              }
+                              
+                              if (React.isValidElement(icon)) {
+                                return React.cloneElement(icon, { 
+                                  className: 'w-4 h-4' 
+                                } as React.HTMLAttributes<HTMLElement>);
+                              }
+                              
+                              // Si c'est un composant d'icône
+                              const IconComponent = icon as React.ComponentType<{ className?: string }>;
+                              return <IconComponent className="w-4 h-4" />;
+                            })()}
+                          </span>
+                        )}
+                        <h4 className="font-medium text-sm text-gray-900">{tech.name}</h4>
+                      </div>
+                      
+                      {tech.description && (
+                        <p className="text-xs text-gray-600 line-clamp-2">{tech.description}</p>
+                      )}
+                      
+                      {tech.category && (
+                        <div className="mt-1">
+                          <span className="inline-block px-1.5 py-0.5 text-[10px] font-medium bg-gray-100 text-gray-600 rounded">
+                            {tech.category}
+                          </span>
+                        </div>
+                      )}
+                      
+                      {tech.url && (
+                        <a 
+                          href={tech.url} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="mt-2 inline-flex items-center text-xs text-amber-600 hover:text-amber-700 transition-colors"
+                        >
+                          En savoir plus
+                          <ExternalLink className="w-3 h-3 ml-1" />
+                        </a>
+                      )}
+                    </div>
+                  ))}
                 </div>
               </div>
             )}
@@ -222,7 +429,7 @@ function ServiceModal({ service, isOpen, onClose }: { service: Service | null; i
         <div className="p-3 sm:p-4 bg-gray-50 border-t">
           <div className="flex flex-col sm:flex-row gap-2">
             <a
-              href={service.link}
+              href={`/services/${service.slug}`}
               className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 text-sm rounded-lg bg-gradient-to-r from-amber-500 to-orange-500 text-white font-medium hover:from-amber-600 hover:to-orange-600 transition-all shadow-md"
             >
               Voir le service
@@ -288,6 +495,103 @@ const ClientOnly = ({ children }: { children: React.ReactNode }) => {
 
 export default function Service() {
   const [selectedService, setSelectedService] = useState<Service | null>(null);
+  
+  // Fonction utilitaire pour obtenir l'URL de l'image
+  const getImageSrc = (img: string | { src: string; alt?: string; width?: number; height?: number }): string => {
+    return typeof img === 'string' ? img : img.src;
+  };
+  
+  // Fonction utilitaire pour obtenir le texte alternatif de l'image
+  const getImageAlt = (
+    img: string | { src: string; alt?: string; width?: number; height?: number }, 
+    fallback: string
+  ): string => {
+    return (typeof img === 'object' && img.alt) ? img.alt : fallback;
+  };
+  
+  // Mappage des icônes Lucide
+  const iconComponents = {
+    Monitor,
+    Smartphone: PhoneIcon,
+    Terminal,
+    FileText,
+    TrendingUp,
+    Clock,
+    Users,
+    MessageSquare,
+    BarChart2,
+    Award,
+    Brain,
+    Zap,
+    Lock,
+    Settings,
+    Settings2,
+    Wrench,
+    EyeOff,
+    Cloud,
+    Server,
+    Code,
+    Paintbrush,
+    GraduationCap,
+    Shield,
+    Search,
+    Rocket,
+    Heart,
+    Sparkles,
+    Globe,
+    Lightbulb,
+    Briefcase
+  } as const;
+  
+  // Définir un type pour les noms d'icônes valides
+  type IconName = keyof typeof iconComponents;
+  
+    // Fonction utilitaire pour obtenir un composant d'icône par son nom
+  const getIconComponent = (iconName: string): React.ComponentType<{ className?: string }> => {
+    const Icon = iconComponents[iconName as keyof typeof iconComponents];
+    return Icon || Globe;
+  };
+  
+  // Type pour les propriétés d'icône étendues
+  interface IconProps extends React.HTMLAttributes<HTMLElement> {
+    className?: string;
+  }
+  
+  // Fonction utilitaire pour rendre une icône de manière sécurisée
+  const renderServiceIcon = (
+    icon: string | LucideIcon | React.ReactElement | undefined, 
+    className = 'w-4 h-4 text-amber-400'
+  ): React.ReactNode => {
+    if (!icon) return null;
+    
+    // Si c'est une chaîne, on l'affiche comme texte
+    if (typeof icon === 'string') {
+      return <span className="text-sm font-medium">{icon}</span>;
+    }
+    
+    // Si c'est un élément React valide, on le clone avec la classe
+    if (React.isValidElement(icon)) {
+      const currentProps = icon.props as IconProps;
+      const newClassName = [
+        currentProps?.className,
+        className
+      ].filter(Boolean).join(' ');
+      
+      // Créer un nouvel objet props sans la propriété className existante
+      const { className: _, ...otherProps } = currentProps || {};
+      
+      // Retourner l'élément cloné avec les nouvelles propriétés
+      return React.cloneElement(icon, {
+        ...otherProps,
+        className: newClassName
+      } as React.HTMLAttributes<HTMLElement>);
+    }
+    
+    // Si c'est une icône Lucide, on la rend avec la classe
+    const IconComponent = icon as React.ComponentType<{ className?: string }>;
+    return <IconComponent className={className} />;
+  };
+  
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isClient, setIsClient] = useState(false);
   
@@ -297,239 +601,37 @@ export default function Service() {
   
   const { width: windowWidth } = useWindowSize();
   const isMobile = windowWidth < 640; // Tailwind's sm breakpoint
-
-  // Services les plus populaires (au centre)
-  const popularServices: Service[] = [
-    {
-      id: 'web-dev',
-      title: "Développement Web",
-      shortDescription: "Sites vitrines, plateformes, applications métier, e-commerce",
-      fullDescription: "Notre équipe d'experts développe des solutions web sur-mesure adaptées à vos besoins spécifiques. Que vous ayez besoin d'un site vitrine élégant, d'une plateforme e-commerce performante ou d'une application métier complexe, nous maîtrisons les dernières technologies pour vous offrir une solution robuste, sécurisée et évolutive.",
-      image: "/website-img-1.jpg",
-      values: [
-        { icon: <Rocket className="w-5 h-5 text-orange-400" />, label: "Rapidité" },
-        { icon: <Shield className="w-5 h-5 text-amber-500" />, label: "Sécurité" },
-        { icon: <Sparkles className="w-5 h-5 text-yellow-400" />, label: "UX Moderne" },
-      ],
-      link: "/services/development",
-      features: [
-        "Design responsive",
-        "SEO optimisé",
-        "Performance élevée",
-        "Sécurité renforcée",
-        "Support technique",
-        "Formation utilisateur"
-      ],
-      price: "À partir de 2500€"
-    },
-    {
-      id: 'mobile-app',
-      title: "Applications Mobiles",
-      shortDescription: "Apps performantes, connectées à vos outils",
-      fullDescription: "Développement d'applications mobiles natives et cross-platform pour iOS et Android. Nos apps sont conçues pour offrir une expérience utilisateur exceptionnelle tout en étant parfaitement intégrées à vos systèmes existants.",
-      image: "/DG1.jpg",
-      values: [
-        { icon: <Rocket className="w-5 h-5 text-orange-400" />, label: "Performance" },
-        { icon: <Shield className="w-5 h-5 text-amber-500" />, label: "Sécurité" },
-        { icon: <Heart className="w-5 h-5 text-orange-400" />, label: "Support" },
-      ],
-      link: "/services/mobile",
-      features: [
-        "Applications natives",
-        "Interface intuitive",
-        "Synchronisation cloud",
-        "Notifications push",
-        "Analytics intégrées",
-        "Mises à jour OTA"
-      ],
-      price: "À partir de 4000€"
-    },
-    {
-      id: 'consulting',
-      title: "Consulting Digital",
-      shortDescription: "Conseil, audit, accompagnement pour votre transformation numérique",
-      fullDescription: "Nos consultants experts vous accompagnent dans votre transformation digitale. Audit de l'existant, définition de stratégie, recommandations techniques et accompagnement au changement pour maximiser votre ROI.",
-      image: "/website-img-2.webp",
-      values: [
-        { icon: <Lightbulb className="w-5 h-5 text-orange-400" />, label: "Expertise" },
-        { icon: <Users className="w-5 h-5 text-amber-500" />, label: "Accompagnement" },
-        { icon: <Globe className="w-5 h-5 text-orange-400" />, label: "Ouverture" },
-      ],
-      link: "/services/consulting",
-      features: [
-        "Audit technique complet",
-        "Stratégie digitale",
-        "Accompagnement au changement",
-        "Formation des équipes",
-        "Optimisation des processus",
-        "Suivi ROI"
-      ],
-      price: "Sur devis"
-    }
-  ];
-
-  // Services complémentaires - Tous les services de la navbar
-  const additionalServices: Service[] = [
-    // Services principaux
-    {
-      id: 'consulting',
-      title: 'Consulting',
-      shortDescription: 'Conseil stratégique pour votre transformation digitale.',
-      fullDescription: 'Nos experts vous accompagnent dans la définition et la mise en œuvre de votre stratégie numérique pour maximiser votre impact et votre croissance.',
-      image: '/consulting.jpg',
-      values: [
-        { icon: <Lightbulb className="w-5 h-5 text-amber-400" />, label: 'Stratégie' },
-        { icon: <TrendingUp className="w-5 h-5 text-amber-400" />, label: 'Croissance' },
-        { icon: <Award className="w-5 h-5 text-amber-400" />, label: 'Expertise' }
-      ],
-      link: '/services/consulting',
-      features: [
-        'Audit numérique complet',
-        'Stratégie digitale sur mesure',
-        'Accompagnement au changement',
-        'Analyse de marché',
-        'Étude de faisabilité',
-        'Plan d\'action personnalisé'
-      ],
-      price: 'Sur devis'
-    },
-    {
-      id: 'development',
-      title: 'Développement',
-      shortDescription: 'Solutions logicielles sur mesure pour votre entreprise.',
-      fullDescription: 'Développement d\'applications web et mobiles personnalisées, évolutives et performantes, adaptées à vos besoins spécifiques.',
-      image: '/development.jpg',
-      values: [
-        { icon: <Code2 className="w-5 h-5 text-amber-400" />, label: 'Code' },
-        { icon: <Smartphone className="w-5 h-5 text-amber-400" />, label: 'Mobile' },
-        { icon: <Globe className="w-5 h-5 text-amber-400" />, label: 'Web' }
-      ],
-      link: '/services/development',
-      features: [
-        'Applications web sur mesure',
-        'Applications mobiles natives',
-        'Développement frontend/backend',
-        'API et intégrations',
-        'Tests et déploiement',
-        'Maintenance évolutive'
-      ],
-      price: 'Sur devis'
-    },
-    {
-      id: 'design',
-      title: 'Design',
-      shortDescription: 'Design créatif pour une expérience utilisateur exceptionnelle.',
-      fullDescription: 'Conception d\'interfaces utilisateur intuitives et esthétiques qui améliorent l\'expérience utilisateur et renforcent votre identité de marque.',
-      image: '/design.jpg',
-      values: [
-        { icon: <Paintbrush className="w-5 h-5 text-amber-400" />, label: 'UI/UX' },
-        { icon: <Users className="w-5 h-5 text-amber-400" />, label: 'Centré utilisateur' },
-        { icon: <Sparkles className="w-5 h-5 text-amber-400" />, label: 'Créatif' }
-      ],
-      link: '/services/design',
-      features: [
-        'Design d\'interface utilisateur',
-        'Expérience utilisateur (UX)',
-        'Identité visuelle',
-        'Maquettes interactives',
-        'Design system',
-        'Prototypage et tests utilisateurs'
-      ],
-      price: 'À partir de 1500€'
-    },
-    // Services réseau et sécurité
-    {
-      id: 'securite-reseau',
-      title: 'Sécurité Réseau',
-      shortDescription: 'Protection avancée pour vos infrastructures réseau.',
-      fullDescription: 'Solutions complètes de sécurité réseau pour protéger vos infrastructures contre les menaces et assurer la continuité de vos activités.',
-      image: '/network-security.jpg',
-      values: [
-        { icon: <ShieldCheck className="w-5 h-5 text-amber-400" />, label: 'Sécurité' },
-        { icon: <Shield className="w-5 h-5 text-amber-400" />, label: 'Protection' },
-        { icon: <Lock className="w-5 h-5 text-amber-400" />, label: 'Sécurisé' }
-      ],
-      link: '/services/securite-reseau',
-      features: [
-        'Audit de sécurité réseau',
-        'Pare-feu et VPN',
-        'Détection d\'intrusion',
-        'Sécurisation Wi-Fi',
-        'Surveillance 24/7',
-        "Plan de reprise d'activité"
-      ],
-      price: 'Sur devis'
-    },
-    {
-      id: 'solutions-ia',
-      title: 'Solutions IA',
-      shortDescription: 'Intégrez l\'intelligence artificielle dans votre entreprise.',
-      fullDescription: 'Nous développons des solutions d\'intelligence artificielle sur mesure pour automatiser vos processus, analyser vos données et améliorer votre prise de décision.',
-      image: '/ia.jpg',
-      values: [
-        { icon: <Brain className="w-5 h-5 text-amber-400" />, label: 'IA' },
-        { icon: <Zap className="w-5 h-5 text-amber-400" />, label: 'Automatisation' },
-        { icon: <Award className="w-5 h-5 text-amber-400" />, label: 'Innovation' }
-      ],
-      link: '/services/ia-intelligence-artificielle',
-      features: [
-        'Chatbots intelligents',
-        'Analyse prédictive',
-        'Traitement du langage naturel',
-        'Vision par ordinateur',
-        'Automatisation des processus',
-        'Solutions personnalisées'
-      ],
-      price: 'Sur devis'
-    },
-    // Services de support et formation
-    {
-      id: 'formation',
-      title: 'Formation',
-      shortDescription: 'Formations professionnelles sur mesure.',
-      fullDescription: 'Programmes de formation adaptés pour maîtriser les technologies et outils numériques essentiels à votre activité.',
-      image: '/formation.jpg',
-      values: [
-        { icon: <GraduationCap className="w-5 h-5 text-amber-400" />, label: 'Formation' },
-        { icon: <Users className="w-5 h-5 text-amber-400" />, label: 'Pratique' },
-        { icon: <Award className="w-5 h-5 text-amber-400" />, label: 'Certification' }
-      ],
-      link: '/services/formation',
-      features: [
-        'Formations sur mesure',
-        'Ateliers pratiques',
-        'Support pédagogique',
-        'Évaluation des compétences',
-        'Suivi post-formation',
-        'Certification'
-      ],
-      price: 'Sur devis'
-    },
-    {
-      id: 'maintenance',
-      title: 'Maintenance',
-      shortDescription: 'Maintenance préventive et corrective de vos systèmes.',
-      fullDescription: 'Services complets de maintenance pour assurer le bon fonctionnement et la sécurité de vos systèmes d\'information.',
-      image: '/maintenance.jpg',
-      values: [
-        { icon: <Settings2 className="w-5 h-5 text-amber-400" />, label: 'Maintenance' },
-        { icon: <ShieldCheck className="w-5 h-5 text-amber-400" />, label: 'Sécurité' },
-        { icon: <Wrench className="w-5 h-5 text-amber-400" />, label: 'Support' }
-      ],
-      link: '/services/maintenance',
-      features: [
-        'Maintenance préventive',
-        'Mises à jour logicielles',
-        'Sauvegardes automatisées',
-        'Surveillance 24/7',
-        'Dépannage technique',
-        'Rapports d\'activité'
-      ],
-      price: 'À partir de 200€/mois'
-    }
-  ];
-
-  const allServices = [...popularServices, ...additionalServices];
+  // Récupérer les services populaires et complémentaires
+  const popularServices = servicesData.filter(service => service.isPopular);
+  const allServices = servicesData; // Tous les services depuis la source centralisée
+  
+  // Fonction utilitaire pour obtenir l'icône d'une valeur de service
+  const getValueIcon = (value: ServiceValue): React.ReactNode => {
+    if (!value.icon) return <Globe className="w-5 h-5 text-amber-400" />;
+    const icon = renderServiceIcon(value.icon);
+    return icon || <Globe className="w-5 h-5 text-amber-400" />;
+  };
+  
+  // Fonction utilitaire pour obtenir l'icône d'un domaine de service
+  const getDomainIcon = (domain: ServiceDomain): React.ReactNode => {
+    if (!domain.icon) return <Globe className="w-5 h-5 text-blue-500" />;
+    const icon = renderServiceIcon(domain.icon);
+    return icon || <Globe className="w-5 h-5 text-blue-500" />;
+  };
+  
+  // Fonction utilitaire pour obtenir l'icône d'une approche de service
+  const getApproachIcon = (approach: ServiceApproach): React.ReactNode => {
+    if (!approach.icon) return <Globe className="w-5 h-5 text-green-500" />;
+    const icon = renderServiceIcon(approach.icon);
+    return icon || <Globe className="w-5 h-5 text-green-500" />;
+  };
+  
+  // Fonction utilitaire pour obtenir l'icône d'un service
+  const getServiceIcon = (service: Service): React.ReactNode => {
+    if (!service.icon) return <Globe className="w-5 h-5 text-purple-500" />;
+    const icon = renderServiceIcon(service.icon);
+    return icon || <Globe className="w-5 h-5 text-purple-500" />;
+  };
 
   const handleServiceClick = (service: Service) => {
     setSelectedService(service);
@@ -583,66 +685,68 @@ export default function Service() {
         {/* Services populaires - Disposition circulaire avec fond dédié */}
         <div className="relative mb-32">
           <div className="text-center mb-12 md:mb-16">
-            <h2 className="text-2xl md:text-3xl font-bold text-amber-400 mb-4">Services Les Plus Demandés</h2>
-            <p className="text-gray-300 mb-4">.</p>
           </div>
           
           {/* Container avec fond pour les services en orbite */}
-          <div className="relative">
+          <div className={styles.serviceOrbitContainer}>
             {/* Fond avec espace suffisant */}
-            <div className="absolute inset-0 -mx-4 md:-mx-8 lg:-mx-16 bg-gradient-to-r from-gray-900/50 via-gray-800/30 to-gray-900/50 backdrop-blur-sm rounded-3xl border border-amber-500/10" 
-                 style={{ height: 'calc(100% + 120px)', top: '-60px' }}>
-            </div>
+            <div className={styles.serviceOrbitBackground}></div>
             
             {/* Cercles décoratifs en arrière-plan */}
-            <div className="absolute inset-0 overflow-hidden pointer-events-none">
-              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full border border-amber-500/10 animate-pulse"></div>
-              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 rounded-full border border-orange-500/5 animate-pulse" style={{animationDelay: '1s'}}></div>
-              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full border border-amber-500/5 animate-pulse" style={{animationDelay: '2s'}}></div>
+            <div className={styles.serviceOrbitCircles}>
+              <div className={`${styles.serviceOrbitCircle} ${styles.serviceOrbitCircle1}`}></div>
+              <div className={`${styles.serviceOrbitCircle} ${styles.serviceOrbitCircle2}`}></div>
+              <div className={`${styles.serviceOrbitCircle} ${styles.serviceOrbitCircle3}`}></div>
             </div>
             
             {/* Container principal avec hauteur fixe adaptative */}
-            <div className="relative flex items-center justify-center py-8 sm:py-12 md:py-16" style={{ minHeight: '400px' }}>
+            <div className={styles.serviceOrbitContent}>
               {/* Centre - Logo ou élément central */}
-              <div className="absolute z-20 w-32 h-32 md:w-40 md:h-40 rounded-full bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center shadow-2xl border-4 border-white/10">
-                <div className="text-center">
-                  <Sparkles className="w-8 h-8 md:w-10 md:h-10 text-white mx-auto mb-2 animate-pulse" />
-                  <div className="text-white text-xs md:text-sm font-bold">Services</div>
-                  <div className="text-white text-xs md:text-sm font-bold">Premium</div>
+              <div className={styles.serviceCenterLogo}>
+                <div className={styles.serviceCenterLogoText}>
+                  <Sparkles className={styles.serviceCenterLogoIcon} />
+                  <div className={styles.serviceCenterLogoLabel}>Services</div>
+                  <div className={styles.serviceCenterLogoLabel}>Premium</div>
                 </div>
               </div>
               
               {/* Services en orbite avec positions optimisées */}
+              {/* Composant pour un élément d'orbite */}
               {popularServices.map((service, index) => {
                 // Positions adaptatives selon la taille d'écran  
                 const radius = isMobile ? 120 : 200; // Rayon plus petit sur mobile
                 
                 // Angles optimisés pour éviter les chevauchements
-                const angles = isMobile ? [0, 120, 240] : [-90, 30, 150]; // Disposition différente sur mobile
-                const angle = angles[index];
+                const angles = isMobile ? [0, 120, 240] : [-90, 30, 150];
+                const angle = angles[index] || 0; // Valeur par défaut si l'angle n'est pas défini
                 const { x, y } = getCirclePoint(angle, radius);
+                
+                // Créer un identifiant unique pour cet élément d'orbite
+                const orbitItemId = `orbit-item-${service.id}-${index}`;
+                
+                // S'assurer que x et y sont des nombres valides
+                const posX = isNaN(x) ? 0 : x;
+                const posY = isNaN(y) ? 0 : y;
                 
                 return (
                   <div
                     key={service.id}
-                    className="absolute z-10 cursor-pointer group"
-                    style={{
-                      transform: `translate(${x}px, ${y}px)`,
-                      width: 'min(180px, 40vw)',
-                      height: 'min(180px, 40vw)'
-                    }}
+                    id={orbitItemId}
+                    className={`${styles.serviceOrbitItem} ${styles.orbitItemPositioned}`}
+                    data-x={posX}
+                    data-y={posY}
                     onClick={() => handleServiceClick(service)}
                   >
-                    <div className="w-full h-full rounded-2xl bg-gradient-to-br from-gray-800/90 to-gray-900/90 backdrop-blur-md border border-amber-500/30 p-3 sm:p-4 flex flex-col items-center justify-center text-center hover:scale-105 sm:hover:scale-110 hover:border-amber-500/60 transition-all duration-300 shadow-xl group-hover:shadow-amber-500/20 hover:z-30 relative group-hover:bg-gradient-to-br group-hover:from-amber-500/10 group-hover:to-orange-500/10">
+                    <div className={`${styles.serviceCard} group`}>
                       {/* Badge de popularité */}
-                      <div className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-gradient-to-r from-amber-400 to-orange-500 flex items-center justify-center">
-                        <span className="text-white text-xs font-bold">★</span>
+                      <div className={styles.popularBadge}>
+                        <span className={styles.popularBadgeText}>★</span>
                       </div>
                       
                       <div className="flex gap-1 mb-2 sm:mb-3 opacity-80 group-hover:opacity-100 transition-opacity">
                         {service.values.slice(0, 2).map((value, i) => (
                           <div key={i} className="transform group-hover:scale-110 transition-transform">
-                            {value.icon}
+                            {renderServiceIcon(value.icon)}
                           </div>
                         ))}
                       </div>
@@ -686,11 +790,12 @@ export default function Service() {
                   {popularServices.map((_, index) => {
                     const radius = isMobile ? 120 : 200;
                     const angles = isMobile ? [0, 120, 240] : [-90, 30, 150];
-                    const angle = angles[index];
+                    // Ensure angle is always defined even if there are more services than angles
+                    const safeAngle = angles.length > 0 ? angles[index % angles.length] : 0;
                     const startRadius = isMobile ? 40 : 70;
                     const endRadius = radius - (isMobile ? 40 : 60);
-                    const { x: x1, y: y1 } = getCirclePoint(angle, startRadius);
-                    const { x: x2, y: y2 } = getCirclePoint(angle, endRadius);
+                    const { x: x1, y: y1 } = getCirclePoint(safeAngle, startRadius);
+                    const { x: x2, y: y2 } = getCirclePoint(safeAngle, endRadius);
                     
                     return (
                       <line
@@ -720,28 +825,44 @@ export default function Service() {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {additionalServices.map((service) => (
+            {allServices.map((service) => (
               <div
                 key={service.id}
                 className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl border border-gray-700 p-6 hover:border-amber-500/50 transition-all duration-300 cursor-pointer group hover:transform hover:scale-105 shadow-xl hover:shadow-2xl hover:shadow-amber-500/10"
                 onClick={() => handleServiceClick(service)}
               >
-                <div className="flex items-center gap-3 mb-4">
-                  {service.values.map((value, index) => (
-                    <div key={index} className="opacity-70">
-                      {value.icon}
+                <div className="w-full h-48 rounded-lg overflow-hidden bg-gradient-to-br from-gray-700 to-gray-800 flex items-center justify-center">
+                  {service.image ? (
+                    <img 
+                      src={typeof service.image === 'string' ? service.image : service.image.src} 
+                      alt={typeof service.image === 'string' ? service.title : service.image.alt || service.title}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <Globe className="w-12 h-12 text-gray-500" />
+                  )}
+                </div>
+                <div className="flex items-center gap-3 mb-4 flex-wrap">
+                  {service.values && service.values.map((value, index) => (
+                    <div key={value.id || index} className="opacity-70">
+                      {renderServiceIcon(value.icon)}
                     </div>
                   ))}
                 </div>
                 
                 <h3 className="text-white text-xl font-bold mb-3">{service.title}</h3>
-                <p className="text-gray-300 text-sm leading-relaxed mb-4">{service.shortDescription}</p>
+                <p className="text-gray-300 text-sm leading-relaxed mb-4">{service.shortDescription || service.excerpt}</p>
                 
-                {service.price && (
-                  <div className="flex justify-between items-center">
-                    <span className="text-amber-400 font-bold">{service.price}</span>
-                    <ChevronRight className="w-5 h-5 text-amber-400 group-hover:translate-x-1 transition-transform" />
-                  </div>
+                {service.pricingTiers && service.pricingTiers.length > 0 && (
+                  <a 
+                    href={`/services/${service.slug}`} 
+                    className="text-amber-400 hover:text-amber-300 flex items-center group-hover:underline"
+                  >
+                    <span className="text-amber-400 font-bold">
+                      À partir de {service.pricingTiers[0].price}€
+                    </span>
+                    <ChevronRight className="w-4 h-4 ml-1 text-amber-400 group-hover:translate-x-1 transition-transform" />
+                  </a>
                 )}
               </div>
             ))}
@@ -791,40 +912,46 @@ export default function Service() {
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {[
             {
-              icon: <Bot className="w-8 h-8 text-amber-500" />,
+              icon: 'Bot',
+              iconColor: 'text-amber-500',
               title: "Assistant IA",
               description: "Un guide intelligent pour optimiser vos choix",
               action: "Démarrer l'IA",
               badge: "IA"
             },
             {
-              icon: <FileText className="w-8 h-8 text-orange-400" />,
+              icon: 'FileText',
+              iconColor: 'text-orange-400',
               title: "Brochure PDF",
               description: "Catalogue complet de nos services",
               action: "Télécharger",
               link: "/brochure-ioi.pdf"
             },
             {
-              icon: <ExternalLink className="w-8 h-8 text-amber-500" />,
+              icon: 'ExternalLink',
+              iconColor: 'text-amber-500',
               title: "Carrières",
               description: "Rejoignez notre équipe innovante",
               action: "Voir les offres",
               link: "/jobs"
             },
             {
-              icon: <Languages className="w-8 h-8 text-orange-400" />,
+              icon: 'Languages',
+              iconColor: 'text-orange-400',
               title: "Multilingue",
               description: "Solutions internationales",
               action: "Voir la démo"
             },
             {
-              icon: <Accessibility className="w-8 h-8 text-amber-500" />,
+              icon: 'Accessibility',
+              iconColor: 'text-amber-500',
               title: "Accessibilité",
               description: "Inclusif et accessible à tous",
               action: "En savoir plus"
             },
             {
-              icon: <Headphones className="w-8 h-8 text-orange-400" />,
+              icon: 'Headphones',
+              iconColor: 'text-orange-400',
               title: "Support 24/7",
               description: "Équipe disponible en permanence",
               action: "Contacter"
@@ -838,7 +965,7 @@ export default function Service() {
               )}
               
               <div className="flex items-center gap-3 mb-3">
-                {item.icon}
+                {renderServiceIcon(item.icon, `w-8 h-8 ${item.iconColor}`)}
                 <h3 className="text-white font-bold">{item.title}</h3>
               </div>
               

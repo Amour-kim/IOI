@@ -2,109 +2,116 @@
 
 import Image from "next/image"
 import Link from "next/link"
-import { Star } from "lucide-react"
-import {
-  Home,
-  Compass,
-  Cable,
-  ListVideo,
-  History,
-  PlaySquare,
-  Clock,
-  ThumbsUp,
-  ChevronDown,
-  Youtube,
-  Search,
-  Mic,
-  Video,
-  Grid,
-  Bell,
-  Menu,
-  CheckCircle,
-} from "lucide-react"
-
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { allCards } from '@/lib/data';
+import { Star, PlaySquare, CheckCircle } from "lucide-react"
+import { allCards, type VideoCardType, type ArticleCardType } from '@/lib/data';
 import ModernNavbar from '@/components/ui/navbar';
 import Footer from '@/components/ui/footer';
 import SocialSidebar from '@/components/ui/social-sidebar';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { format } from 'date-fns';
 import Valeurs from '@/components/ui/valeurs';
 import Visite from '@/components/ui/visite';
 import ContactUs from '@/components/ui/contact_us';
 
-function VideoCard({
-  thumbnail,
-  avatar,
-  title,
-  channel,
-  views,
-  time,
-  hasHD,
-  hasPlayOverlay,
-  publishedAt
-}: {
-  thumbnail: string
-  avatar: string
-  title: string
-  channel: string
-  views: string
-  time: string
-  hasHD?: boolean
-  hasPlayOverlay?: boolean
-  publishedAt: string
-}) {
-  return (
-    <div className="relative group cursor-pointer hover:shadow-xl transition-shadow duration-200">
-      <div className="relative">
-        <Image
-          src={thumbnail || "/placeholder.svg"}
-          alt="Video thumbnail"
-          width={360}
-          height={200}
-          className="w-full rounded-lg object-cover aspect-video"
-        />
-        {hasHD && <div className="absolute top-2 right-2 bg-black/70 text-white text-xs px-1.5 py-0.5 rounded">HD</div>}
-        {hasPlayOverlay && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity">
-            <PlaySquare className="w-12 h-12 text-white" />
-          </div>
-        )}
-      </div>
-      <div className="flex items-start gap-3 mt-2">
-        <Avatar className="w-9 h-9 border border-avatar-border">
-          <AvatarImage src={avatar || "/placeholder.svg"} alt={channel} />
-          <AvatarFallback>{channel.charAt(0)}</AvatarFallback>
-        </Avatar>
-        <div className="grid gap-1">
-          <h3 className="text-[#1a1a1a] text-sm font-medium line-clamp-2">{title}</h3>
-          <div className="flex items-center gap-1 text-muted-foreground text-xs">
-            <span>{channel}</span>
-            {channel === "Coke Studio Bangla" && <CheckCircle className="w-3 h-3 fill-muted-foreground" />}
-          </div>
-          <div className="text-muted-foreground text-xs">
-            {views} &bull; {time}
-          </div>
-          <div className="text-xs text-gray-400 mt-1">Publié le {format(new Date(publishedAt), 'dd/MM/yyyy')}</div>
-        </div>
-      </div>
-    </div>
-  )
-}
+// Type guard pour vérifier si une carte est une vidéo
+const isVideoCard = (card: VideoCardType | ArticleCardType): card is VideoCardType => {
+  return card.type === 'video' && 'channel' in card && 'views' in card;
+};
 
-export default function Component() {
+export default function TutorialsPage() {
   const [search, setSearch] = useState('');
-  // Trier les vidéos par date décroissante
-  const videos = allCards.filter(card => card.type === 'video').sort((a, b) => new Date((b as any).publishedAt).getTime() - new Date((a as any).publishedAt).getTime());
-  const filteredVideos = videos.filter(video =>
-    video.title.toLowerCase().includes(search.toLowerCase()) ||
-    video.channel.toLowerCase().includes(search.toLowerCase())
+  
+  // Filtrer et trier les vidéos avec useMemo pour optimiser les performances
+  const { videos, filteredVideos, topVideos } = useMemo(() => {
+    const videoCards = allCards.filter(isVideoCard);
+    const sortedVideos = [...videoCards].sort((a, b) => 
+      new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
+    );
+    
+    const filtered = search 
+      ? sortedVideos.filter(video => 
+          video.title.toLowerCase().includes(search.toLowerCase()) ||
+          video.channel.toLowerCase().includes(search.toLowerCase())
+        )
+      : sortedVideos;
+    
+    return {
+      videos: sortedVideos,
+      filteredVideos: filtered,
+      topVideos: filtered.slice(0, 10)
+    };
+  }, [search]);
+  
+  // Rendu d'une carte vidéo
+  const renderVideoCard = (video: VideoCardType, index: number) => (
+    <div 
+      key={video.id}
+      className="group relative bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden border border-gray-100 hover:border-orange-100"
+      aria-labelledby={`video-${video.id}-title`}
+    >
+      <Link href={`/ressources/tutorials/${video.id}`} className="block" aria-label={`Voir la vidéo : ${video.title}`}>
+        <div className="relative aspect-video overflow-hidden">
+          <Image
+            src={video.thumbnail || "/placeholder.svg"}
+            alt=""
+            width={400}
+            height={225}
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            priority={index < 4} // Chargement prioritaire pour les premières images
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          <div className="absolute bottom-0 left-0 right-0 p-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <div className="flex items-center justify-center">
+              <div className="bg-white/90 text-orange-600 text-xs font-medium px-2 py-1 rounded-full">
+                Regarder maintenant
+              </div>
+            </div>
+          </div>
+          {index % 3 === 0 && (
+            <div className="absolute top-2 right-2 bg-black/70 text-white text-xs px-1.5 py-0.5 rounded">
+              HD
+            </div>
+          )}
+        </div>
+        <div className="p-4">
+          <div className="flex items-start gap-3">
+            <div className="w-10 h-10 border border-gray-200 flex-shrink-0 rounded-full overflow-hidden">
+              {video.channelAvatar ? (
+                <Image
+                  src={video.channelAvatar}
+                  alt={`Avatar de ${video.channel}`}
+                  width={40}
+                  height={40}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                  <span className="text-xs text-gray-500">{video.channel.charAt(0)}</span>
+                </div>
+              )}
+            </div>
+            <div className="flex-1 min-w-0">
+              <h3 
+                id={`video-${video.id}-title`}
+                className="font-medium text-gray-900 mb-1 line-clamp-2 group-hover:text-orange-600 transition-colors"
+              >
+                {video.title}
+              </h3>
+              <div className="flex items-center gap-1 text-xs text-gray-500">
+                <span>{video.channel}</span>
+                <CheckCircle className="w-3 h-3 text-gray-400" aria-hidden="true" />
+              </div>
+              <div className="flex items-center gap-1 text-xs text-gray-400 mt-1">
+                <span>{video.views}</span>
+                <span aria-hidden="true">•</span>
+                <span>{video.time}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Link>
+    </div>
   );
-  // Top 10 réactif à la recherche
-  const topVideos = filteredVideos.slice(0, 10);
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-yellow-50 via-orange-50 to-yellow-100 text-[#1a1a1a]">
       <ModernNavbar />
@@ -198,73 +205,30 @@ export default function Component() {
             {/* Grille de vidéos complète */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {filteredVideos.length === 0 ? (
-                <div className="col-span-full text-center py-16">
+                <div className="col-span-full text-center py-16" role="alert" aria-live="polite">
                   <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-orange-100 mb-4">
-                    <svg className="w-8 h-8 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    <svg 
+                      className="w-8 h-8 text-orange-500" 
+                      fill="none" 
+                      stroke="currentColor" 
+                      viewBox="0 0 24 24" 
+                      xmlns="http://www.w3.org/2000/svg"
+                      aria-hidden="true"
+                    >
+                      <path 
+                        strokeLinecap="round" 
+                        strokeLinejoin="round" 
+                        strokeWidth="2" 
+                        d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
                     </svg>
+                    <span className="sr-only">Icône d'information</span>
                   </div>
                   <h3 className="text-lg font-medium text-gray-900 mb-1">Aucun tutoriel trouvé</h3>
                   <p className="text-gray-500">Essayez de modifier vos critères de recherche</p>
                 </div>
               ) : (
-                filteredVideos.map((video, idx) => (
-                  <div 
-                    key={video.id}
-                    className="group relative bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden border border-gray-100 hover:border-orange-100"
-                  >
-                    <Link href={`/ressources/tutorials/${video.id}`} className="block">
-                      <div className="relative aspect-video overflow-hidden">
-                        <Image
-                          src={video.thumbnail || "/placeholder.svg"}
-                          alt={video.title}
-                          width={400}
-                          height={225}
-                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                        <div className="absolute bottom-0 left-0 right-0 p-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                          <div className="flex items-center justify-center">
-                            <div className="bg-white/90 text-orange-600 text-xs font-medium px-2 py-1 rounded-full">
-                              Regarder maintenant
-                            </div>
-                          </div>
-                        </div>
-                        {idx % 3 === 0 && (
-                          <div className="absolute top-2 right-2 bg-black/70 text-white text-xs px-1.5 py-0.5 rounded">
-                            HD
-                          </div>
-                        )}
-                      </div>
-                      <div className="p-4">
-                        <div className="flex items-start gap-3">
-                          <Avatar className="w-10 h-10 border border-gray-200 flex-shrink-0">
-                            <AvatarImage src={video.channelAvatar || "/placeholder.svg"} alt={video.channel} />
-                            <AvatarFallback>{video.channel.charAt(0)}</AvatarFallback>
-                          </Avatar>
-                          <div className="flex-1 min-w-0">
-                            <h3 className="font-medium text-gray-900 mb-1 line-clamp-2 group-hover:text-orange-600 transition-colors">
-                              {video.title}
-                            </h3>
-                            <div className="flex items-center gap-1 text-xs text-gray-500">
-                              <span>{video.channel}</span>
-                              {video.channel === "Coke Studio Bangla" && (
-                                <CheckCircle className="w-3 h-3 text-gray-400" />
-                              )}
-                            </div>
-                            <div className="flex items-center gap-1 text-xs text-gray-400 mt-1">
-                              <span>{video.views}</span>
-                              <span>•</span>
-                              <span>{video.time}</span>
-                              <span>•</span>
-                              <span>{format(new Date(video.publishedAt), 'dd MMM yyyy')}</span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </Link>
-                  </div>
-                ))
+                filteredVideos.map((video, index) => renderVideoCard(video, index))
               )}
             </div>
           </div>

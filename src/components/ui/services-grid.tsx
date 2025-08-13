@@ -81,25 +81,31 @@ const ServicesGrid = () => {
   
   // Effet pour gérer la visibilité de la section
   useEffect(() => {
+    const currentSection = sectionRef.current;
+    
     const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true)
-        }
+      (entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            setIsVisible(true);
+          }
+        });
       },
       { threshold: 0.1 }
     )
     
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current)
+    if (currentSection) {
+      observer.observe(currentSection);
     }
     
+    // Nettoyage de l'observer
     return () => {
-      if (sectionRef.current) {
-        observer.unobserve(sectionRef.current)
+      if (currentSection) {
+        observer.unobserve(currentSection);
       }
-    }
-  }, [])
+      observer.disconnect();
+    };
+  }, []) // sectionRef n'est pas nécessaire dans les dépendances car c'est une ref
 
   const services: Service[] = [
     {

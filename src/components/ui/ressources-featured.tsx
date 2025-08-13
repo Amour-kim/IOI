@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState } from 'react';
-import { Download, Clock, BookOpen, Star, Plus, Play, FileText, Video, Headphones, Image, File } from 'lucide-react';
+import { Download, Clock, BookOpen, Star, Plus, Play, FileText, Video, Headphones, File, Image as LucideImage } from 'lucide-react';
+import Image from 'next/image';
 
 interface FeaturedResource {
   id: string;
@@ -107,7 +108,7 @@ const RessourcesFeatured = () => {
       case 'Audio':
         return <Headphones className="w-5 h-5" />;
       case 'Image':
-        return <Image className="w-5 h-5" />;
+        return <LucideImage className="w-5 h-5" />;
       default:
         return <File className="w-5 h-5" />;
     }
@@ -126,12 +127,16 @@ const RessourcesFeatured = () => {
     }
   };
 
-  const handleDownload = (resourceId: string) => {
+  const handleDownload = (e: React.MouseEvent<HTMLButtonElement>, resourceId: string) => {
+    e.preventDefault();
+    e.stopPropagation();
     console.log('Téléchargement de la ressource:', resourceId);
     // Ici on pourrait déclencher le téléchargement réel
   };
 
-  const handleAddToLibrary = (resourceId: string) => {
+  const handleAddToLibrary = (e: React.MouseEvent<HTMLButtonElement>, resourceId: string) => {
+    e.preventDefault();
+    e.stopPropagation();
     console.log('Ajout à la bibliothèque:', resourceId);
     // Ici on pourrait ajouter à la bibliothèque personnelle
   };
@@ -198,14 +203,16 @@ const RessourcesFeatured = () => {
                 }`}>
                   <div className="flex gap-3">
                     <button
-                      onClick={() => handleDownload(resource.id)}
+                      onClick={(e) => handleDownload(e, resource.id)}
                       className="bg-yellow-400 text-gray-900 p-3 rounded-full hover:bg-yellow-500 transition-colors duration-200"
+                      aria-label="Télécharger"
                     >
                       <Download className="w-5 h-5" />
                     </button>
                     <button
-                      onClick={() => handleAddToLibrary(resource.id)}
+                      onClick={(e) => handleAddToLibrary(e, resource.id)}
                       className="bg-white/20 backdrop-blur-sm text-white p-3 rounded-full hover:bg-white/30 transition-colors duration-200"
+                      aria-label="Ajouter à ma bibliothèque"
                     >
                       <Plus className="w-5 h-5" />
                     </button>
@@ -247,12 +254,12 @@ const RessourcesFeatured = () => {
 
                 {/* Rating */}
                 <div className="flex items-center gap-2 mb-4">
-                  <div className="flex items-center gap-1">
-                    {[...Array(5)].map((_, i) => (
+                  <div className="flex items-center gap-1" role="img" aria-label={`Note: ${resource.rating} sur 5`}>
+                    {[1, 2, 3, 4, 5].map((rating) => (
                       <Star
-                        key={i}
+                        key={rating}
                         className={`w-4 h-4 ${
-                          i < Math.floor(resource.rating) ? 'text-yellow-400 fill-current' : 'text-gray-300'
+                          rating <= resource.rating ? 'text-yellow-400 fill-current' : 'text-gray-300'
                         }`}
                       />
                     ))}
@@ -263,15 +270,17 @@ const RessourcesFeatured = () => {
                 {/* Action buttons */}
                 <div className="flex gap-2">
                   <button
-                    onClick={() => handleDownload(resource.id)}
+                    onClick={(e) => handleDownload(e, resource.id)}
                     className="flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 py-3 px-4 rounded-xl font-medium hover:shadow-lg hover:scale-105 transition-all duration-300"
+                    aria-label={`Télécharger ${resource.title}`}
                   >
                     <Download className="w-4 h-4" />
                     Télécharger
                   </button>
                   <button
-                    onClick={() => handleAddToLibrary(resource.id)}
+                    onClick={(e) => handleAddToLibrary(e, resource.id)}
                     className="p-3 border border-gray-200 rounded-xl hover:bg-gray-50 hover:border-yellow-200 transition-all duration-300"
+                    aria-label={`Ajouter ${resource.title} à ma bibliothèque`}
                   >
                     <Plus className="w-4 h-4 text-gray-600" />
                   </button>

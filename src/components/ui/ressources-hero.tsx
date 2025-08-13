@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
-import { Search, BookOpen, Download, UserPlus, Sparkles, Brain, Users, TrendingUp } from 'lucide-react';
+import React, { useState, useEffect, useCallback, KeyboardEvent } from 'react';
+import { Search, BookOpen, UserPlus, Sparkles, Brain, Users, TrendingUp } from 'lucide-react';
 
 interface SearchSuggestion {
   id: string;
@@ -46,15 +46,24 @@ const RessourcesHero = () => {
       setSuggestions(filtered);
       setShowSuggestions(true);
     } else {
+      setSuggestions([]);
       setShowSuggestions(false);
     }
-  }, [searchQuery]);
+  }, [searchQuery, mockSuggestions]);
 
-  const handleSearch = (query: string) => {
+  const handleSearch = useCallback((query: string) => {
     setSearchQuery(query);
     setShowSuggestions(false);
     // Ici on pourrait déclencher la recherche réelle
     console.log('Recherche:', query);
+  }, []);
+
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleSearch(searchQuery);
+    } else if (e.key === 'Escape') {
+      setShowSuggestions(false);
+    }
   };
 
   return (
@@ -105,12 +114,21 @@ const RessourcesHero = () => {
         {/* Search and filters */}
         <div className="max-w-4xl mx-auto mb-12">
           {/* Filters */}
-          <div className="flex flex-wrap justify-center gap-3 mb-8">
+          <div className="flex flex-wrap justify-center gap-3 mb-8" role="tablist" aria-label="Filtres de recherche">
             {filters.map((filter) => (
               <button
                 key={filter.name}
                 onClick={() => setSelectedFilter(filter.name)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-300 ${
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    setSelectedFilter(filter.name);
+                  }
+                }}
+                role="tab"
+                {...(selectedFilter === filter.name ? { 'aria-selected': 'true' } : {})}
+                data-aria-controls={`${filter.name.toLowerCase().replace(/\s+/g, '-')}-tab`}
+                className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-offset-2 focus:ring-offset-blue-900 ${
                   selectedFilter === filter.name
                     ? 'bg-yellow-400 text-gray-900 shadow-lg scale-105'
                     : 'bg-white/10 text-white hover:bg-white/20 backdrop-blur-sm'
@@ -131,18 +149,36 @@ const RessourcesHero = () => {
                 placeholder="Recherchez des ressources, guides, webinaires..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={handleKeyDown}
+                {...(showSuggestions && suggestions.length > 0 ? { 'aria-expanded': 'true' } : {})}
+                aria-haspopup="listbox"
+                aria-label="Rechercher des ressources"
+                data-aria-owns="search-suggestions"
                 className="w-full pl-12 pr-4 py-4 text-lg bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all duration-300"
               />
             </div>
 
             {/* Search suggestions */}
             {showSuggestions && suggestions.length > 0 && (
-              <div className="absolute top-full left-0 right-0 mt-2 bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/20 z-50">
+              <div 
+                id="search-suggestions"
+                className="absolute top-full left-0 right-0 mt-2 bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/20 z-50"
+                role="listbox"
+                aria-label="Suggestions de recherche"
+              >
                 {suggestions.map((suggestion) => (
                   <button
                     key={suggestion.id}
                     onClick={() => handleSearch(suggestion.title)}
-                    className="w-full text-left px-4 py-3 hover:bg-gray-100/50 transition-colors duration-200 flex items-center justify-between"
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        handleSearch(suggestion.title);
+                      }
+                    }}
+                    role="option"
+                    aria-selected="false"
+                    className="w-full text-left px-4 py-3 hover:bg-gray-100/50 transition-colors duration-200 flex items-center justify-between focus:outline-none focus:bg-gray-100/50"
                   >
                     <div>
                       <div className="font-medium text-gray-900">{suggestion.title}</div>
@@ -160,12 +196,18 @@ const RessourcesHero = () => {
 
         {/* CTA Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-          <button className="group flex items-center gap-3 bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 px-8 py-4 rounded-2xl font-bold text-lg hover:shadow-2xl hover:scale-105 transition-all duration-300">
+          <button 
+            className="group flex items-center gap-3 bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 px-8 py-4 rounded-2xl font-bold text-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-blue-900"
+            aria-label="Explorer toutes les ressources disponibles"
+          >
             <BookOpen className="w-6 h-6 group-hover:rotate-12 transition-transform duration-300" />
             Explorer les ressources
           </button>
           
-          <button className="group flex items-center gap-3 bg-white/10 backdrop-blur-sm border border-white/20 text-white px-8 py-4 rounded-2xl font-bold text-lg hover:bg-white/20 hover:scale-105 transition-all duration-300">
+          <button 
+            className="group flex items-center gap-3 bg-white/10 backdrop-blur-sm border border-white/20 text-white px-8 py-4 rounded-2xl font-bold text-lg hover:bg-white/20 hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-offset-2 focus:ring-offset-blue-900"
+            aria-label="Créer un compte pour accéder à toutes les fonctionnalités"
+          >
             <UserPlus className="w-6 h-6 group-hover:scale-110 transition-transform duration-300" />
             Créer un compte pour tout débloquer
           </button>

@@ -1,139 +1,124 @@
 "use client"
 
-import { useState, useRef, useEffect } from "react"
+import { useState, useRef, useCallback, useMemo } from "react"
 import Image from "next/image"
-import {
-  ExternalLink,
-  TrendingUp,
-  Users,
-  Clock,
-  Star,
-  Award,
-  Target,
-  Zap,
-  ChevronLeft,
+import { 
+  ExternalLink, 
+  TrendingUp, 
+  Users, 
+  Clock, 
+  Star, 
+  Award, 
+  Target, 
+  Zap, 
+  ChevronLeft, 
   ChevronRight,
+  Download
 } from "lucide-react"
+import { getAllCaseStudies } from "@/data"
+import type { CaseStudy } from "@/data/types"
+
+// Mappage des couleurs pour les badges de catégorie
+const categoryColors: Record<string, string> = {
+  'Développement Web': 'from-blue-500 to-cyan-500',
+  'Application Mobile': 'from-purple-500 to-pink-500',
+  'E-commerce': 'from-green-500 to-emerald-500',
+  'UI/UX Design': 'from-amber-500 to-orange-500',
+  'Consulting': 'from-rose-500 to-pink-500',
+  'Formation': 'from-indigo-500 to-blue-500'
+}
+
+interface CaseStudyCardProps {
+  caseStudy: CaseStudy
+  isActive: boolean
+  onClick: () => void
+}
+
+const CaseStudyCard: React.FC<CaseStudyCardProps> = ({ caseStudy, isActive, onClick }) => {
+  return (
+    <div 
+      className={`relative rounded-lg overflow-hidden cursor-pointer transition-all duration-300 ${
+        isActive ? 'ring-4 ring-blue-500 scale-105' : 'opacity-70 hover:opacity-100'
+      }`}
+      onClick={onClick}
+    >
+      <div className="relative h-40 md:h-48">
+        <Image
+          src={caseStudy.image?.src || '/images/placeholder-project.jpg'}
+          alt={caseStudy.image?.alt || caseStudy.title}
+          fill
+          className="object-cover"
+          sizes="(max-width: 768px) 100vw, 50vw"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
+          <h3 className="font-bold text-lg">{caseStudy.title}</h3>
+          <p className="text-sm text-gray-200">{caseStudy.client}</p>
+        </div>
+      </div>
+    </div>
+  )
+}
 
 const ServicesCaseStudies = () => {
-  const [activeCase, setActiveCase] = useState(0)
+  const [activeIndex, setActiveIndex] = useState(0)
   const sectionRef = useRef<HTMLElement>(null)
+  
+  // Récupération des études de cas depuis le module de données
+  const caseStudies = getAllCaseStudies()
+  const currentCase = caseStudies[activeIndex]
 
-  const caseStudies = [
-    {
-      id: 1,
-      title: "E-commerce Luxe",
-      client: "Maison Élégance",
-      category: "E-commerce & UX",
-      image: "", // Removed placeholder.svg reference
-      description:
-        "Transformation digitale complète d&apos;une maison de couture parisienne avec création d&apos;une plateforme e-commerce haut de gamme.",
-      challenge:
-        "Digitaliser une marque centenaire tout en préservant son identité luxueuse et son savoir-faire artisanal.",
-      solution:
-        "Plateforme e-commerce sur-mesure avec expérience immersive, configurateur 3D et service client premium.",
-      results: {
-        revenue: "+340%",
-        conversion: "+85%",
-        satisfaction: "98%",
-        time: "6 mois",
-      },
-      technologies: ["Next.js", "Shopify Plus", "Three.js", "Stripe"],
-      color: "from-purple-600 to-pink-500",
-      testimonial: {
-        text: "IOI a su comprendre notre univers et créer une expérience digitale qui reflète parfaitement nos valeurs. Les résultats dépassent nos attentes.",
-        author: "Marie Dubois",
-        role: "Directrice Marketing",
-      },
-    },
-    {
-      id: 2,
-      title: "App Fitness Revolution",
-      client: "FitTech Pro",
-      category: "Application Mobile",
-      image: "", // Removed placeholder.svg reference
-      description:
-        "Développement d'une application mobile révolutionnaire pour le coaching sportif personnalisé avec IA.",
-      challenge:
-        "Créer une app qui rivalise avec les leaders du marché tout en proposant une approche innovante du coaching.",
-      solution: "Application native avec IA pour coaching personnalisé, réalité augmentée et communauté intégrée.",
-      results: {
-        downloads: "500K+",
-        retention: "75%",
-        rating: "4.8/5",
-        time: "8 mois",
-      },
-      technologies: ["React Native", "TensorFlow", "Firebase", "ARKit"],
-      color: "from-green-600 to-emerald-500",
-      testimonial: {
-        text: "L'équipe IOI a transformé notre vision en réalité. L'app dépasse toutes nos attentes en termes de performance et d'engagement utilisateur.",
-        author: "Thomas Martin",
-        role: "CEO FitTech Pro",
-      },
-    },
-    {
-      id: 3,
-      title: "Plateforme SaaS B2B",
-      client: "DataFlow Solutions",
-      category: "SaaS & Dashboard",
-      image: "", // Removed placeholder.svg reference
-      description:
-        "Création d'une plateforme SaaS complète pour la gestion et l'analyse de données en temps réel pour les entreprises.",
-      challenge:
-        "Développer une solution scalable capable de traiter des millions de données en temps réel avec une UX intuitive.",
-      solution:
-        "Architecture microservices avec dashboard temps réel, API robuste et système de notifications intelligent.",
-      results: {
-        clients: "200+",
-        uptime: "99.9%",
-        performance: "+60%",
-        time: "12 mois",
-      },
-      technologies: ["React", "Node.js", "MongoDB", "Redis", "Docker"],
-      color: "from-blue-600 to-cyan-500",
-      testimonial: {
-        text: "IOI a livré une plateforme exceptionnelle qui a révolutionné notre façon de travailler. La qualité technique est remarquable.",
-        author: "Sophie Laurent",
-        role: "CTO DataFlow",
-      },
-    },
-    {
-      id: 4,
-      title: "Transformation Digitale",
-      client: "Groupe Industriel Alpha",
-      category: "Digital Transformation",
-      image: "", // Removed placeholder.svg reference
-      description:
-        "Modernisation complète du système d'information d'un groupe industriel avec migration cloud et automatisation.",
-      challenge: "Moderniser un système legacy de 20 ans sans interrompre les opérations critiques de production.",
-      solution: "Migration progressive vers le cloud avec automatisation des processus et formation des équipes.",
-      results: {
-        efficiency: "+45%",
-        costs: "-30%",
-        downtime: "0%",
-        time: "18 mois",
-      },
-      technologies: ["AWS", "Kubernetes", "Terraform", "Jenkins"],
-      color: "from-orange-600 to-red-500",
-      testimonial: {
-        text: "IOI a géré cette transformation complexe avec un professionnalisme exemplaire. Aucune interruption de service pendant 18 mois.",
-        author: "Jean-Pierre Moreau",
-        role: "Directeur IT",
-      },
-    },
-  ]
+  const nextCase = useCallback(() => {
+    setActiveIndex(prev => (prev + 1) % caseStudies.length)
+  }, [caseStudies.length])
 
+  const prevCase = useCallback(() => {
+    setActiveIndex(prev => (prev - 1 + caseStudies.length) % caseStudies.length)
+  }, [caseStudies.length])
 
+  const selectCase = useCallback((index: number) => {
+    setActiveIndex(index)
+  }, [])
 
-  const nextCase = () => {
-    setActiveCase((prev) => (prev + 1) % caseStudies.length)
+  // Mappage des icônes pour les résultats
+  const resultIcons = useMemo<Record<string, React.ReactNode>>(() => ({
+    revenue: <TrendingUp className="w-5 h-5 text-green-500" />,
+    conversion: <TrendingUp className="w-5 h-5 text-blue-500" />,
+    satisfaction: <Star className="w-5 h-5 text-yellow-500" />,
+    downloads: <Download className="w-5 h-5 text-purple-500" />,
+    clients: <Users className="w-5 h-5 text-cyan-500" />,
+    performance: <Zap className="w-5 h-5 text-amber-500" />
+  }), [])
+
+  // Traduction des clés de résultats
+  const getResultLabel = (key: string): string => {
+    const labels: Record<string, string> = {
+      revenue: "Chiffre d'affaires",
+      conversion: "Taux de conversion",
+      satisfaction: "Satisfaction client",
+      downloads: "Téléchargements",
+      retention: "Taux de rétention",
+      rating: "Note moyenne",
+      clients: "Nouveaux clients",
+      uptime: "Disponibilité",
+      performance: "Performance",
+      efficiency: "Efficacité",
+      costs: "Réduction des coûts",
+      downtime: "Temps d'arrêt",
+      default: key
+    }
+    return labels[key] || labels.default
   }
 
-  const prevCase = () => {
-    setActiveCase((prev) => (prev - 1 + caseStudies.length) % caseStudies.length)
+  if (!currentCase) {
+    return (
+      <section ref={sectionRef} className="relative py-12 md:py-20 overflow-hidden">
+        <div className="container mx-auto px-4 text-center">
+          <p>Aucune étude de cas disponible pour le moment.</p>
+        </div>
+      </section>
+    )
   }
-
-  const currentCase = caseStudies[activeCase]
 
   return (
     <section ref={sectionRef} className="relative py-12 md:py-20 overflow-hidden">
@@ -146,20 +131,14 @@ const ServicesCaseStudies = () => {
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         {/* Header */}
         <div className="text-center mb-8 md:mb-16 px-2">
-          <div
-            className="inline-flex items-center gap-2 px-4 py-2 bg-white/60 backdrop-blur-sm rounded-full border border-white/20 shadow-lg mb-4 md:mb-6"
-          >
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/60 backdrop-blur-sm rounded-full border border-white/20 shadow-lg mb-4 md:mb-6">
             <Award className="w-4 h-4 md:w-5 md:h-5 text-blue-600" />
             <span className="text-xs md:text-sm font-medium text-gray-700">Études de Cas</span>
           </div>
-          <h2
-            className="text-3xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600 bg-clip-text text-transparent mb-4 md:mb-6"
-          >
+          <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600 bg-clip-text text-transparent mb-4 md:mb-6">
             Projets Réalisés
           </h2>
-          <p
-            className="text-base md:text-xl text-gray-600 max-w-3xl mx-auto"
-          >
+          <p className="text-base md:text-xl text-gray-600 max-w-3xl mx-auto">
             Découvrez comment nous avons aidé nos clients à atteindre leurs objectifs avec des solutions innovantes
           </p>
         </div>
@@ -170,21 +149,33 @@ const ServicesCaseStudies = () => {
             <div className="flex flex-col lg:grid lg:grid-cols-2 gap-0">
               {/* Image */}
               <div className="relative h-64 sm:h-80 md:h-96 lg:h-auto lg:min-h-[400px] min-h-[300px] bg-gray-100">
-                <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-blue-50 to-purple-50">
-                  <span className="text-gray-400 text-lg font-medium">
-                    {currentCase.client}
-                  </span>
-                </div>
+                {currentCase.image?.src ? (
+                  <Image
+                    src={currentCase.image.src}
+                    alt={currentCase.image.alt || currentCase.title}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                  />
+                ) : (
+                  <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-blue-50 to-purple-50">
+                    <span className="text-gray-400 text-lg font-medium">
+                      {currentCase.client}
+                    </span>
+                  </div>
+                )}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent" />
 
                 {/* Category Badge */}
-                <div className="absolute top-4 left-4 md:top-6 md:left-6">
-                  <div
-                    className={`px-3 py-1.5 md:px-4 md:py-2 bg-gradient-to-r ${currentCase.color} text-white text-xs md:text-sm font-semibold rounded-full shadow-lg`}
-                  >
-                    {currentCase.category}
+                {currentCase.category && (
+                  <div className="absolute top-4 left-4 md:top-6 md:left-6">
+                    <div className={`px-3 py-1.5 md:px-4 md:py-2 bg-gradient-to-r ${
+                      categoryColors[currentCase.category] || 'from-gray-600 to-gray-800'
+                    } text-white text-xs md:text-sm font-semibold rounded-full shadow-lg`}>
+                      {currentCase.category}
+                    </div>
                   </div>
-                </div>
+                )}
 
                 {/* Navigation */}
                 <div className="absolute bottom-4 right-4 md:bottom-6 md:right-6 flex gap-2">
@@ -209,61 +200,48 @@ const ServicesCaseStudies = () => {
               <div className="p-8 lg:p-12">
                 <div className="mb-6">
                   <h3 className="text-3xl font-bold text-gray-900 mb-2">{currentCase.title}</h3>
-                  <p className="text-lg text-blue-600 font-semibold">{currentCase.client}</p>
+                  {currentCase.client && (
+                    <p className="text-lg text-blue-600 font-semibold">{currentCase.client}</p>
+                  )}
                 </div>
 
-                <p className="text-gray-600 leading-relaxed mb-8">{currentCase.description}</p>
+                {currentCase.description && (
+                  <p className="text-gray-600 leading-relaxed mb-8">{currentCase.description}</p>
+                )}
 
                 {/* Results Grid */}
-                <div className="grid grid-cols-2 gap-4 mb-8">
-                  {Object.entries(currentCase.results).map(([key, value], index) => (
-                    <div key={key} className="text-center p-4 bg-gray-50/80 rounded-xl">
-                      <div className="text-2xl font-bold text-gray-900 mb-1">{value}</div>
-                      <div className="text-sm text-gray-600 capitalize">
-                        {key === "revenue"
-                          ? "Chiffre d'affaires"
-                          : key === "conversion"
-                            ? "Conversion"
-                            : key === "satisfaction"
-                              ? "Satisfaction"
-                              : key === "downloads"
-                                ? "Téléchargements"
-                                : key === "retention"
-                                  ? "Rétention"
-                                  : key === "rating"
-                                    ? "Note App Store"
-                                    : key === "clients"
-                                      ? "Clients"
-                                      : key === "uptime"
-                                        ? "Disponibilité"
-                                        : key === "performance"
-                                          ? "Performance"
-                                          : key === "efficiency"
-                                            ? "Efficacité"
-                                            : key === "costs"
-                                              ? "Réduction coûts"
-                                              : key === "downtime"
-                                                ? "Interruption"
-                                                : "Durée projet"}
+                {currentCase.results && Object.keys(currentCase.results).length > 0 && (
+                  <div className="grid grid-cols-2 gap-4 mb-8">
+                    {Object.entries(currentCase.results).map(([key, value]) => (
+                      <div key={key} className="text-center p-4 bg-gray-50/80 rounded-xl">
+                        <div className="flex items-center justify-center gap-2 mb-1">
+                          {resultIcons[key] || <TrendingUp className="w-5 h-5 text-gray-400" />}
+                          <div className="text-2xl font-bold text-gray-900">{value}</div>
+                        </div>
+                        <div className="text-sm text-gray-600">
+                          {getResultLabel(key)}
+                        </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Technologies */}
-                <div className="mb-8">
-                  <h4 className="text-sm font-semibold text-gray-700 mb-3">Technologies utilisées</h4>
-                  <div className="flex flex-wrap gap-2">
-                    {currentCase.technologies.map((tech, index) => (
-                      <span
-                        key={index}
-                        className="px-3 py-1.5 bg-gradient-to-r from-gray-100 to-gray-200 text-gray-700 text-sm font-medium rounded-full"
-                      >
-                        {tech}
-                      </span>
                     ))}
                   </div>
-                </div>
+                )}
+
+                {/* Technologies */}
+                {currentCase.technologies && currentCase.technologies.length > 0 && (
+                  <div className="mb-8">
+                    <h4 className="text-sm font-semibold text-gray-700 mb-3">Technologies utilisées</h4>
+                    <div className="flex flex-wrap gap-2">
+                      {currentCase.technologies.map((tech, index) => (
+                        <span
+                          key={index}
+                          className="px-3 py-1.5 bg-gradient-to-r from-gray-100 to-gray-200 text-gray-700 text-sm font-medium rounded-full"
+                        >
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
                 {/* Testimonial */}
                 <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-6 mb-8">
@@ -307,9 +285,9 @@ const ServicesCaseStudies = () => {
             {caseStudies.map((caseStudy, index) => (
               <button
                 key={caseStudy.id}
-                onClick={() => setActiveCase(index)}
+                onClick={() => setActiveIndex(index)}
                 className={`relative group overflow-hidden rounded-2xl transition-all duration-300 ${
-                  activeCase === index ? "ring-4 ring-blue-500/50 scale-105" : "hover:scale-105 hover:shadow-lg"
+                  activeIndex === index ? "ring-4 ring-blue-500/50 scale-105" : "hover:scale-105 hover:shadow-lg"
                 }`}
               >
                 <div className="aspect-video relative">
@@ -323,7 +301,7 @@ const ServicesCaseStudies = () => {
                     <h4 className="text-white font-semibold text-sm mb-1">{caseStudy.title}</h4>
                     <p className="text-white/80 text-xs">{caseStudy.client}</p>
                   </div>
-                  {activeCase === index && (
+                  {activeIndex === index && (
                     <div className="absolute inset-0 bg-blue-500/20 flex items-center justify-center">
                       <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
                         <Zap className="w-4 h-4 text-blue-600" />

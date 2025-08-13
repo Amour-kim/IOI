@@ -16,7 +16,7 @@ const nextConfig: NextConfig = {
         hostname: 'localhost',
         port: '8080',
         pathname: '/media/**'
-      },
+      }
     ],
     formats: ['image/webp', 'image/avif'],
     minimumCacheTTL: 60,

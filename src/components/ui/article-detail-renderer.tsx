@@ -50,7 +50,6 @@ export default function ArticleDetailRenderer({ article }: ArticleDetailRenderer
         sidebarContent: `Points clés à retenir:\n\n• Approche progressive recommandée\n• Résultats mesurables à court terme\n• Impact positif sur la productivité\n• Facilité d'intégration dans les processus existants`
       } as const
     ]
-
     return sections
   }
 
@@ -150,13 +149,27 @@ export default function ArticleDetailRenderer({ article }: ArticleDetailRenderer
 
   return (
     <main className="flex-1 mt-24">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="mb-8">
-          <Link href="/blog" className="inline-flex items-center text-blue-600 hover:text-blue-800 transition-colors">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="mb-6">
+          <Link href="/ressources/blog" className="inline-flex items-center text-blue-600 hover:text-blue-800 transition-colors">
             <ArrowLeft className="w-5 h-5 mr-2" />
             Retour aux articles
           </Link>
         </div>
+        
+        {/* Image de couverture */}
+        {article.thumbnail && (
+          <div className="mb-10 rounded-lg overflow-hidden shadow-xl">
+            <Image
+              src={article.thumbnail}
+              alt={article.title}
+              width={1200}
+              height={630}
+              className="w-full h-auto max-h-[500px] object-cover"
+              priority
+            />
+          </div>
+        )}
 
         <article>
           <header className="mb-8">

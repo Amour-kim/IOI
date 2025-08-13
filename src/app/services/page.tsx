@@ -17,7 +17,6 @@ export default function Services() {
     <div className="flex flex-col">
       <Header />
       <Question />
-      {/* <ServicesGrid /> */}
       <Service />
       <Reference />
       <ServicesCaseStudies />

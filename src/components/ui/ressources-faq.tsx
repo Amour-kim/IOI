@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import Image from 'next/image';
 import type { FAQItem } from '@/lib/data';
 
 const LOGO_URL = "/logo.png";
@@ -11,11 +12,14 @@ export default function RessourcesFAQ({ data }: { data: FAQItem[] }) {
     <section className="relative py-20 px-4 sm:px-8 md:px-16 lg:px-32 overflow-hidden bg-gradient-to-br from-amber-50/80 to-orange-100/60 rounded-3xl shadow-xl mb-16">
       {/* Logo animé en arrière-plan */}
       <div className="pointer-events-none absolute inset-0 flex items-center justify-center z-0">
-        <img
+        <Image
           src={LOGO_URL}
           alt="Logo IOI"
+          width={800}
+          height={800}
           className="w-[60vw] max-w-3xl opacity-10 blur-[2px] animate-spin-slow drop-shadow-2xl"
           style={{ animationDuration: "28s" }}
+          priority
         />
       </div>
       <div className="relative z-10 flex flex-col items-center">

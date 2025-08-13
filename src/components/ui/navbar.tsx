@@ -1,132 +1,38 @@
 "use client"
 
-import React, { useState, useRef, useEffect, ReactNode, useCallback } from "react"
+import React, { useState, useRef, useEffect, useCallback } from "react"
 import Link from "next/link"
-import { LucideIcon } from "lucide-react"
-import {
-  Youtube,
-  Linkedin,
-  Instagram,
-  Twitter,
-  Facebook,
-  MapPin,
-  HelpCircle,
-  PlayCircle,
-  Edit,
-  Code,
-  Monitor,
-  Smartphone,
-  Globe,
-  ChevronDown,
-  Menu,
-  X,
-  Home,
-  User,
-  Settings,
-  Package,
-  Briefcase,
-  Lightbulb,
-  Code2,
-  Paintbrush,
-  Megaphone,
-  GraduationCap,
-  Settings2,
-  Headset,
-  Video,
-  ShieldCheck,
-  Wrench,
-  Server,
-  ShieldAlert,
-  LockKeyhole,
-  Brain,
-  BookOpenText,
-  Newspaper,
-  CalendarCheck,
-  Contact2,
-  FileText,
-  Mail,
-  Phone,
-  Grid,
-  Star,
-  Heart,
-  Calendar,
-  Palette,
-  TrendingUp,
-  BookOpen,
-  Sparkles,
-  ArrowRight,
-  Clock,
-  Shield,
-  Network,
-  Rocket,
-  Cloud,
-  Lock,
+import { 
+  Home, Package, Briefcase, BookOpenText, CalendarCheck, Contact2,
+  FileText, Newspaper, Video, HelpCircle, ChevronDown, Menu, X, Mail, Clock,
+  Facebook, Twitter, Instagram, Linkedin, Youtube, Phone, MapPin,
+  Sparkles
 } from "lucide-react"
+import { getUniqueServices, filterServicesByStatus } from "@/lib/utils/service-utils"
+import { getIconComponent } from "@/lib/utils/icon-utils"
+import { servicesData } from "@/data/services/services.data"
+import { ModernNavbarProps, MenuItem, SubMenuItem } from './navbar.types'
 import { usePathname } from "next/navigation"
 import dynamic from 'next/dynamic'
-
 // Chargement dynamique côté client uniquement
 const LanguageSwitcher = dynamic(
   () => import('./LanguageSwitcher'),
   { ssr: false }
 )
 
-// Types pour les éléments de menu
-type SubMenuItem = {
-  id: string;
-  label: string;
-  href: string;
-  icon: LucideIcon;
-  description?: string;
-};
-
-type MenuItem = {
-  id: string;
-  label: string;
-  href: string;
-  icon: LucideIcon;
-  subItems: SubMenuItem[];
-};
-
-type SocialLink = {
-  icon: LucideIcon;
-  href: string;
-  label: string;
-};
-
-type CompanyInfo = {
-  email: string;
-  phone: string;
-  address: string;
-  hours: string;
-};
-
-type ActiveBg = {
-  left: number;
-  top: number;
-  width: number;
-  height: number;
-  visible: boolean;
-};
-
-interface ModernNavbarProps {
-  logo?: string;
-  activeItem?: string | null;
-  activeSubItem?: string | null;
-  onItemClick?: (item: MenuItem) => void;
-  onSubItemClick?: (subItem: SubMenuItem) => void;
-  className?: string;
-  variant?: 'default' | 'glass' | 'dark';
-  showTopBar?: boolean;
-  companyInfo?: Partial<CompanyInfo>;
-  socialLinks?: SocialLink[];
-  menuItems?: MenuItem[];
+// Interface pour le fond actif du menu
+interface ActiveBg {
+  left: number
+  top: number
+  width: number
+  height: number
+  visible: boolean
 }
 
 const ModernNavbar: React.FC<ModernNavbarProps> = ({
   logo = "IOI",
-  activeItem: _activeItem = null,
-  activeSubItem: _subItem = null,
+  activeItem: activeItemProp = null,
+  activeSubItem: activeSubItemProp = null,
   onItemClick = () => {},
   onSubItemClick = () => {},
   className = "",
@@ -165,120 +71,39 @@ const ModernNavbar: React.FC<ModernNavbarProps> = ({
       label: "Services",
       icon: Briefcase,
       href: "/services",
-      subItems: [
-        {
-          id: "consulting",
-          label: "Consulting",
-          href: "/services/consulting",
-          icon: Lightbulb,
-          description: "Conseil stratégique",
-        },
-        {
-          id: "development",
-          label: "Développement",
-          href: "/services/development",
-          icon: Code2,
-          description: "Développement sur mesure",
-        },
-        {
-          id: "design",
-          label: "Design",
-          href: "/services/design",
-          icon: Paintbrush,
-          description: "Design créatif"
-        },
-        {
-          id: "marketing",
-          label: "Marketing",
-          href: "/services/marketing",
-          icon: Megaphone,
-          description: "Marketing digital",
-        },
-        {
-          id: "formation",
-          label: "Formation",
-          href: "/services/formation",
-          icon: GraduationCap,
-          description: "Formations sur-mesure"
-        },
-        {
-          id: "maintenance",
-          label: "Maintenance",
-          href: "/services/maintenance",
-          icon: Settings2,
-          description: "Maintenance préventive",
-        },
-        {
-          id: "support",
-          label: "Support",
-          href: "/services/support",
-          icon: Headset,
-          description: "Support client premium",
-        },
-        {
-          id: "media",
-          label: "Media",
-          href: "/services/media",
-          icon: Video,
-          description: "Production média"
-        },
-        {
-          id: "securite-reseau",
-          label: "Sécurité Réseau",
-          href: "/services/securite-reseau",
-          icon: ShieldCheck,
-          description: "Protection réseau avancée",
-        },
-        {
-          id: "architecture-reseau",
-          label: "Architecture Réseau",
-          href: "/services/architecture-reseau",
-          icon: Network,
-          description: "Conception réseau optimale",
-        },
-        {
-          id: "maintenance-equipements-reseau",
-          label: "Maintenance Équipements",
-          href: "/services/maintenance-equipements-reseau",
-          icon: Wrench,
-          description: "Maintenance équipements réseau",
-        },
-        {
-          id: "deploiement-reseau",
-          label: "Déploiement Réseau",
-          href: "/services/deploiement-reseau",
-          icon: Server,
-          description: "Installation et migration réseau",
-        },
-        {
-          id: "cybersecurite",
-          label: "Cybersécurité",
-          href: "/services/cybersecurite",
-          icon: ShieldAlert,
-          description: "Protection cybersécurité avancée",
-        },
-        {
-          id: "solutions-cloud",
-          label: "Solutions Cloud",
-          href: "/services/solutions-cloud",
-          icon: Cloud,
-          description: "Infrastructure et DevOps cloud",
-        },
-        {
-          id: "solutions-vpn",
-          label: "Solutions VPN",
-          href: "/services/solutions-vpn",
-          icon: LockKeyhole,
-          description: "Connectivité sécurisée VPN",
-        },
-        {
-          id: "ia-intelligence-artificielle",
-          label: "Intelligence Artificielle",
-          href: "/services/ia-intelligence-artificielle",
-          icon: Brain,
-          description: "Solutions IA sur mesure pour votre entreprise",
-        },
-      ],
+      subItems: filterServicesByStatus(getUniqueServices(servicesData), 'active').map(service => {
+        // Déterminer l'icône en fonction du type de service
+        let IconComponent: React.ComponentType<any> | null = null;
+        switch(service.type) {
+          case 'web-development':
+            IconComponent = getIconComponent('CODE_2');
+            break;
+          case 'mobile-development':
+            IconComponent = getIconComponent('SMARTPHONE');
+            break;
+          case 'security':
+            IconComponent = getIconComponent('SHIELD_CHECK');
+            break;
+          case 'design':
+            IconComponent = getIconComponent('PAINTBRUSH');
+            break;
+          case 'training':
+            IconComponent = getIconComponent('GRADUATION_CAP');
+            break;
+          default:
+            IconComponent = getIconComponent('BRIEFCASE');
+        }
+        
+        return {
+          id: service.slug,
+          label: service.title,
+          href: `/services/${service.slug}`,
+          icon: IconComponent, // Utilisation directe du composant icône
+          description: service.shortDescription || 'En savoir plus',
+          disabled: service.status !== 'active',
+          className: service.status !== 'active' ? 'opacity-60' : ''
+        };
+      })
     },
     {
       id: "ressources",
@@ -384,8 +209,8 @@ const ModernNavbar: React.FC<ModernNavbarProps> = ({
   
   const [hoveredSocial, setHoveredSocial] = useState<number | null>(null)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [activeItem, setActiveItem] = useState<string | null>(_activeItem)
-  const [activeSubItem, setActiveSubItem] = useState<string | null>(_subItem)
+  const [activeItem, setActiveItem] = useState<string | null>(activeItemProp || null);
+  const [activeSubItem, setActiveSubItem] = useState<string | null>(activeSubItemProp || null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [hoveredItem, setHoveredItem] = useState<string | null>(null)
   const [navbarBlur, setNavbarBlur] = useState(0)
@@ -817,9 +642,11 @@ const ModernNavbar: React.FC<ModernNavbarProps> = ({
                                     ${isSubActive ? "bg-blue-100" : "bg-gray-100 group-hover:bg-blue-100"}
                                   `}
                                   >
-                                    <SubIcon
-                                      className={`w-3 h-3 ${isSubActive ? "text-blue-600" : "text-gray-600 group-hover:text-blue-600"}`}
-                                    />
+                                    {SubIcon && typeof SubIcon !== 'string' && (
+                                      <SubIcon
+                                        className={`w-3 h-3 ${isSubActive ? "text-blue-600" : "text-gray-600 group-hover:text-blue-600"}`}
+                                      />
+                                    )}
                                   </div>
 
                                   <div className="flex-1 min-w-0">
@@ -942,9 +769,9 @@ const ModernNavbar: React.FC<ModernNavbarProps> = ({
                                 animationDelay: `${index * 100 + subIndex * 50}ms`,
                               }}
                             >
-                              <SubIcon
-                                className={`w-4 h-4 transition-all duration-300 group-hover:scale-110 ${isSubActive ? "text-blue-600" : ""}`}
-                              />
+                              {SubIcon && typeof SubIcon !== 'string' && (
+                                <SubIcon className="w-4 h-4 mr-2" />
+                              )}
                               <span className="text-sm">{subItem.label}</span>
                               {isSubActive && <div className="w-1.5 h-1.5 bg-blue-500 rounded-full ml-auto"></div>}
                             </Link>

@@ -21,7 +21,7 @@ const ServicesHero = () => {
       setCurrentService((prev) => (prev + 1) % services.length)
     }, 3000)
     return () => clearInterval(interval)
-  }, [])
+  }, [services.length])
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">

@@ -98,10 +98,160 @@
     animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
   }
   50% {
-    transform: translateY(0);
+    transform: none;
     animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
   }
 }
+
+/* Service Orbit Container */
+.serviceOrbitContainer {
+  position: relative;
+}
+
+.serviceOrbitBackground {
+  position: absolute;
+  inset: 0;
+  height: calc(100% + 120px);
+  top: -60px;
+  margin: 0 -1rem;
+  background: linear-gradient(to right, rgba(17, 24, 39, 0.5), rgba(31, 41, 55, 0.3), rgba(17, 24, 39, 0.5));
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  border-radius: 1.5rem;
+  border: 1px solid rgba(245, 158, 11, 0.1);
+}
+
+.serviceOrbitCircles {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.serviceOrbitCircle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 9999px;
+  border-width: 1px;
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.serviceOrbitCircle1 {
+  width: 24rem;
+  height: 24rem;
+  border-color: rgba(245, 158, 11, 0.1);
+}
+
+.serviceOrbitCircle2 {
+  width: 20rem;
+  height: 20rem;
+  border-color: rgba(249, 115, 22, 0.05);
+  animation-delay: 1s;
+}
+
+.serviceOrbitCircle3 {
+  width: 16rem;
+  height: 16rem;
+  border-color: rgba(245, 158, 11, 0.05);
+  animation-delay: 2s;
+}
+
+.serviceOrbitContent {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 0;
+  min-height: 400px;
+}
+
+@media (min-width: 640px) {
+  .serviceOrbitContent {
+    padding: 3rem 0;
+  }
+}
+
+@media (min-width: 768px) {
+  .serviceOrbitContent {
+    padding: 4rem 0;
+  }
+}
+
+.serviceCenterLogo {
+  position: absolute;
+  z-index: 20;
+  width: 8rem;
+  height: 8rem;
+  border-radius: 9999px;
+  background: linear-gradient(to bottom right, #f59e0b, #f97316);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  border: 4px solid rgba(255, 255, 255, 0.1);
+}
+
+.serviceCenterLogoText {
+  text-align: center;
+}
+
+.serviceCenterLogoIcon {
+  width: 2rem;
+  height: 2rem;
+  color: white;
+  margin: 0 auto 0.5rem;
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.serviceCenterLogoLabel {
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+/* Styles pour les services en orbite */
+.serviceOrbitItem {
+  position: absolute;
+  z-index: 10;
+  cursor: pointer;
+  width: min(180px, 40vw);
+  height: min(180px, 40vw);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.serviceOrbitItem:hover {
+  transform: scale(1.05);
+  z-index: 20;
+}
+
+/* Responsive pour les services en orbite */
+@media (min-width: 768px) {
+  .serviceOrbitItem {
+    width: 200px;
+    height: 200px;
+  }
+}
+
+@media (min-width: 768px) {
+  .serviceCenterLogo {
+    width: 10rem;
+    height: 10rem;
+  }
+  
+  .serviceCenterLogoIcon {
+    width: 2.5rem;
+    height: 2.5rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .serviceCenterLogoLabel {
+    font-size: 0.875rem;
+  }
+}
+
 
 @keyframes float {
   0%, 100% {
@@ -119,4 +269,77 @@
 
 .iconAmber500 {
   color: #f59e0b;
+}
+
+/* Service Orbit Item with dynamic position */
+.serviceOrbitItem {
+  position: absolute;
+  z-index: 10;
+  cursor: pointer;
+  width: min(180px, 40vw);
+  height: min(180px, 40vw);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  will-change: transform;
+  --translate-x: 0;
+  --translate-y: 0;
+}
+
+.serviceOrbitItem:hover {
+  transform: scale(1.05);
+  z-index: 20;
+}
+
+/* Classe pour positionner dynamiquement les éléments en orbite */
+.orbitItemPositioned {
+  transform: translate(
+    var(--translate-x, 0),
+    var(--translate-y, 0)
+  );
+}
+
+/* Service Card Styles */
+.serviceCard {
+  width: 100%;
+  height: 100%;
+  border-radius: 1rem;
+  background: linear-gradient(to bottom right, rgba(31, 41, 55, 0.9), rgba(17, 24, 39, 0.9));
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.serviceCard:hover {
+  transform: scale(1.05);
+  border-color: rgba(245, 158, 11, 0.6);
+  background: linear-gradient(to bottom right, rgba(31, 41, 55, 0.95), rgba(17, 24, 39, 0.95));
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.popularBadge {
+  position: absolute;
+  top: -0.5rem;
+  right: -0.5rem;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 9999px;
+  background: linear-gradient(to right, #f59e0b, #f97316);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.popularBadgeText {
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1;
 }

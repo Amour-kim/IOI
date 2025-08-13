@@ -15,6 +15,7 @@ import Suivis from "@/components/ui/suivis";
 import ModernEmployeeCarousel from "@/components/ui/equipes";
 import SocialSidebar from "@/components/ui/social-sidebar";
 import History from "@/components/ui/history";
+import dynamic from 'next/dynamic';
 
 
 export default function Home() {
