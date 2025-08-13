@@ -4,6 +4,9 @@ import dynamic from 'next/dynamic';
 import Link from "next/link"
 import { Facebook, Linkedin, Youtube, Instagram } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { useMemo } from 'react';
+import { servicesData } from '@/data/services/services.data';
+import { getUniqueServices, filterServicesByStatus } from '@/lib/utils/service-utils';
 
 // Chargement dynamique côté client uniquement
 const FooterLanguageSwitcher = dynamic(
@@ -12,6 +15,13 @@ const FooterLanguageSwitcher = dynamic(
 );
 
 export default function ClientFooter() {
+  // Build unique active services list (same logic as navbar)
+  const serviceLinks = useMemo(() => {
+    const unique = getUniqueServices(servicesData);
+    const active = filterServicesByStatus(unique, 'active');
+    return active.map(s => ({ href: `/services/${s.slug}`, label: s.title }));
+  }, []);
+
   return (
     <footer className="bg-[#1a1a1a] text-[#d3dde8] py-16 px-6 relative overflow-hidden">
       {/* Single Large Animated Background Logo */}
@@ -125,22 +135,11 @@ export default function ClientFooter() {
           <div className="lg:col-span-1">
             <h3 className="text-[#ffffff] font-semibold text-lg mb-6">Services</h3>
             <nav className="space-y-3">
-              <Link href="/services/consulting" className="block text-sm hover:text-[#3884ff] transition-colors">Consulting</Link>
-              <Link href="/services/development" className="block text-sm hover:text-[#3884ff] transition-colors">Développement</Link>
-              <Link href="/services/design" className="block text-sm hover:text-[#3884ff] transition-colors">Design</Link>
-              <Link href="/services/marketing" className="block text-sm hover:text-[#3884ff] transition-colors">Marketing</Link>
-              <Link href="/services/formation" className="block text-sm hover:text-[#3884ff] transition-colors">Formation</Link>
-              <Link href="/services/maintenance" className="block text-sm hover:text-[#3884ff] transition-colors">Maintenance</Link>
-              <Link href="/services/support" className="block text-sm hover:text-[#3884ff] transition-colors">Support</Link>
-              <Link href="/services/media" className="block text-sm hover:text-[#3884ff] transition-colors">Media</Link>
-              <Link href="/services/securite-reseau" className="block text-sm hover:text-[#3884ff] transition-colors">Sécurité Réseau</Link>
-              <Link href="/services/architecture-reseau" className="block text-sm hover:text-[#3884ff] transition-colors">Architecture Réseau</Link>
-              <Link href="/services/maintenance-equipements-reseau" className="block text-sm hover:text-[#3884ff] transition-colors">Maintenance Équipements</Link>
-              <Link href="/services/deploiement-reseau" className="block text-sm hover:text-[#3884ff] transition-colors">Déploiement Réseau</Link>
-              <Link href="/services/cybersecurite" className="block text-sm hover:text-[#3884ff] transition-colors">Cybersécurité</Link>
-              <Link href="/services/solutions-cloud" className="block text-sm hover:text-[#3884ff] transition-colors">Solutions Cloud</Link>
-              <Link href="/services/solutions-vpn" className="block text-sm hover:text-[#3884ff] transition-colors">Solutions VPN</Link>
-              <Link href="/services/ia-intelligence-artificielle" className="block text-sm text-[#3884ff] font-medium hover:underline transition-colors">IA & Intelligence Artificielle</Link>
+              {serviceLinks.map((item) => (
+                <Link key={item.href} href={item.href} className="block text-sm hover:text-[#3884ff] transition-colors">
+                  {item.label}
+                </Link>
+              ))}
             </nav>
           </div>
 
