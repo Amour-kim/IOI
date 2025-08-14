@@ -277,3 +277,143 @@ export * from './base';
 
 // Ré-export des types spécifiques aux études de cas
 export * from './case-studies';
+
+// Types pour la section "Notre Histoire" (About)
+export interface AboutStat {
+  id: string;
+  value: string | number;
+  label: string;
+}
+
+export interface AboutTeamSpotlightItem {
+  name: string;
+  role: string;
+  image: Image;
+  alt?: string;
+}
+
+export interface AboutFloatingLogo {
+  image: Image;
+  filterCss?: string; // Chaîne CSS optionnelle utilisée par le composant UI
+}
+
+export interface AboutHistory {
+  id: string;
+  title: string; // "Notre Histoire"
+  intro: string; // paragraphe d'introduction
+  heroImage: Image; // image de droite
+  floatingLogo?: AboutFloatingLogo; // logo flottant optionnel
+  stats: AboutStat[]; // ex: Clients, Experts, Pays
+  teamSpotlight?: AboutTeamSpotlightItem[]; // portraits en bas
+  detailedTimeline?: AboutDetailedTimeline; // histoire périodique détaillée
+  // Axes éditoriaux
+  mission?: string;
+  vision?: string;
+  values?: AboutValueItem[];
+  // Infos institutionnelles
+  founders?: AboutFounder[];
+  locations?: AboutLocation[];
+  awards?: Award[]; // déjà défini plus haut
+  partners?: AboutPartner[];
+  // SEO / CTA / Liens clés
+  seo?: SeoMeta;
+  ctaText?: string;
+  documentationUrl?: string;
+  demoUrl?: string;
+  // Médias
+  mediaCarousels?: AboutMediaCarousel[];
+}
+
+// Timeline détaillée (histoire périodique)
+export interface AboutTimelineMedia {
+  image?: Image;
+  videoUrl?: string;
+}
+
+export interface AboutTimelineMilestone {
+  id: string;
+  title: string;
+  date: Date | string; // ISO string ou Date
+  description: string;
+  highlights?: string[]; // puces/faits marquants
+  links?: Link[]; // liens externes ou internes
+  media?: AboutTimelineMedia;
+  tags?: string[];
+}
+
+export interface AboutTimelinePeriod {
+  id: string;
+  title: string; // ex: 2015 - 2018
+  startDate: Date | string;
+  endDate?: Date | string; // facultatif pour période en cours
+  summary?: string; // texte de contexte
+  color?: string; // couleur d'accent pour la ligne/puces
+  milestones: AboutTimelineMilestone[];
+}
+
+export type AboutDetailedTimeline = Array<AboutTimelinePeriod | AboutTimelineMilestone>;
+
+// Valeurs (titre + texte + icône référencée par nom)
+export interface AboutValueItem {
+  id: string;
+  title: string;
+  text: string;
+  icon?: string; // clé d'icône (ex: 'shield', 'target'), voir système d'icônes centralisé
+}
+
+// Fondateurs
+export interface AboutFounder {
+  id: string;
+  name: string;
+  role: string;
+  image: Image;
+  bio?: string;
+  links?: Link[];
+}
+
+// Localisations
+export interface AboutLocation {
+  id: string;
+  name: string; // ex: "Paris - HQ"
+  country: string;
+  city?: string;
+  address?: string;
+  coordinates?: { lat: number; lng: number };
+}
+
+// Partenaires
+export interface AboutPartner {
+  id: string;
+  name: string;
+  logo: Image;
+  url?: string;
+}
+
+// SEO basique
+export interface SeoMeta {
+  title?: string;
+  description?: string;
+  keywords?: string[];
+  image?: Image;
+}
+
+// Mot du Président / Directeur
+export interface MotPresident {
+  name: string;
+  title?: string; // ex: Président, Directeur Général
+  photo: Image; // image avec fond supprimé recommandé (PNG)
+  ambitions: string; // paragraphe
+  objectifs: string[]; // puces
+  missions: string[]; // puces
+  conseils: string[]; // puces
+  phraseInspirante: string; // citation finale
+  backgroundColor?: string; // override optionnel (sinon bleu foncé par défaut)
+}
+
+// Carrousels médias
+export interface AboutMediaCarousel {
+  id: string;
+  title?: string;
+  images?: Image[];
+  videos?: string[]; // urls vidéo (YouTube, fichiers, etc.)
+}

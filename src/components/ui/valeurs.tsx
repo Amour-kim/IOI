@@ -1,28 +1,9 @@
 "use client";
 
-import { Handshake, Lightbulb, Shield } from "lucide-react";
+import { valeursData } from "@/data/valeurs/valeurs.data";
 
 export default function Valeur() {
-  const valeurs = [
-    {
-      icone: Handshake,
-      titre: "Intégrité",
-      description: "Nous maintenons les plus hauts standards d'éthique et de professionnalisme dans toutes nos interventions.",
-      couleur: "from-yellow-400 to-orange-500"
-    },
-    {
-      icone: Lightbulb,
-      titre: "Innovation",
-      description: "Nous restons à la pointe des dernières technologies pour vous offrir des solutions modernes et efficaces.",
-      couleur: "from-blue-400 to-cyan-500"
-    },
-    {
-      icone: Shield,
-      titre: "Engagement",
-      description: "Votre satisfaction est notre priorité absolue. Nous nous engageons à dépasser vos attentes.",
-      couleur: "from-green-400 to-emerald-500"
-    }
-  ];
+  const valeurs = valeursData;
 
 
 
@@ -56,7 +37,7 @@ export default function Valeur() {
             Contactez-nous dès aujourd&apos;hui pour transformer vos idées en réalité
           </p>
           <a 
-            href="/contact" 
+            href="/contacts" 
             className="inline-flex items-center justify-center bg-white text-green-700 hover:bg-gray-100 px-6 py-3 rounded-lg font-medium transition-colors"
           >
             Contactez-nous

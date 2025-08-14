@@ -19,6 +19,9 @@ export * from './products';
 // Export des projets
 export * from './projects';
 
+// Export de la section About/Notre Histoire
+export * from './about';
+
 // Utilitaires communs
 export const formatDate = (date: Date | string | undefined): string => {
   if (!date) return '';
