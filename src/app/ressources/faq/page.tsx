@@ -4,7 +4,9 @@ import ModernNavbar from '@/components/ui/navbar';
 import Footer from '@/components/ui/footer';
 import SocialSidebar from '@/components/ui/social-sidebar';
 import { useState } from 'react';
-import { faqData, faqCategories } from '@/lib/data';
+import { faqItems } from '@/data/ressources/faq.data';
+import { getUniqueCategories } from '@/lib/utils/resources-utils';
+import type { FAQCategory } from '@/data/ressources/resources.types';
 import RessourcesFAQ from '@/components/ui/ressources-faq';
 
 export default function FAQPage() {
@@ -19,22 +21,12 @@ export default function FAQPage() {
     );
   };
 
+  const categories = ['all', ...getUniqueCategories(faqItems)] as ('all' | FAQCategory)[];
+
   const getFilteredQuestions = () => {
-    if (activeCategory === 'all') {
-      return [
-        ...faqData.general.map((q, i) => ({ ...q, category: 'general', index: i })),
-        ...faqData.technical.map((q, i) => ({ ...q, category: 'technical', index: i + 3 })),
-        ...faqData.billing.map((q, i) => ({ ...q, category: 'billing', index: i + 6 })),
-        ...faqData.support.map((q, i) => ({ ...q, category: 'support', index: i + 9 }))
-      ];
-    }
-    return faqData[activeCategory as keyof typeof faqData].map((q, i) => ({ 
-      ...q, 
-      category: activeCategory, 
-      index: activeCategory === 'general' ? i : 
-             activeCategory === 'technical' ? i + 3 :
-             activeCategory === 'billing' ? i + 6 : i + 9
-    }));
+    const withIndex = faqItems.map((q, i) => ({ ...q, index: i }));
+    if (activeCategory === 'all') return withIndex;
+    return withIndex.filter(q => q.category === activeCategory);
   };
 
   return (
@@ -81,17 +73,23 @@ export default function FAQPage() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 className="text-2xl font-bold text-center mb-6 animate-fade-in-up">Catégories</h2>
             <div className="flex flex-wrap justify-center gap-3 mb-8">
-              {faqCategories.map((category, index) => (
-                <button
-                  key={category.id}
-                  onClick={() => setActiveCategory(category.id)}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-full border border-gray-200 bg-white text-gray-700 hover:bg-amber-50 hover:text-amber-700 transition-all shadow-sm text-sm font-medium ${activeCategory === category.id ? 'bg-amber-600 text-white border-amber-600' : ''}`}
-                >
-                  <span className="text-xl">{category.icon}</span>
-                  {category.name}
-                  <span className="ml-2 px-2 py-0.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-700">{category.count}</span>
-                </button>
-              ))}
+              {categories.map((cat) => {
+                const count = cat === 'all' ? faqItems.length : faqItems.filter(i => i.category === cat).length;
+                const labelMap: Record<string, string> = { all: 'Toutes', general: 'Général', technical: 'Technique', billing: 'Facturation', support: 'Support' };
+                const iconMap: Record<string, string> = { all: '❓', general: '❓', technical: '⚙️', billing: '💰', support: '🛠️' };
+                const isActive = activeCategory === cat;
+                return (
+                  <button
+                    key={cat}
+                    onClick={() => setActiveCategory(cat)}
+                    className={`flex items-center gap-2 px-4 py-2 rounded-full border border-gray-200 bg-white text-gray-700 hover:bg-amber-50 hover:text-amber-700 transition-all shadow-sm text-sm font-medium ${isActive ? 'bg-amber-600 text-white border-amber-600' : ''}`}
+                  >
+                    <span className="text-xl">{iconMap[cat]}</span>
+                    {labelMap[cat]}
+                    <span className="ml-2 px-2 py-0.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-700">{count}</span>
+                  </button>
+                );
+              })}
             </div>
           </div>
         </section>
@@ -105,7 +103,6 @@ export default function FAQPage() {
                 <div
                   key={index}
                   className="border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02] animate-fade-in-up"
-                  style={{ animationDelay: `${index * 100}ms` }}
                 >
                   <button
                     onClick={() => toggleQuestion(faq.index)}

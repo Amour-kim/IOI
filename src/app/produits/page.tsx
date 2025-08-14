@@ -25,6 +25,7 @@ import { AnalyticsPlatform } from "@/components/ui/interactive/analytics-platfor
 import { SecurityPlatform } from "@/components/ui/interactive/security-platform"
 import { TeamVisualization } from "@/components/ui/interactive/team-visualization"
 import { useMediaQuery } from "@/hooks/use-media-query"
+import { projectsItems, productsItems } from "@/data"
 
 export default function Produits() {
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -151,6 +152,87 @@ export default function Produits() {
                 Explorez notre suite de produits innovants conçus pour transformer votre expérience numérique.
               </p>
             </motion.div>
+          </div>
+
+          {/* Produits (données centralisées) en présentation 2 colonnes */}
+          <div className="space-y-24 mb-12">
+            {productsItems.map((p, idx) => (
+              <div key={p.id} className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
+                {/* Colonne texte */}
+                <motion.div
+                  initial={{ opacity: 0, x: idx % 2 === 0 ? -50 : 50 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.8 }}
+                  className={idx % 2 === 0 ? "order-1" : "order-2 md:order-2"}
+                >
+                  <div className="space-y-4 md:space-y-6">
+                    <div className="flex items-center gap-3">
+                      {p.logo?.src ? (
+                        <img src={p.logo.src} alt={p.logo.alt || p.title} className="w-10 h-10 object-contain" />
+                      ) : null}
+                      <h3 className="text-2xl md:text-3xl font-bold">{p.title}</h3>
+                      {p.isFeatured ? (
+                        <span className="ml-auto text-xs px-2 py-1 rounded bg-orange-500/20 text-orange-300 border border-orange-500/40">Vedette</span>
+                      ) : null}
+                    </div>
+                    {p.tagline ? (
+                      <p className="text-gray-300 text-base md:text-lg">{p.tagline}</p>
+                    ) : null}
+                    {p.description ? (
+                      <p className="text-gray-400 text-sm md:text-base">{p.description}</p>
+                    ) : null}
+                    {p.features?.length ? (
+                      <ul className="space-y-2 md:space-y-3">
+                        {p.features.slice(0, 4).map((feature, i) => (
+                          <li key={i} className="flex items-center gap-2 md:gap-3">
+                            <CheckCircle className="h-4 w-4 md:h-5 md:w-5 text-orange-500 flex-shrink-0" />
+                            <span className="text-sm md:text-base">{feature}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : null}
+                    <div className="flex items-center gap-3">
+                      {p.price ? <div className="text-orange-400 font-semibold">{p.price}</div> : null}
+                    </div>
+                    <div className="flex gap-2 pt-1">
+                      {p.links?.website ? (
+                        <a href={p.links.website} className="text-xs px-3 py-1 rounded bg-orange-600 hover:bg-orange-700 transition">Site</a>
+                      ) : null}
+                      {p.links?.docs ? (
+                        <a href={p.links.docs} className="text-xs px-3 py-1 rounded bg-gray-800 hover:bg-gray-700 transition">Docs</a>
+                      ) : null}
+                      {p.links?.demo ? (
+                        <a href={p.links.demo} className="text-xs px-3 py-1 rounded bg-gray-800 hover:bg-gray-700 transition">Démo</a>
+                      ) : null}
+                    </div>
+                  </div>
+                </motion.div>
+
+                {/* Colonne image */}
+                <motion.div
+                  initial={{ opacity: 0, x: idx % 2 === 0 ? 50 : -50 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.8 }}
+                  className={idx % 2 === 0 ? "order-2" : "order-1 md:order-1"}
+                >
+                  <div className="bg-gradient-to-br from-orange-500/20 to-yellow-500/20 p-1 rounded-lg">
+                    <div className="relative h-[300px] md:h-[400px] w-full rounded-lg overflow-hidden">
+                      {p.images?.[0]?.src ? (
+                        <img src={p.images[0].src} alt={p.images[0].alt || p.title} className="w-full h-full object-cover" />
+                      ) : p.logo?.src ? (
+                        <div className="w-full h-full flex items-center justify-center bg-gray-900">
+                          <img src={p.logo.src} alt={p.logo.alt || p.title} className="w-40 h-40 object-contain opacity-80" />
+                        </div>
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center bg-gray-900 text-gray-500">Visuel à venir</div>
+                      )}
+                    </div>
+                  </div>
+                </motion.div>
+              </div>
+            ))}
           </div>
 
           <div className="space-y-24">
@@ -486,46 +568,6 @@ export default function Produits() {
               </motion.div>
             </div>
 
-          </div>
-        </div>
-      </section>
-
-      {/* Projects Section */}
-      <section id="projets" className="py-24 bg-gray-950">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl md:text-5xl font-bold mb-8 text-center">Nos Projets Récents</h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[
-              {
-                title: "Plateforme e-learning pour EduPlus",
-                description: "Développement d’une plateforme d’apprentissage en ligne avec gestion de cours, quiz et suivi des progrès.",
-                tech: ["React", "Node.js", "AWS"],
-                image: "/images/projet-eduplus.jpg",
-                result: "Plus de 10 000 utilisateurs actifs en 6 mois.",
-              },
-              {
-                title: "Refonte du site e-commerce ShopX",
-                description: "Modernisation de l’interface, optimisation mobile et intégration d’un nouveau système de paiement.",
-                tech: ["Next.js", "Stripe", "Vercel"],
-                image: "/images/projet-shopx.jpg",
-                result: "Augmentation du taux de conversion de 25%.",
-              },
-              {
-                title: "Application mobile CityConnect",
-                description: "Application pour connecter citoyens et services municipaux avec notifications en temps réel.",
-                tech: ["React Native", "Firebase"],
-                image: "/images/projet-cityconnect.jpg",
-                result: "Adoptée par 5 grandes villes.",
-              },
-            ].map((projet, i) => (
-              <div key={i} className="bg-gray-900 rounded-lg p-6 shadow-lg">
-                <img src={projet.image} alt={projet.title} className="rounded mb-4 w-full h-40 object-cover" />
-                <h3 className="text-xl font-bold mb-2">{projet.title}</h3>
-                <p className="text-gray-300 mb-2">{projet.description}</p>
-                <div className="text-xs text-gray-400 mb-2">Technologies : {projet.tech.join(", ")}</div>
-                <div className="text-green-400 text-sm font-semibold">{projet.result}</div>
-              </div>
-            ))}
           </div>
         </div>
       </section>

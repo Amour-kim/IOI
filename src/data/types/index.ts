@@ -141,6 +141,38 @@ export interface Project {
   isFeatured?: boolean;
   content?: string;
   gallery?: Image[];
+  results?: CaseStudyResults; // métriques pour activer les badges dans Projets Réalisés
+}
+
+// Types pour les produits
+export interface ProductLinks {
+  demo?: string;
+  docs?: string;
+  repo?: string;
+  website?: string;
+}
+
+export interface Product {
+  id: string;
+  title: string;
+  slug: string;
+  tagline: string;
+  description: string;
+  category: string;
+  tags?: string[];
+  logo?: Image;
+  images?: Image[];
+  features: string[];
+  technologies?: string[];
+  price?: string; // ex: "Gratuit", "À partir de 49€/mois"
+  pricingTiers?: PricingPlan[];
+  links?: ProductLinks;
+  status?: 'alpha' | 'beta' | 'stable' | 'deprecated';
+  version?: string;
+  releaseDate?: Date;
+  isFeatured?: boolean;
+  badges?: string[];
+  relatedProjectsIds?: string[]; // références vers Project.id
 }
 
 // Types pour les compétences

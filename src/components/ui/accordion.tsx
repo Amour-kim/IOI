@@ -159,7 +159,7 @@ export function AccordionTrigger({
         className
       )}
       onClick={onToggle}
-      aria-expanded={isOpen ? 'true' : 'false'}
+      aria-expanded={isOpen}
       aria-controls={`accordion-content-${value}`}
       {...props}
     >
@@ -169,7 +169,7 @@ export function AccordionTrigger({
           'h-4 w-4 transition-transform duration-200',
           isOpen ? 'rotate-180' : ''
         )}
-        aria-hidden="true"
+        aria-hidden={isOpen ? false : true}
       />
     </button>
   );
@@ -196,7 +196,7 @@ export function AccordionContent({
         isOpen ? 'max-h-[1000px]' : 'max-h-0',
         className
       )}
-      aria-hidden={isOpen ? 'false' : 'true'}
+      aria-hidden={!isOpen}
       role="region"
     >
       <div className="pb-4 pt-0">

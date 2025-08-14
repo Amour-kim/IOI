@@ -13,6 +13,12 @@ export * from './team';
 // Export des témoignages
 export * from './testimonials';
 
+// Export des produits
+export * from './products';
+
+// Export des projets
+export * from './projects';
+
 // Utilitaires communs
 export const formatDate = (date: Date | string | undefined): string => {
   if (!date) return '';

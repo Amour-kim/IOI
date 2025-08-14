@@ -2,17 +2,17 @@
 import React from "react";
 import Link from 'next/link';
 import Image from 'next/image';
-import { allCards, VideoCardType } from '@/lib/data';
 import { format } from 'date-fns';
+import type { TutorialItem } from '@/data/ressources/resources.types';
+import { tutorialsItems } from '@/data/ressources/tutorials.data';
 
 const LOGO_URL = "/logo.png";
 
 export default function RessourcesTutoriels() {
-  // Récupérer les vidéos depuis allCards
-  const tutorials = allCards
-    .filter((card): card is VideoCardType => card.type === 'video')
-    .slice(0, 3) // Limiter à 3 tutoriels pour l'affichage
-    .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
+  // Récupérer les tutoriels centralisés (tri décroissant par date)
+  const tutorials: TutorialItem[] = [...tutorialsItems]
+    .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
+    .slice(0, 3);
 
   return (
     <section className="relative py-12 overflow-hidden bg-white">

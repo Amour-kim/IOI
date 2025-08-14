@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useRef, useCallback, useMemo } from "react"
+import { useState, useRef, useCallback, useMemo, type ReactNode } from "react"
 import Image from "next/image"
 import { 
   ExternalLink, 
@@ -15,7 +15,7 @@ import {
   ChevronRight,
   Download
 } from "lucide-react"
-import { getAllCaseStudies } from "@/data"
+import { projectsItems } from "@/data"
 import type { CaseStudy } from "@/data/types"
 
 // Mappage des couleurs pour les badges de catégorie
@@ -64,8 +64,35 @@ const ServicesCaseStudies = () => {
   const [activeIndex, setActiveIndex] = useState(0)
   const sectionRef = useRef<HTMLElement>(null)
   
-  // Récupération des études de cas depuis le module de données
-  const caseStudies = getAllCaseStudies()
+  // Récupération depuis les projets centralisés et adaptation au format attendu par le design
+  const caseStudies = useMemo<CaseStudy[]>(() => {
+    return projectsItems.map((p) => ({
+      id: p.id,
+      title: p.title,
+      client: p.client || "Client",
+      category: p.category || "Projet",
+      slug: p.slug,
+      image: p.image,
+      description: p.description,
+      challenge: "",
+      solution: "",
+      results: p.results || {},
+      technologies: p.technologies || [],
+      color: categoryColors[p.category as string] ? categoryColors[p.category as string] : "from-blue-600 to-cyan-600",
+      testimonial: {
+        text: p.content || "Projet réalisé avec succès.",
+        author: p.client || "Client",
+        role: `${p.category || "Projet"} • ${p.year || ""}`.trim(),
+      },
+      date: p.year ? new Date(p.year, 0, 1) : new Date(),
+      duration: undefined,
+      teamSize: undefined,
+      budget: undefined,
+      tags: p.technologies || [],
+      links: p.link ? [{ href: p.link, label: "Voir le projet", isExternal: true }] : [],
+    }))
+  }, [])
+
   const currentCase = caseStudies[activeIndex]
 
   const nextCase = useCallback(() => {
@@ -81,7 +108,7 @@ const ServicesCaseStudies = () => {
   }, [])
 
   // Mappage des icônes pour les résultats
-  const resultIcons = useMemo<Record<string, React.ReactNode>>(() => ({
+  const resultIcons = useMemo<Record<string, ReactNode>>(() => ({
     revenue: <TrendingUp className="w-5 h-5 text-green-500" />,
     conversion: <TrendingUp className="w-5 h-5 text-blue-500" />,
     satisfaction: <Star className="w-5 h-5 text-yellow-500" />,
@@ -212,17 +239,23 @@ const ServicesCaseStudies = () => {
                 {/* Results Grid */}
                 {currentCase.results && Object.keys(currentCase.results).length > 0 && (
                   <div className="grid grid-cols-2 gap-4 mb-8">
-                    {Object.entries(currentCase.results).map(([key, value]) => (
-                      <div key={key} className="text-center p-4 bg-gray-50/80 rounded-xl">
-                        <div className="flex items-center justify-center gap-2 mb-1">
-                          {resultIcons[key] || <TrendingUp className="w-5 h-5 text-gray-400" />}
-                          <div className="text-2xl font-bold text-gray-900">{value}</div>
+                    {(() => {
+                      const r = currentCase.results as Record<string, string | undefined>
+                      const entries = Object.keys(r)
+                        .map((k) => ({ key: k, value: r[k] }))
+                        .filter((e): e is { key: string; value: string } => typeof e.value === 'string' && e.value.length > 0)
+                      return entries.map(({ key, value }) => (
+                        <div key={key} className="text-center p-4 bg-gray-50/80 rounded-xl">
+                          <div className="flex items-center justify-center gap-2 mb-1">
+                            {resultIcons[key] ?? <TrendingUp className="w-5 h-5 text-gray-400" />}
+                            <div className="text-2xl font-bold text-gray-900">{value}</div>
+                          </div>
+                          <div className="text-sm text-gray-600">
+                            {getResultLabel(key)}
+                          </div>
                         </div>
-                        <div className="text-sm text-gray-600">
-                          {getResultLabel(key)}
-                        </div>
-                      </div>
-                    ))}
+                      ))
+                    })()}
                   </div>
                 )}
 

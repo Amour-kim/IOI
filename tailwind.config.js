@@ -1,3 +1,4 @@
+/* eslint-disable */
 /** @type {import('tailwindcss').Config} */
 
 module.exports = {
@@ -137,6 +138,6 @@ module.exports = {
       },
     },
   },
+  // eslint-disable-next-line @typescript-eslint/no-require-imports, global-require, import/no-commonjs
   plugins: [require("tailwindcss-animate")],
 }
-  

@@ -3,7 +3,6 @@ import Header from "@/components/ui/header";
 import Footer from "@/components/ui/footer";
 import ContactUs from "@/components/ui/contact_us";
 import Service from "@/components/ui/service";
-import Reference from "@/components/ui/reference";
 import Question from "@/components/ui/question";
 import Feedback from "@/components/ui/feedback";
 import Valeur from "@/components/ui/valeurs";
@@ -18,7 +17,6 @@ export default function Services() {
       <Header />
       <Question />
       <Service />
-      <Reference />
       <ServicesCaseStudies />
       <Valeur />
       <Feedback />

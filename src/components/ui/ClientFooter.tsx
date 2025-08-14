@@ -30,10 +30,7 @@ export default function ClientFooter() {
           <img
             src="/logo.png"
             alt="IOI Logo"
-            className="w-64 h-64 sm:w-96 sm:h-96 lg:w-[500px] lg:h-[500px] xl:w-[600px] xl:h-[600px] object-contain"
-            style={{
-              filter: 'brightness(0.9) saturate(0.8) opacity(0.1)',
-            }}
+            className="w-64 h-64 sm:w-96 sm:h-96 lg:w-[500px] lg:h-[500px] xl:w-[600px] xl:h-[600px] object-contain filter brightness-90 opacity-10"
           />
         </div>
       </div>

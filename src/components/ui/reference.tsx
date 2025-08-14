@@ -2,6 +2,7 @@ import Image from "next/image"
 import { Star, CheckCircle, ArrowRight, MessageSquare } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
+import { projectsItems } from "@/data"
 
 export default function Reference() {
   return (
@@ -15,101 +16,69 @@ export default function Reference() {
           <h1 className="text-3xl font-extrabold text-blue-900">Nos références</h1>
         </div>
 
-        {/* Reference Cards */}
+        {/* Reference Cards alimentées par projectsItems */}
         <div className="space-y-10">
-          {/* Première référence IOI Gabon */}
-          <Card className="bg-white/95 border-none rounded-3xl overflow-hidden shadow-xl flex flex-col md:flex-row p-0">
-            {/* Image immersive */}
-            <div className="md:w-1/2 w-full h-64 md:h-auto relative flex-shrink-0">
-              <Image
-                src="/images/site-ecole-gabon.png"
-                alt="Plateforme numérique pour écoles au Gabon"
-                fill
-                className="object-cover w-full h-full rounded-none md:rounded-l-3xl"
-                style={{ minHeight: 260 }}
-              />
-            </div>
-            {/* Contenu textuel */}
-            <div className="flex-1 flex flex-col justify-between p-8 md:p-12">
-              <div className="space-y-4">
-                <h2 className="text-2xl md:text-3xl font-bold text-blue-700 mb-2">Plateforme Scolaire Gabon</h2>
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="flex gap-1">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="w-5 h-5 fill-orange-400 text-orange-400" />
-                    ))}
+          {projectsItems.map((projet) => {
+            const clientName = projet.client || "Client";
+            const initials = clientName
+              .split(" ")
+              .filter(Boolean)
+              .slice(0, 2)
+              .map((s) => s[0]?.toUpperCase())
+              .join("") || "CL";
+            const subtitle = [projet.category, projet.year].filter(Boolean).join(", ");
+            return (
+              <Card key={projet.id} className="bg-white/95 border-none rounded-3xl overflow-hidden shadow-xl flex flex-col md:flex-row p-0">
+                {/* Image immersive */}
+                <div className="md:w-1/2 w-full h-64 md:h-auto relative flex-shrink-0">
+                  <Image
+                    src={projet.image?.src || "/images/placeholder.jpg"}
+                    alt={projet.image?.alt || projet.title}
+                    fill
+                    className="object-cover w-full h-full rounded-none md:rounded-l-3xl"
+                    style={{ minHeight: 260 }}
+                  />
+                </div>
+                {/* Contenu textuel */}
+                <div className="flex-1 flex flex-col justify-between p-8 md:p-12">
+                  <div className="space-y-4">
+                    <h2 className="text-2xl md:text-3xl font-bold text-blue-700 mb-2">{projet.title}</h2>
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="flex gap-1">
+                        {[...Array(5)].map((_, i) => (
+                          <Star key={i} className="w-5 h-5 fill-orange-400 text-orange-400" />
+                        ))}
+                      </div>
+                      <div className="flex items-center gap-2 bg-green-500/90 text-white px-3 py-1 rounded-full text-xs font-semibold">
+                        <CheckCircle className="w-4 h-4" />
+                        <span>Client vérifié</span>
+                      </div>
+                    </div>
+                    <blockquote className="text-slate-700 text-lg leading-relaxed italic border-l-4 border-blue-200 pl-4 mb-4">
+                      {projet.description || projet.content || "Projet réalisé avec succès."}
+                    </blockquote>
+                    <div className="flex items-center gap-3 mt-4">
+                      <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-white text-lg font-bold">{initials}</div>
+                      <div>
+                        <div className="font-semibold text-blue-700">{clientName}</div>
+                        {subtitle ? (
+                          <div className="text-sm text-slate-500">{subtitle}</div>
+                        ) : null}
+                      </div>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2 bg-green-500/90 text-white px-3 py-1 rounded-full text-xs font-semibold">
-                    <CheckCircle className="w-4 h-4" />
-                    <span>Client vérifié</span>
+                  <div className="mt-8 flex justify-end">
+                    <a href={projet.link || "#"} target="_blank" rel="noopener noreferrer">
+                      <Button className="bg-blue-100 hover:bg-blue-200 text-blue-700 px-6 py-2 rounded-full font-semibold text-base shadow-none border border-blue-200">
+                        Découvrir
+                        <ArrowRight className="w-4 h-4 ml-2" />
+                      </Button>
+                    </a>
                   </div>
                 </div>
-                <blockquote className="text-slate-700 text-lg leading-relaxed italic border-l-4 border-blue-200 pl-4 mb-4">
-                  "Grâce à IOI Gabon, notre école a franchi un cap dans la gestion numérique : inscriptions en ligne, suivi des élèves, communication facilitée avec les parents. L’équipe IOI est à l’écoute et propose des solutions adaptées à la réalité locale. Un vrai partenaire digital !"
-                </blockquote>
-                <div className="flex items-center gap-3 mt-4">
-                  <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-white text-lg font-bold">MB</div>
-                  <div>
-                    <div className="font-semibold text-blue-700">Mireille Biyogo</div>
-                    <div className="text-sm text-slate-500">Directrice d’école, Libreville</div>
-                  </div>
-                </div>
-              </div>
-              <div className="mt-8 flex justify-end">
-                <Button className="bg-blue-100 hover:bg-blue-200 text-blue-700 px-6 py-2 rounded-full font-semibold text-base shadow-none border border-blue-200">
-                  Découvrir
-                  <ArrowRight className="w-4 h-4 ml-2" />
-                </Button>
-              </div>
-            </div>
-          </Card>
-
-          {/* Deuxième référence IOI Gabon */}
-          <Card className="bg-white/95 border-none rounded-3xl overflow-hidden shadow-xl flex flex-col md:flex-row p-0">
-            {/* Image immersive */}
-            <div className="md:w-1/2 w-full h-64 md:h-auto relative flex-shrink-0">
-              <Image
-                src="/images/site-entreprise-gabon.png"
-                alt="Transformation digitale entreprise Gabon"
-                fill
-                className="object-cover w-full h-full rounded-none md:rounded-l-3xl"
-                style={{ minHeight: 260 }}
-              />
-            </div>
-            {/* Contenu textuel */}
-            <div className="flex-1 flex flex-col justify-between p-8 md:p-12">
-              <div className="space-y-4">
-                <h2 className="text-2xl md:text-3xl font-bold text-blue-700 mb-2">Digitalisation PME Gabon</h2>
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="flex gap-1">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="w-5 h-5 fill-orange-400 text-orange-400" />
-                    ))}
-                  </div>
-                  <div className="flex items-center gap-2 bg-green-500/90 text-white px-3 py-1 rounded-full text-xs font-semibold">
-                    <CheckCircle className="w-4 h-4" />
-                    <span>Client vérifié</span>
-                  </div>
-                </div>
-                <blockquote className="text-slate-700 text-lg leading-relaxed italic border-l-4 border-blue-200 pl-4 mb-4">
-                  "IOI Gabon nous a accompagnés dans la refonte de notre site et la mise en place d’outils collaboratifs. Résultat : plus de visibilité, des process simplifiés, et une équipe plus motivée. Leur expertise locale fait la différence !"
-                </blockquote>
-                <div className="flex items-center gap-3 mt-4">
-                  <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-white text-lg font-bold">AK</div>
-                  <div>
-                    <div className="font-semibold text-blue-700">Arnaud Koumba</div>
-                    <div className="text-sm text-slate-500">Responsable informatique, PME à Owendo</div>
-                  </div>
-                </div>
-              </div>
-              <div className="mt-8 flex justify-end">
-                <Button className="bg-blue-100 hover:bg-blue-200 text-blue-700 px-6 py-2 rounded-full font-semibold text-base shadow-none border border-blue-200">
-                  Découvrir
-                  <ArrowRight className="w-4 h-4 ml-2" />
-                </Button>
-              </div>
-            </div>
-          </Card>
+              </Card>
+            );
+          })}
         </div>
       </div>
     </div>

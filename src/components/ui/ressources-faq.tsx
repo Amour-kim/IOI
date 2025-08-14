@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import Image from 'next/image';
-import type { FAQItem } from '@/lib/data';
+import type { FAQItem } from '@/data/ressources/resources.types';
 
 const LOGO_URL = "/logo.png";
 

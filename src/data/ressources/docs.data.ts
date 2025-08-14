@@ -1,0 +1,46 @@
+import type { DocumentationItems } from '@/data/ressources/resources.types';
+
+export const docsItems: DocumentationItems = [
+  {
+    id: 'getting-started',
+    category: 'Démarrage Rapide',
+    title: 'Installation et configuration',
+    description: 'Comment installer et configurer la solution.',
+    tags: ['installation', 'configuration'],
+    version: ['current', 'previous'],
+    type: 'gratuit',
+    fileUrl: '/docs/installation.pdf', // lien de téléchargement direct
+    docType: 'pdf',
+    domain: 'Développement',
+    audience: ['Débutant', 'PME'],
+    cover: '/covers/installation.jpg',
+  },
+  {
+    id: 'api-auth',
+    category: 'Référence API',
+    title: 'Authentification API',
+    description: "Tout sur l'authentification de l'API.",
+    tags: ['api', 'authentification'],
+    version: ['current', 'beta'],
+    type: 'payant',
+    fileUrl: '/docs/api-auth.pdf',
+    docType: 'pdf',
+    domain: 'Sécurité',
+    audience: ['Start-Up', 'Personnels'],
+    cover: '/covers/api-auth.jpg',
+  },
+  {
+    id: 'best-practices-security',
+    category: 'Bonnes Pratiques',
+    title: 'Sécurité avancée',
+    description: 'Meilleures pratiques de sécurité.',
+    tags: ['sécurité', 'pratiques'],
+    version: ['current', 'previous', 'beta'],
+    type: 'gratuit',
+    fileUrl: '/docs/securite.pdf',
+    docType: 'ppt',
+    domain: 'Sécurité',
+    audience: ['PME', 'Débutant'],
+    cover: '/covers/securite.jpg',
+  },
+];

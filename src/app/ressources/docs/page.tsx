@@ -7,40 +7,42 @@ import { useState } from 'react';
 import Visite from '@/components/ui/visite';
 import Question from '@/components/ui/question';
 import Feedback from '@/components/ui/feedback';
-import { docsData, DocsDataType } from '@/lib/data';
+import { docsItems } from '@/data/ressources/docs.data';
+import { getUniqueDocVersions, getUniqueDocTypes, getUniqueDocAudiences, getUniqueDocDomains } from '@/lib/utils/resources-utils';
 
 export default function DocumentationPage() {
   const [activeVersion, setActiveVersion] = useState('current');
   const [searchQuery, setSearchQuery] = useState('');
-
-  const versions = [
-    { id: 'current', name: 'v2.1.0', status: 'Actuelle', color: 'border-green-500', bgColor: 'bg-green-500' },
-    { id: 'previous', name: 'v2.0.0', status: 'Précédente', color: 'border-gray-200', bgColor: 'bg-gray-600' },
-    { id: 'beta', name: 'v2.2.0', status: 'Beta', color: 'border-orange-500', bgColor: 'bg-orange-600' }
-  ];
-
-  const popularTopics = [
-    { title: 'Authentification', icon: '🔐', color: 'bg-red-100 text-red-600' },
-    { title: 'Webhooks', icon: '🔗', color: 'bg-blue-100 text-blue-600' },
-    { title: 'SDK Mobile', icon: '📱', color: 'bg-green-100 text-green-600' },
-    { title: 'Déploiement', icon: '🚀', color: 'bg-purple-100 text-purple-600' },
-    { title: 'Monitoring', icon: '📊', color: 'bg-yellow-100 text-yellow-600' },
-    { title: 'Sécurité', icon: '🛡️', color: 'bg-indigo-100 text-indigo-600' },
-    { title: 'Intégration', icon: '🔧', color: 'bg-pink-100 text-pink-600' },
-    { title: 'Troubleshooting', icon: '🔍', color: 'bg-gray-100 text-gray-600' }
-  ];
-
-  // 2. Filtrage dynamique selon la recherche, la catégorie, la version
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
-  const filteredDocs = docsData.filter(doc => {
+  const [activeDocType, setActiveDocType] = useState<string | null>(null);
+  const [activeAudience, setActiveAudience] = useState<string | null>(null);
+  const [activeDomain, setActiveDomain] = useState<string | null>(null);
+
+  // valeurs uniques pour filtres
+  const versions = getUniqueDocVersions(docsItems);
+  const docTypes = getUniqueDocTypes(docsItems);
+  const audiences = getUniqueDocAudiences(docsItems);
+  const domains = getUniqueDocDomains(docsItems);
+
+  // counts globaux (simple, non conditionnels)
+  const versionsCount = Object.fromEntries(versions.map(v => [v, docsItems.filter(d => d.version.includes(v)).length]));
+  const typesCount = Object.fromEntries(docTypes.map(t => [t, docsItems.filter(d => d.docType === t).length]));
+  const audiencesCount = Object.fromEntries(audiences.map(a => [a, docsItems.filter(d => d.audience.includes(a)).length]));
+  const domainsCount = Object.fromEntries(domains.map(d => [d, docsItems.filter(x => x.domain === d).length]));
+
+  // 2. Filtrage dynamique selon recherche + filtres avancés
+  const filteredDocs = docsItems.filter(doc => {
     const matchesSearch =
       searchQuery.trim() === '' ||
       doc.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       doc.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
       doc.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
     const matchesCategory = !activeCategory || doc.category === activeCategory;
-    const matchesVersion = doc.version.includes(activeVersion);
-    return matchesSearch && matchesCategory && matchesVersion;
+    const matchesVersion = !activeVersion || doc.version.includes(activeVersion);
+    const matchesDocType = !activeDocType || doc.docType === activeDocType;
+    const matchesAudience = !activeAudience || doc.audience.includes(activeAudience);
+    const matchesDomain = !activeDomain || doc.domain === activeDomain;
+    return matchesSearch && matchesCategory && matchesVersion && matchesDocType && matchesAudience && matchesDomain;
   });
 
   // Fonction utilitaire pour l'icône du type de document
@@ -115,6 +117,78 @@ export default function DocumentationPage() {
           </div>
         </section>
 
+        {/* Filtres avancés */}
+        <section className="py-6 bg-white border-t border-b border-gray-100">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-base font-semibold text-gray-900">Affiner la recherche</h3>
+              <button
+                onClick={() => { setActiveVersion(''); setActiveDocType(null); setActiveAudience(null); setActiveDomain(null); }}
+                className="text-xs px-3 py-1 rounded-full border border-gray-200 bg-white text-gray-700 hover:bg-gray-50"
+                aria-label="Réinitialiser les filtres"
+              >Réinitialiser</button>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {/* Version */}
+              <div>
+                <h3 className="text-sm font-semibold text-gray-700 mb-2">Version</h3>
+                <div className="flex gap-2 overflow-x-auto pb-1">
+                  <button onClick={() => setActiveVersion('')} className={`whitespace-nowrap px-3 py-1 rounded-full text-xs border flex items-center gap-1 ${!activeVersion?'bg-indigo-600 text-white border-indigo-600':'bg-white text-gray-700 border-gray-200'}`}>
+                    <span>📚</span> Toutes
+                  </button>
+                  {versions.map(v => (
+                    <button key={v} onClick={() => setActiveVersion(v)} className={`whitespace-nowrap px-3 py-1 rounded-full text-xs border flex items-center gap-1 ${activeVersion===v?'bg-indigo-600 text-white border-indigo-600':'bg-white text-gray-700 border-gray-200'}`}>
+                      <span>{v==='current'?'✅':v==='beta'?'🧪':'🕘'}</span> {v}
+                      <span className={`ml-1 px-1.5 rounded-full ${activeVersion===v?'bg-white/20 text-white':'bg-gray-100 text-gray-700'}`}>{versionsCount[v]}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+              {/* Type */}
+              <div>
+                <h3 className="text-sm font-semibold text-gray-700 mb-2">Type de fichier</h3>
+                <div className="flex gap-2 overflow-x-auto pb-1">
+                  <button onClick={() => setActiveDocType(null)} className={`whitespace-nowrap px-3 py-1 rounded-full text-xs border flex items-center gap-1 ${activeDocType===null?'bg-indigo-600 text-white border-indigo-600':'bg-white text-gray-700 border-gray-200'}`}>
+                    <span>🗂️</span> Tous
+                  </button>
+                  {docTypes.map(t => (
+                    <button key={t} onClick={() => setActiveDocType(t)} className={`whitespace-nowrap px-3 py-1 rounded-full text-xs border flex items-center gap-1 ${activeDocType===t?'bg-indigo-600 text-white border-indigo-600':'bg-white text-gray-700 border-gray-200'}`}>
+                      <span>{t==='pdf'?'📄':t==='docx'?'📝':t==='ppt'?'📊':'📁'}</span> {t.toUpperCase()}
+                      <span className={`ml-1 px-1.5 rounded-full ${activeDocType===t?'bg-white/20 text-white':'bg-gray-100 text-gray-700'}`}>{typesCount[t]}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+              {/* Audience */}
+              <div>
+                <h3 className="text-sm font-semibold text-gray-700 mb-2">Audience</h3>
+                <div className="flex gap-2 overflow-x-auto pb-1">
+                  <button onClick={() => setActiveAudience(null)} className={`whitespace-nowrap px-3 py-1 rounded-full text-xs border ${activeAudience===null?'bg-indigo-600 text-white border-indigo-600':'bg-white text-gray-700 border-gray-200'}`}>Tous</button>
+                  {audiences.map(a => (
+                    <button key={a} onClick={() => setActiveAudience(a)} className={`whitespace-nowrap px-3 py-1 rounded-full text-xs border ${activeAudience===a?'bg-indigo-600 text-white border-indigo-600':'bg-white text-gray-700 border-gray-200'}`}>
+                      {a}
+                      <span className={`ml-1 px-1.5 rounded-full ${activeAudience===a?'bg-white/20 text-white':'bg-gray-100 text-gray-700'}`}>{audiencesCount[a]}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+              {/* Domaine */}
+              <div>
+                <h3 className="text-sm font-semibold text-gray-700 mb-2">Domaine</h3>
+                <div className="flex gap-2 overflow-x-auto pb-1">
+                  <button onClick={() => setActiveDomain(null)} className={`whitespace-nowrap px-3 py-1 rounded-full text-xs border ${activeDomain===null?'bg-indigo-600 text-white border-indigo-600':'bg-white text-gray-700 border-gray-200'}`}>Tous</button>
+                  {domains.map(d => (
+                    <button key={d} onClick={() => setActiveDomain(d)} className={`whitespace-nowrap px-3 py-1 rounded-full text-xs border ${activeDomain===d?'bg-indigo-600 text-white border-indigo-600':'bg-white text-gray-700 border-gray-200'}`}>
+                      {d}
+                      <span className={`ml-1 px-1.5 rounded-full ${activeDomain===d?'bg-white/20 text-white':'bg-gray-100 text-gray-700'}`}>{domainsCount[d]}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Documents List */}
         <section className="py-10 bg-gradient-to-br from-gray-50 to-gray-100">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -127,7 +201,6 @@ export default function DocumentationPage() {
                   <div
                     key={doc.id}
                     className="bg-white rounded-lg shadow-md p-0 hover:shadow-xl transition-all duration-300 group border border-gray-100 hover:border-indigo-300 flex flex-col justify-between animate-fade-in-up"
-                    style={{ animationDelay: `${idx * 80}ms` }}
                   >
                     {/* Cover image */}
                     <div className="h-36 w-full rounded-t-lg overflow-hidden flex items-center justify-center bg-gray-100">

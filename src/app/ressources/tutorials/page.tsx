@@ -3,7 +3,6 @@
 import Image from "next/image"
 import Link from "next/link"
 import { Star, PlaySquare, CheckCircle } from "lucide-react"
-import { allCards, type VideoCardType, type ArticleCardType } from '@/lib/data';
 import ModernNavbar from '@/components/ui/navbar';
 import Footer from '@/components/ui/footer';
 import SocialSidebar from '@/components/ui/social-sidebar';
@@ -12,44 +11,47 @@ import { format } from 'date-fns';
 import Valeurs from '@/components/ui/valeurs';
 import Visite from '@/components/ui/visite';
 import ContactUs from '@/components/ui/contact_us';
+import type { TutorialItem } from '@/data/ressources/resources.types';
+import { tutorialsItems } from '@/data/ressources/tutorials.data';
+// filters utils removed per request
 
-// Type guard pour vérifier si une carte est une vidéo
-const isVideoCard = (card: VideoCardType | ArticleCardType): card is VideoCardType => {
-  return card.type === 'video' && 'channel' in card && 'views' in card;
-};
+// Utilitaires d'icône pour format
+const formatIcon = (format: string) => format === 'video' ? '▶️' : '📰';
 
 export default function TutorialsPage() {
   const [search, setSearch] = useState('');
+  // filters removed per request
+
+  // uniques
+  // NOTE: Filters removed per request. Keep only sorting and search.
+
+  const sorted = useMemo(() => {
+    return [...tutorialsItems].sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
+  }, []);
+
+  const filteredVideos: TutorialItem[] = useMemo(() => {
+    return sorted.filter(t => {
+      const q = search.trim().toLowerCase();
+      const matchesSearch =
+        q === '' ||
+        t.title.toLowerCase().includes(q) ||
+        t.description.toLowerCase().includes(q) ||
+        t.tags.some(tag => tag.toLowerCase().includes(q)) ||
+        (t.channel || '').toLowerCase().includes(q);
+      return matchesSearch;
+    });
+  }, [sorted, search]);
   
-  // Filtrer et trier les vidéos avec useMemo pour optimiser les performances
-  const { videos, filteredVideos, topVideos } = useMemo(() => {
-    const videoCards = allCards.filter(isVideoCard);
-    const sortedVideos = [...videoCards].sort((a, b) => 
-      new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
-    );
-    
-    const filtered = search 
-      ? sortedVideos.filter(video => 
-          video.title.toLowerCase().includes(search.toLowerCase()) ||
-          video.channel.toLowerCase().includes(search.toLowerCase())
-        )
-      : sortedVideos;
-    
-    return {
-      videos: sortedVideos,
-      filteredVideos: filtered,
-      topVideos: filtered.slice(0, 10)
-    };
-  }, [search]);
+  const featuredVideos = useMemo(() => sorted.filter(t => t.isVedette), [sorted]);
   
-  // Rendu d'une carte vidéo
-  const renderVideoCard = (video: VideoCardType, index: number) => (
+  // Rendu d'une carte tutoriel
+  const renderVideoCard = (video: TutorialItem, index: number) => (
     <div 
       key={video.id}
-      className="group relative bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden border border-gray-100 hover:border-orange-100"
+      className="group relative bg-white shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden border border-gray-100 hover:border-orange-100"
       aria-labelledby={`video-${video.id}-title`}
     >
-      <Link href={`/ressources/tutorials/${video.id}`} className="block" aria-label={`Voir la vidéo : ${video.title}`}>
+      <Link href={`/ressources/tutorials/${video.id}`} className="block" aria-label={`Voir le tutoriel : ${video.title}`}>
         <div className="relative aspect-video overflow-hidden">
           <Image
             src={video.thumbnail || "/placeholder.svg"}
@@ -59,34 +61,38 @@ export default function TutorialsPage() {
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
             priority={index < 4} // Chargement prioritaire pour les premières images
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-          <div className="absolute bottom-0 left-0 right-0 p-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <div className="flex items-center justify-center">
-              <div className="bg-white/90 text-orange-600 text-xs font-medium px-2 py-1 rounded-full">
-                Regarder maintenant
-              </div>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <div className="w-14 h-14 bg-white/90 rounded-full flex items-center justify-center text-orange-500">
+              <PlaySquare className="w-6 h-6" />
             </div>
           </div>
-          {index % 3 === 0 && (
-            <div className="absolute top-2 right-2 bg-black/70 text-white text-xs px-1.5 py-0.5 rounded">
+          {video.isVedette && (
+            <div className="absolute top-2 left-2 flex items-center gap-1 bg-orange-500 text-white text-xs px-2 py-1">
+              <Star className="w-3 h-3 fill-current" />
+              En vedette
+            </div>
+          )}
+          {index % 3 === 0 && video.format === 'video' && (
+            <div className="absolute top-2 right-2 bg-black/70 text-white text-xs px-1.5 py-0.5">
               HD
             </div>
           )}
         </div>
         <div className="p-4">
           <div className="flex items-start gap-3">
-            <div className="w-10 h-10 border border-gray-200 flex-shrink-0 rounded-full overflow-hidden">
+            <div className="w-10 h-10 border border-gray-200 flex-shrink-0 overflow-hidden">
               {video.channelAvatar ? (
                 <Image
                   src={video.channelAvatar}
-                  alt={`Avatar de ${video.channel}`}
+                  alt={`Avatar de ${video.channel ?? 'Auteur'}`}
                   width={40}
                   height={40}
                   className="w-full h-full object-cover"
                 />
               ) : (
                 <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                  <span className="text-xs text-gray-500">{video.channel.charAt(0)}</span>
+                  <span className="text-xs text-gray-500">{(video.channel ?? 'T').charAt(0)}</span>
                 </div>
               )}
             </div>
@@ -98,13 +104,13 @@ export default function TutorialsPage() {
                 {video.title}
               </h3>
               <div className="flex items-center gap-1 text-xs text-gray-500">
-                <span>{video.channel}</span>
+                <span>{video.channel ?? '—'}</span>
                 <CheckCircle className="w-3 h-3 text-gray-400" aria-hidden="true" />
               </div>
               <div className="flex items-center gap-1 text-xs text-gray-400 mt-1">
-                <span>{video.views}</span>
+                {video.views && <span>{video.views}</span>}
                 <span aria-hidden="true">•</span>
-                <span>{video.time}</span>
+                <span>{format(new Date(video.publishedAt), 'dd MMM yyyy')}</span>
               </div>
             </div>
           </div>
@@ -116,7 +122,7 @@ export default function TutorialsPage() {
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-yellow-50 via-orange-50 to-yellow-100 text-[#1a1a1a]">
       <ModernNavbar />
       <SocialSidebar />
-      <main className="flex-1 flex flex-col items-center px-4 py-8 mt-24">
+      <main className="flex-1 flex flex-col items-center px-4 py-8 mt-36">
         {/* Barre de recherche */}
         <div className="w-full max-w-2xl mb-8">
           <input
@@ -127,48 +133,41 @@ export default function TutorialsPage() {
             className="w-full px-6 py-4 border-2 border-orange-200 rounded-full focus:border-orange-400 focus:outline-none text-lg transition-all duration-300 shadow-lg bg-white/80"
           />
         </div>
-        {/* Section Top 10 des vidéos */}
-        <section className="relative w-full py-16 px-4 sm:px-6 bg-gradient-to-br from-orange-50 via-amber-50 to-orange-50">
+        {/* Section En vedette */}
+        <section className="relative w-full py-12 px-4 sm:px-6 bg-gradient-to-br from-orange-50 via-amber-50 to-orange-50">
           {/* Effet de dégradé subtil */}
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-orange-100/30 via-transparent to-transparent"></div>
-          
-          <div className="relative z-10 max-w-7xl mx-auto">
-            <div className="text-center mb-12">
-              <span className="inline-flex items-center justify-center px-4 py-2 bg-orange-100 text-orange-800 text-sm font-medium rounded-full mb-4">
-                <Star className="w-4 h-4 mr-2" />
-                Contenu sélectionné
-              </span>
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Top 10 des tutoriels</h2>
-              <p className="text-lg text-gray-600 max-w-2xl mx-auto">Découvrez nos meilleurs tutoriels sélectionnés par notre équipe d'experts</p>
+          <div className="relative max-w-7xl mx-auto">
+            <div className="text-center mb-10">
+              <div className="inline-flex items-center gap-2 px-3 py-1 bg-orange-100 text-orange-700 text-sm font-medium mb-4">
+                <Star className="w-4 h-4" />
+                En vedette
+              </div>
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">En vedette</h2>
+              <p className="text-lg text-gray-600 max-w-2xl mx-auto">Une sélection mise en avant pour vous</p>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 mb-12">
-              {topVideos.length === 0 ? (
-                <div className="col-span-full text-center text-gray-400 py-8">Aucune vidéo trouvée.</div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {featuredVideos.length === 0 ? (
+                <div className="col-span-full flex flex-col items-center justify-center py-10 text-gray-500">
+                  <span>Aucun contenu en vedette</span>
+                </div>
               ) : (
-                topVideos.map((video, idx) => (
-                  <div 
-                    key={video.id}
-                    className="relative group overflow-hidden rounded-xl bg-white shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100 hover:border-orange-200"
-                  >
-                    {/* Badge de classement */}
-                    <div className="absolute top-3 left-3 z-10 w-8 h-8 flex items-center justify-center rounded-full bg-gradient-to-br from-orange-500 to-amber-500 text-white font-bold text-sm shadow-md">
-                      {idx + 1}
-                    </div>
+                featuredVideos.map((video, index) => (
+                  <div key={`top-${video.id}`} className="bg-white border border-gray-200 overflow-hidden">
                     <Link href={`/ressources/tutorials/${video.id}`} className="block">
-                      <div className="relative aspect-video overflow-hidden">
+                      <div className="relative aspect-video">
                         <Image
                           src={video.thumbnail || "/placeholder.svg"}
-                          alt={video.title}
+                          alt=""
                           width={400}
                           height={225}
-                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                          className="w-full h-full object-cover"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                          <div className="w-14 h-14 bg-white/90 rounded-full flex items-center justify-center text-orange-500">
-                            <PlaySquare className="w-6 h-6" />
+                        {video.isVedette && (
+                          <div className="absolute top-2 left-2 bg-orange-500 text-white text-xs px-2 py-1 flex items-center gap-1">
+                            <Star className="w-3 h-3 fill-current" /> Vedette
                           </div>
-                        </div>
+                        )}
                       </div>
                       <div className="p-4">
                         <h3 className="font-medium text-gray-900 mb-1 line-clamp-2 group-hover:text-orange-600 transition-colors">
@@ -181,9 +180,9 @@ export default function TutorialsPage() {
                           )}
                         </div>
                         <div className="flex items-center justify-between text-xs text-gray-400">
-                          <span>{video.views}</span>
+                          {video.views && <span>{video.views}</span>}
                           <span>•</span>
-                          <span>{video.time}</span>
+                          <span>{format(new Date(video.publishedAt), 'dd MMM yyyy')}</span>
                         </div>
                       </div>
                     </Link>
@@ -192,8 +191,10 @@ export default function TutorialsPage() {
               )}
             </div>
 
+            {/* Filtres supprimés sur demande */}
+
             {/* Séparation visuelle */}
-            <div className="relative my-12">
+            <div className="relative my-8">
               <div className="absolute inset-0 flex items-center">
                 <div className="w-full border-t border-gray-200"></div>
               </div>
@@ -202,7 +203,7 @@ export default function TutorialsPage() {
               </div>
             </div>
 
-            {/* Grille de vidéos complète */}
+            {/* Grille de tutoriels complète */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {filteredVideos.length === 0 ? (
                 <div className="col-span-full text-center py-16" role="alert" aria-live="polite">
