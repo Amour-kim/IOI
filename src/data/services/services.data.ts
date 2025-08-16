@@ -5284,7 +5284,805 @@ export const servicesData: Service[] = [
     updatedAt: '2023-08-01T16:30:00Z',
     publishedAt: '2023-03-20T09:00:00Z',
     _version: 1
-  }
+  },
+  {
+    // === Identification ===
+    id: 12,
+    type: 'audio-visuelle-et-media',
+    status: 'active',
+    slug: 'audio-visuelle-et-media',
+  
+    // === Contenu principal ===
+    title: 'Audio visuelle & Média',
+    shortDescription: 'Création de contenus audiovisuels et médias engageants',
+    fullDescription: 'Production de vidéos, podcasts et contenus multimédias pour renforcer votre communication. De la captation à la post-production, nous réalisons des supports captivants pour valoriser votre marque.',
+    excerpt: 'Vidéos, animations, podcasts, captations : des contenus médias pour booster votre image.',
+  
+    // === Visuels ===
+    image: {
+      src: 'http://localhost:8080/media/services/media-production.jpg',
+      alt: 'Production audiovisuelle - Création de contenus média',
+      width: 1600,
+      height: 900,
+      caption: 'Production de contenus médias professionnels',
+      credits: 'IOI Digital'
+    },
+    gallery: [
+      {
+        src: 'http://localhost:8080/media/services/media-prod-1.jpg',
+        alt: 'Tournage en studio vidéo',
+        width: 1200,
+        height: 630
+      },
+      {
+        src: 'http://localhost:8080/media/services/media-prod-2.jpg',
+        alt: 'Montage vidéo professionnel',
+        width: 1200,
+        height: 630
+      }
+    ],
+    icon: 'Video',
+  
+    // === Métadonnées ===
+    isPopular: true,
+    isFeatured: true,
+    tags: ['vidéo', 'audiovisuel', 'podcast', 'communication', 'montage'],
+    order: 6,
+  
+    // === Détails du service ===
+    values: [
+      {
+        id: 1,
+        icon: ICONS.SETTINGS,
+        label: 'Captation vidéo',
+        description: 'Filmez vos événements, interviews ou démonstrations produits.',
+        order: 1
+      },
+      {
+        id: 2,
+        icon: ICONS.SETTINGS,
+        label: 'Production audio',
+        description: 'Création de podcasts, habillages sonores et voix off.',
+        order: 2
+      },
+      {
+        id: 3,
+        icon: ICONS.SETTINGS,
+        label: 'Montage & Post-prod',
+        description: 'Montage vidéo, étalonnage, habillage graphique et mixage audio.',
+        order: 3
+      }
+    ],
+  
+    features: [
+      'Captation multi-caméra',
+      'Montage professionnel',
+      'Animation motion design',
+      'Création de jingles & musiques originales',
+      'Sous-titrage & traduction',
+      'Podcast audio & vidéo',
+      'Diffusion multi-plateformes'
+    ],
+  
+    domains: [
+      {
+        id: 1,
+        name: 'Vidéos corporate',
+        description: 'Présentez votre entreprise ou vos projets avec des vidéos impactantes.',
+        icon: 'Film',
+        order: 1
+      },
+      {
+        id: 2,
+        name: 'Podcasts',
+        description: 'Créez et diffusez vos émissions audio ou vidéo en ligne.',
+        icon: 'Mic',
+        order: 2
+      },
+      {
+        id: 3,
+        name: 'Captation événementielle',
+        description: 'Enregistrez vos événements professionnels pour une large diffusion.',
+        icon: 'Camera',
+        order: 3
+      }
+    ],
+  
+    approaches: [
+      {
+        id: 1,
+        title: 'Pré-production',
+        description: 'Préparation du contenu, script et plan de tournage.',
+        icon: 'PenTool',
+        steps: [
+          'Brief & objectifs',
+          'Scénarisation',
+          'Repérages & planning',
+          'Préparation technique'
+        ],
+        order: 1
+      },
+      {
+        id: 2,
+        title: 'Production',
+        description: 'Captation sur site ou en studio.',
+        icon: 'Camera',
+        steps: [
+          'Installation',
+          'Tournage',
+          'Suivi de la direction artistique',
+          'Enregistrement audio/vidéo'
+        ],
+        order: 2
+      },
+      {
+        id: 3,
+        title: 'Post-production',
+        description: 'Montage, habillage, mixage et livraison des contenus.',
+        icon: 'Edit',
+        steps: [
+          'Montage',
+          'Habillage graphique',
+          'Mixage sonore',
+          'Export & livrables'
+        ],
+        order: 3
+      }
+    ],
+  
+    // === Tarification ===
+    price: 'À partir de 1 800 €',
+    pricingTiers: [
+      {
+        id: 1,
+        name: 'Essentiel',
+        description: 'Pour une vidéo simple et efficace',
+        price: 1800,
+        period: 'project' as BillingPeriod,
+        currency: 'EUR',
+        features: [
+          'Vidéo 1-2 minutes',
+          'Captation 1/2 journée',
+          'Montage simple',
+          'Habillage graphique basique',
+          'Livraison HD',
+          '1 révision'
+        ],
+        isPopular: true,
+        ctaText: 'Choisir cette offre',
+        order: 1
+      },
+      {
+        id: 2,
+        name: 'Avancé',
+        description: 'Pour des contenus professionnels complets',
+        price: 3500,
+        period: 'project' as BillingPeriod,
+        currency: 'EUR',
+        features: [
+          'Vidéo 3-5 minutes',
+          'Captation journée complète',
+          'Montage avancé',
+          'Motion design & habillage pro',
+          '2 formats livrés',
+          '3 révisions'
+        ],
+        ctaText: 'Choisir cette offre',
+        order: 2
+      },
+      {
+        id: 3,
+        name: 'Premium',
+        description: 'Pack média complet sur mesure',
+        price: 6000,
+        period: 'project' as BillingPeriod,
+        currency: 'EUR',
+        features: [
+          'Film complet',
+          'Captation multi-cam',
+          'Podcast + Vidéo',
+          'Interviews, reportages',
+          'Sous-titrage & multilingue',
+          'Diffusion optimisée'
+        ],
+        ctaText: 'Choisir cette offre',
+        order: 3
+      }
+    ],
+    hasFreeTier: true,
+    freeTierDescription: 'Audit de vos supports existants & recommandations gratuites.',
+  
+    // === FAQ ===
+    faqs: [
+      {
+        id: 1,
+        question: 'Quels types de formats livrez-vous ?',
+        answer: 'Nous livrons tous les formats standards pour le web, les réseaux sociaux ou la diffusion télévisée.',
+        category: 'Formats',
+        order: 1
+      },
+      {
+        id: 2,
+        question: 'Fournissez-vous les fichiers sources ?',
+        answer: 'Oui, sur demande, nous pouvons vous livrer les fichiers sources du montage ou du mixage audio.',
+        category: 'Technique',
+        order: 2
+      },
+      {
+        id: 3,
+        question: 'Est-ce que vous vous déplacez ?',
+        answer: 'Oui, nous intervenons dans toute la France et à l’international selon les projets.',
+        category: 'Logistique',
+        order: 3
+      }
+    ],
+  
+    // === Témoignages ===
+    testimonials: [
+      {
+        id: 1,
+        author: 'Clara Simon',
+        role: 'Responsable Communication',
+        company: 'Groupe Orion',
+        content: 'La vidéo institutionnelle a vraiment permis de renforcer notre image. L’équipe est pro, créative et réactive.',
+        rating: 5,
+        date: '2023-11-02',
+        avatar: '/images/testimonials/avatar-3.jpg',
+        projectLink: 'https://www.groupe-orion.com'
+      },
+      {
+        id: 2,
+        author: 'Yassine B.',
+        role: 'Fondateur',
+        company: 'Studio Loop',
+        content: 'Montage soigné, storytelling maîtrisé, diffusion rapide. Un service audiovisuel au top.',
+        rating: 5,
+        date: '2024-01-18',
+        avatar: '/images/testimonials/avatar-4.jpg'
+      }
+    ],
+  
+    // === Références ===
+    relatedServices: [1, 4], // Web, Communication visuelle
+    technologies: ['Adobe Premiere Pro', 'After Effects', 'Audition', 'DaVinci Resolve'],
+  
+    // === Cas d'Usage & Industries ===
+    useCases: [
+      {
+        id: 1,
+        title: 'Film d’entreprise',
+        description: 'Présentez votre société en vidéo de manière professionnelle et engageante.',
+        icon: 'Film',
+        industries: ['PME', 'Industrie', 'Services'],
+        benefits: ['Meilleure image de marque', 'Communication plus engageante', 'Support réutilisable'],
+        order: 1
+      },
+      {
+        id: 2,
+        title: 'Podcast professionnel',
+        description: 'Partagez votre expertise sous forme de podcast audio ou vidéo.',
+        icon: 'Mic',
+        industries: ['Éducation', 'Média', 'Coaching'],
+        benefits: ['Valorisation du savoir-faire', 'Accessibilité mobile', 'Audience fidèle'],
+        order: 2
+      },
+      {
+        id: 3,
+        title: 'Captation d’événements',
+        description: 'Immortalisez vos conférences, séminaires, lancements produits...',
+        icon: 'Camera',
+        industries: ['Événementiel', 'Tech', 'Institutionnel'],
+        benefits: ['Souvenir pérenne', 'Communication post-événement', 'Valorisation sur le web'],
+        order: 3
+      }
+    ],
+  
+    // === Nos Experts Consulting ===
+    experts: [
+      {
+        id: 1,
+        name: 'Lucas Fontaine',
+        role: 'Réalisateur & Chef opérateur',
+        bio: '10 ans d’expérience en réalisation vidéo corporate et institutionnelle.',
+        avatar: '/images/team/lucas-fontaine.jpg',
+        experience: 10,
+        skills: ['Réalisation', 'Tournage', 'Direction artistique'],
+        certifications: ['Adobe Certified Expert Premiere'],
+        linkedinUrl: 'https://linkedin.com/in/lucasfontaine',
+        order: 1
+      },
+      {
+        id: 2,
+        name: 'Julie André',
+        role: 'Monteuse vidéo',
+        bio: 'Spécialiste du montage dynamique, storytelling et motion design.',
+        avatar: '/images/team/julie-andre.jpg',
+        experience: 8,
+        skills: ['Montage', 'Motion design', 'After Effects'],
+        certifications: ['Adobe Certified Professional After Effects'],
+        linkedinUrl: 'https://linkedin.com/in/julieandre',
+        order: 2
+      }
+    ],
+  
+    // === Nos Technologies ===
+    serviceTechnologies: [
+      {
+        id: 1,
+        name: 'Adobe Premiere Pro',
+        description: 'Montage vidéo professionnel',
+        icon: 'Film',
+        category: 'Montage',
+        version: '24.0',
+        url: 'https://www.adobe.com/fr/products/premiere.html',
+        order: 1
+      },
+      {
+        id: 2,
+        name: 'After Effects',
+        description: 'Animations graphiques et effets spéciaux',
+        icon: 'Zap',
+        category: 'Motion Design',
+        version: '24.0',
+        url: 'https://www.adobe.com/fr/products/aftereffects.html',
+        order: 2
+      },
+      {
+        id: 3,
+        name: 'Audition',
+        description: 'Montage et mixage audio professionnel',
+        icon: 'Mic',
+        category: 'Audio',
+        version: '24.0',
+        url: 'https://www.adobe.com/fr/products/audition.html',
+        order: 3
+      },
+      {
+        id: 4,
+        name: 'DaVinci Resolve',
+        description: 'Étalonnage et post-production vidéo',
+        icon: 'Adjustments',
+        category: 'Post-prod',
+        version: '18',
+        url: 'https://www.blackmagicdesign.com/products/davinciresolve/',
+        order: 4
+      }
+    ],
+  
+    // === SEO ===
+    seo: {
+      metaTitle: 'Production Audiovisuelle & Média | IOI Digital',
+      metaDescription: 'Création de vidéos, podcasts et contenus médias pour valoriser votre communication. Tournage, montage, animation et diffusion.',
+      metaKeywords: ['vidéo', 'podcast', 'production média', 'montage', 'audiovisuel', 'motion design'],
+      ogTitle: 'Production Audiovisuelle sur Mesure - IOI Digital',
+      ogDescription: 'Des contenus médias professionnels pour faire rayonner votre marque',
+      ogImage: '/images/og/media-production-og.jpg',
+      canonicalUrl: 'https://www.ioi-digital.fr/services/audio-visuelle-et-media'
+    },
+  
+    // === Dates ===
+    createdAt: '2025-08-16T00:00:00.000Z',
+    updatedAt: '2025-08-16T09:59:59.959005Z',
+    publishedAt: '2025-08-16T00:00:00.000Z',
+  
+    // === Métadonnées techniques ===
+    _version: 1,
+  
+    // Liens
+    documentationUrl: '/docs/audio-visuelle-et-media',
+    demoUrl: '/demo/audio-visuelle-et-media',
+    ctaText: 'Demander une démo gratuite'
+  },
+  {
+    // === Identification ===
+    id: 3,
+    type: 'marketing-digital-seo',
+    status: 'active',
+    slug: 'marketing-digital-seo',
+    
+    // === Contenu principal ===
+    title: 'Marketing Digital & SEO',
+    shortDescription: 'Stratégies digitales performantes et référencement naturel optimisé',
+    fullDescription: 'Développez votre visibilité en ligne avec nos stratégies de marketing digital sur mesure. Référencement naturel, publicité en ligne, réseaux sociaux et analytics pour maximiser votre ROI et atteindre vos objectifs business.',
+    excerpt: 'Boostez votre présence digitale avec des stratégies marketing efficaces et un référencement optimisé.',
+    
+    // === Visuels ===
+    image: {
+      src: 'http://localhost:8080/media/services/marketing-digital-seo.jpg',
+      alt: 'Marketing Digital & SEO - Stratégies performantes',
+      width: 1600,
+      height: 900,
+      caption: 'Marketing digital et référencement optimisé',
+      credits: 'IOI Digital'
+    },
+    gallery: [
+      {
+        src: 'http://localhost:8080/media/services/seo-analytics-1.jpg',
+        alt: 'Analyse SEO et performances',
+        width: 1200,
+        height: 630
+      },
+      {
+        src: 'http://localhost:8080/media/services/digital-strategy-2.jpg',
+        alt: 'Stratégie marketing digital',
+        width: 1200,
+        height: 630
+      }
+    ],
+    icon: 'TrendingUp',
+    
+    // === Métadonnées ===
+    isPopular: true,
+    isFeatured: true,
+    tags: ['SEO', 'marketing digital', 'référencement', 'publicité en ligne', 'analytics'],
+    order: 3,
+    
+    // === Détails du service ===
+    values: [
+      {
+        id: 1,
+        icon: ICONS.SEARCH,
+        label: 'SEO & Référencement',
+        description: 'Optimisation pour les moteurs de recherche et visibilité organique.',
+        order: 1
+      },
+      {
+        id: 2,
+        icon: ICONS.SEARCH,
+        label: 'Publicité Digitale',
+        description: 'Campagnes publicitaires ciblées sur Google, Facebook et LinkedIn.',
+        order: 2
+      },
+      {
+        id: 3,
+        icon: ICONS.SEARCH,
+        label: 'Analytics & Reporting',
+        description: 'Suivi des performances et rapports détaillés de vos actions.',
+        order: 3
+      }
+    ],
+    
+    features: [
+      'Audit SEO complet et stratégie de référencement',
+      'Optimisation on-page et technique',
+      'Création de contenu optimisé SEO',
+      'Campagnes Google Ads et Facebook Ads',
+      'Gestion des réseaux sociaux',
+      'Email marketing et automation',
+      'Tracking et analytics avancés'
+    ],
+    
+    domains: [
+      {
+        id: 1,
+        name: 'SEO & Référencement Naturel',
+        description: 'Améliorez votre positionnement dans les résultats de recherche Google.',
+        icon: 'Search',
+        order: 1
+      },
+      {
+        id: 2,
+        name: 'Publicité en Ligne (SEM)',
+        description: 'Campagnes publicitaires rentables sur Google Ads et réseaux sociaux.',
+        icon: 'Target',
+        order: 2
+      },
+      {
+        id: 3,
+        name: 'Social Media Marketing',
+        description: 'Développez votre communauté et engagement sur les réseaux sociaux.',
+        icon: 'Share2',
+        order: 3
+      }
+    ],
+    
+    approaches: [
+      {
+        id: 1,
+        title: 'Audit & Stratégie',
+        description: 'Analyse complète de votre présence digitale et définition de la stratégie.',
+        icon: 'Search',
+        steps: [
+          'Audit SEO technique',
+          'Analyse de la concurrence',
+          'Étude des mots-clés',
+          'Stratégie digitale personnalisée'
+        ],
+        order: 1
+      },
+      {
+        id: 2,
+        title: 'Mise en Œuvre',
+        description: 'Déploiement des actions marketing et optimisations SEO.',
+        icon: 'Zap',
+        steps: [
+          'Optimisations techniques',
+          'Création de contenu',
+          'Lancement des campagnes',
+          'Configuration du tracking'
+        ],
+        order: 2
+      },
+      {
+        id: 3,
+        title: 'Suivi & Optimisation',
+        description: 'Monitoring des performances et optimisations continues.',
+        icon: 'BarChart3',
+        steps: [
+          'Analyse des performances',
+          'Rapports mensuels',
+          'Optimisations continues',
+          'Recommandations stratégiques'
+        ],
+        order: 3
+      }
+    ],
+    
+    // === Tarification ===
+    price: 'À partir de 890 €/mois',
+    pricingTiers: [
+      {
+        id: 1,
+        name: 'Starter SEO',
+        description: 'Parfait pour débuter en référencement',
+        price: 890,
+        period: 'monthly' as BillingPeriod,
+        currency: 'EUR',
+        features: [
+          'Audit SEO initial complet',
+          'Optimisation de 10 pages',
+          'Recherche de mots-clés (50)',
+          'Rapport mensuel détaillé',
+          'Support email',
+          'Suivi positions (100 mots-clés)'
+        ],
+        isPopular: true,
+        ctaText: 'Commencer maintenant',
+        order: 1
+      },
+      {
+        id: 2,
+        name: 'Business Growth',
+        description: 'Solution complète pour PME en croissance',
+        price: 1590,
+        period: 'monthly' as BillingPeriod,
+        currency: 'EUR',
+        features: [
+          'Tout du plan Starter',
+          'Campagne Google Ads incluse (budget 500€)',
+          'Gestion réseaux sociaux (2 plateformes)',
+          'Création contenu (4 articles/mois)',
+          'Support téléphonique prioritaire',
+          'Optimisation continue illimitée'
+        ],
+        ctaText: 'Choisir ce plan',
+        order: 2
+      },
+      {
+        id: 3,
+        name: 'Enterprise Pro',
+        description: 'Solutions avancées pour grandes entreprises',
+        price: 2990,
+        period: 'monthly' as BillingPeriod,
+        currency: 'EUR',
+        features: [
+          'Tout des plans précédents',
+          'Stratégie multicanal complète',
+          'Budget publicitaire 1500€ inclus',
+          'Consultant dédié',
+          'Reporting en temps réel',
+          'Formation équipe incluse'
+        ],
+        ctaText: 'Contactez-nous',
+        order: 3
+      }
+    ],
+    hasFreeTier: true,
+    freeTierDescription: 'Audit SEO gratuit de votre site et analyse de votre positionnement concurrentiel.',
+    
+    // === FAQ ===
+    faqs: [
+      {
+        id: 1,
+        question: 'Combien de temps faut-il pour voir les résultats SEO ?',
+        answer: 'Les premiers résultats SEO apparaissent généralement entre 3 et 6 mois. Cependant, des améliorations techniques peuvent avoir un impact plus rapide sur certains indicateurs.',
+        category: 'SEO',
+        order: 1
+      },
+      {
+        id: 2,
+        question: 'Comment mesurez-vous le ROI de vos campagnes ?',
+        answer: 'Nous utilisons des outils d\'analytics avancés pour tracker les conversions, le trafic qualifié, et calculer précisément le retour sur investissement de chaque canal marketing.',
+        category: 'Analytics',
+        order: 2
+      },
+      {
+        id: 3,
+        question: 'Gérez-vous les campagnes publicitaires sur tous les réseaux ?',
+        answer: 'Nous gérons Google Ads, Facebook Ads, LinkedIn Ads, et Instagram Ads. Le choix des plateformes dépend de votre audience cible et de vos objectifs business.',
+        category: 'Publicité',
+        order: 3
+      }
+    ],
+    
+    // === Témoignages ===
+    testimonials: [
+      {
+        id: 1,
+        author: 'Laurent Mercier',
+        role: 'Directeur Marketing',
+        company: 'InnoTech Solutions',
+        content: 'Grâce à IOI Digital, notre trafic organique a augmenté de 180% en 8 mois. Les campagnes Google Ads génèrent un ROI de 4:1. Excellente expertise !',
+        rating: 5,
+        date: '2023-07-12',
+        avatar: '/images/testimonials/avatar-5.jpg',
+        projectLink: 'https://www.innotech-solutions.fr'
+      },
+      {
+        id: 2,
+        author: 'Camille Forestier',
+        role: 'CEO',
+        company: 'EcoGreen Store',
+        content: 'L\'accompagnement est top niveau. Notre e-commerce a triplé son chiffre d\'affaires en ligne grâce à leur stratégie SEO et publicité Facebook.',
+        rating: 5,
+        date: '2023-09-05',
+        avatar: '/images/testimonials/avatar-6.jpg'
+      }
+    ],
+    
+    // === Références ===
+    relatedServices: [1, 2, 4], // IDs des services liés (web dev, ecommerce, mobile)
+    technologies: ['Google Analytics', 'Google Ads', 'SEMrush', 'Facebook Business', 'HubSpot'],
+    
+    // === Cas d'Usage & Industries ===
+    useCases: [
+      {
+        id: 1,
+        title: 'Lancement produit/service',
+        description: 'Maximisez la visibilité de vos nouveaux produits avec une stratégie marketing complète.',
+        icon: 'Rocket',
+        industries: ['Retail', 'SaaS', 'Services', 'E-commerce'],
+        benefits: ['Notoriété rapide', 'Génération de leads', 'ROI mesurable', 'Positionnement marché'],
+        order: 1
+      },
+      {
+        id: 2,
+        title: 'Croissance e-commerce',
+        description: 'Augmentez vos ventes en ligne avec SEO, publicités et optimisation conversions.',
+        icon: 'TrendingUp',
+        industries: ['E-commerce', 'Retail', 'Mode', 'Électronique'],
+        benefits: ['Trafic qualifié', 'Taux conversion +', 'Panier moyen +', 'Fidélisation client'],
+        order: 2
+      },
+      {
+        id: 3,
+        title: 'Transformation digitale',
+        description: 'Accompagnement complet pour digitaliser votre approche marketing.',
+        icon: 'Zap',
+        industries: ['Services B2B', 'Industrie', 'Santé', 'Finance'],
+        benefits: ['Présence digitale forte', 'Leads qualifiés', 'Automatisation', 'Compétitivité accrue'],
+        order: 3
+      }
+    ],
+    
+    // === Nos Experts Consulting ===
+    experts: [
+      {
+        id: 1,
+        name: 'Julien Bertrand',
+        role: 'Expert SEO Senior',
+        bio: '10 ans d\'expérience en référencement naturel avec des résultats prouvés sur +200 projets.',
+        avatar: '/images/team/julien-bertrand.jpg',
+        experience: 10,
+        skills: ['SEO Technique', 'Link Building', 'Content Strategy', 'Analytics'],
+        certifications: ['Google Analytics Certified', 'SEMrush Certified', 'Google Ads Certified'],
+        linkedinUrl: 'https://linkedin.com/in/julienbertrand',
+        order: 1
+      },
+      {
+        id: 2,
+        name: 'Sarah Lamont',
+        role: 'Digital Marketing Manager',
+        bio: 'Spécialiste en publicité en ligne et social media avec expertise multicanal.',
+        avatar: '/images/team/sarah-lamont.jpg',
+        experience: 8,
+        skills: ['Google Ads', 'Facebook Ads', 'Social Media', 'Conversion Optimization'],
+        certifications: ['Google Ads Expert', 'Facebook Blueprint', 'LinkedIn Marketing'],
+        linkedinUrl: 'https://linkedin.com/in/sarahlamont',
+        order: 2
+      },
+      {
+        id: 3,
+        name: 'Marc Dubois',
+        role: 'Data Analyst',
+        bio: 'Expert en analytics et tracking pour optimiser les performances marketing.',
+        avatar: '/images/team/marc-dubois.jpg',
+        experience: 6,
+        skills: ['Google Analytics', 'Data Studio', 'Tag Manager', 'Conversion Tracking'],
+        certifications: ['Google Analytics 4', 'Google Tag Manager', 'Data Studio'],
+        linkedinUrl: 'https://linkedin.com/in/marcdubois',
+        order: 3
+      }
+    ],
+    
+    // === Nos Technologies ===
+    serviceTechnologies: [
+      {
+        id: 1,
+        name: 'Google Analytics 4',
+        description: 'Plateforme d\'analyse web avancée pour mesurer les performances',
+        icon: 'BarChart3',
+        category: 'Analytics',
+        version: 'GA4',
+        url: 'https://analytics.google.com/',
+        order: 1
+      },
+      {
+        id: 2,
+        name: 'Google Ads',
+        description: 'Plateforme publicitaire pour campagnes de recherche et display',
+        icon: 'Target',
+        category: 'Publicité',
+        version: 'Google Ads 2023',
+        url: 'https://ads.google.com/',
+        order: 2
+      },
+      {
+        id: 3,
+        name: 'SEMrush',
+        description: 'Suite d\'outils SEO pour recherche mots-clés et analyse concurrentielle',
+        icon: 'Search',
+        category: 'SEO',
+        version: 'Pro Plan',
+        url: 'https://www.semrush.com/',
+        order: 3
+      },
+      {
+        id: 4,
+        name: 'Meta Business',
+        description: 'Gestion des campagnes publicitaires Facebook et Instagram',
+        icon: 'Share2',
+        category: 'Social Media',
+        version: 'Business Manager',
+        url: 'https://business.facebook.com/',
+        order: 4
+      },
+      {
+        id: 5,
+        name: 'HubSpot',
+        description: 'Plateforme complète de marketing automation et CRM',
+        icon: 'Users',
+        category: 'Automation',
+        version: 'Professional',
+        url: 'https://www.hubspot.com/',
+        order: 5
+      }
+    ],
+    
+    // === SEO ===
+    seo: {
+      metaTitle: 'Marketing Digital & SEO - Agence Référencement | IOI Digital',
+      metaDescription: 'Agence spécialisée en marketing digital et SEO. Référencement naturel, Google Ads, réseaux sociaux. Augmentez votre visibilité et vos ventes en ligne.',
+      metaKeywords: ['marketing digital', 'SEO', 'référencement naturel', 'Google Ads', 'réseaux sociaux', 'agence marketing', 'publicité en ligne'],
+      ogTitle: 'Marketing Digital & SEO - Boostez votre visibilité - IOI Digital',
+      ogDescription: 'Stratégies marketing digital performantes et référencement optimisé pour maximiser votre ROI',
+      ogImage: '/images/og/marketing-digital-seo-og.jpg',
+      canonicalUrl: 'https://www.ioi-digital.fr/services/marketing-digital-seo'
+    },
+    
+    // === Dates ===
+    createdAt: '2023-03-10T00:00:00.000Z',
+    updatedAt: new Date().toISOString(),
+    publishedAt: '2023-03-10T00:00:00.000Z',
+    
+    // === Métadonnées techniques ===
+    _version: 1,
+    
+    // Liens
+    documentationUrl: '/docs/marketing-digital-seo',
+    demoUrl: '/demo/marketing-digital-seo',
+    ctaText: 'Audit SEO gratuit'
+  }  
 ];
 
 // Exemple de fonction utilitaire pour filtrer les services

@@ -17,7 +17,9 @@ export type ServiceType =
   | 'cloud'               // Solutions Cloud
   | 'ai'                  // Intelligence Artificielle
   | 'iot'                 // Internet des Objets
-  | 'blockchain';         // Blockchain
+  | 'blockchain'          // Blockchain
+  | 'audio-visuelle-et-media' // Audio Visuelle et Media
+  | 'marketing-digital-seo' // Marketing Digital SEO
 
 /**
  * Statuts possibles d'un service
