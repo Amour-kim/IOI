@@ -55,3 +55,21 @@ export type TutorialItem = {
 };
 
 export type TutorialItems = TutorialItem[];
+
+// Blog post types
+export type BlogPost = {
+  id: number;
+  type: 'article';
+  title: string;
+  description: string;
+  content: string;
+  author: string;
+  date: string; // ISO date
+  category: string;
+  tags: string[];
+  image: string;
+  readTime: string;
+  slug: string;
+};
+
+export type BlogPosts = BlogPost[];

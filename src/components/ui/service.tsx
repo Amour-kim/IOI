@@ -1,6 +1,7 @@
 "use client"
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import Image from 'next/image';
 import { servicesData } from '@/data/services/services.data';
 import { 
   ChevronRight, 
@@ -302,10 +303,13 @@ function ServiceModal({ service, isOpen, onClose }: { service: Service | null; i
                     <div key={expert.id} className="flex items-start gap-3 p-3 border rounded-lg bg-white">
                       <div className="w-12 h-12 rounded-full bg-gray-100 overflow-hidden flex-shrink-0">
                         {expert.avatar ? (
-                          <img 
-                            src={expert.avatar} 
+                          <Image
+                            src={expert.avatar}
                             alt={expert.name}
-                            className="w-full h-full object-cover"
+                            width={500}
+                            height={300}
+                            className="w-full h-full object-cover rounded-lg"
+                            priority
                           />
                         ) : (
                           <div className="w-full h-full flex items-center justify-center bg-amber-100 text-amber-600">

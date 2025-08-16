@@ -2,11 +2,11 @@ import type { AboutHistory, MotPresident } from '../types';
 
 export const aboutHistory: AboutHistory = {
   id: 'about-history',
-  title: 'Notre Histoire',
+  title: 'A propos de Nous',
   intro:
     "Depuis 2023, IOI s'est structurée autour d'une ambition claire : apporter des solutions numériques souveraines, robustes et utiles au quotidien des institutions, administrations et établissements éducatifs africains. Notre trajectoire mêle innovation pragmatique, proximité terrain et exigence opérationnelle. Nous expérimentons, apprenons auprès de nos utilisateurs, industrialisons ce qui fonctionne et mettons en production à l'échelle, avec un soin particulier porté à l'éthique, à la sécurité et à la création de valeur mesurable. Cette histoire est jalonnée de programmes d'acculturation, de projets cloud/data/IA, et de partenariats durables avec les écosystèmes locaux pour faire émerger un numérique de confiance, au service de l'impact.",
   heroImage: {
-    src: '/ioi-home.jpg',
+    src: '/logo.png',
     alt: 'Modern office space with team working',
     width: 600,
     height: 400,

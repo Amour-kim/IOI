@@ -5,32 +5,40 @@ import Footer from '@/components/ui/footer';
 import SocialSidebar from '@/components/ui/social-sidebar';
 import { VideoGridCard } from "@/components/ui/video-grid-card"
 import { TextCard } from "@/components/ui/text-card"
-import { allCards } from "@/lib/data"
-import { BlogCarousel } from "@/components/ui/blog-carousel"
-import { BlogSearchBar } from "@/components/ui/blog-search-bar"
+import { blogPosts } from "@/data/ressources/blog.data"
 import { useState } from "react"
 import Link from 'next/link';
 import Image from 'next/image';
-import { format } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 import ContactUs from '@/components/ui/contact_us';
 import Feedback from '@/components/ui/feedback';
 
 export default function BlogPage() {
   const [search, setSearch] = useState('');
   const [activeTag, setActiveTag] = useState<string | null>(null);
+  
   // Trier les articles par date décroissante
-  const articles = allCards.filter(card => card.type === 'article').sort((a, b) => new Date((b as any).publishedAt).getTime() - new Date((a as any).publishedAt).getTime());
+  const articles = [...blogPosts].sort((a, b) => 
+    new Date(b.date).getTime() - new Date(a.date).getTime()
+  );
+  
   // Recherche et filtre par tag
   const filteredArticles = articles.filter(article => {
     const matchesSearch =
       search.trim() === '' ||
       article.title.toLowerCase().includes(search.toLowerCase()) ||
       article.description.toLowerCase().includes(search.toLowerCase());
-    const matchesTag = !activeTag || (article.tags && article.tags.includes(activeTag));
+      
+    const matchesTag = !activeTag || 
+      (article.tags && article.tags.some(tag => 
+        tag.toLowerCase() === activeTag.toLowerCase()
+      ));
+      
     return matchesSearch && matchesTag;
   });
+  
   // Récupérer tous les tags uniques
-  const allTags = Array.from(new Set(articles.flatMap(a => a.tags || [])));
+  const allTags = Array.from(new Set(articles.flatMap(article => article.tags || [])));
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-yellow-50 via-orange-50 to-blue-50 text-[#1a1a1a]">
       <ModernNavbar />
@@ -77,20 +85,43 @@ export default function BlogPage() {
               >
                 <div className="bg-white rounded-lg shadow-md p-0 hover:shadow-xl transition-all duration-300 group border border-gray-100 hover:border-orange-300 flex flex-col justify-between animate-fade-in-up">
                   <div className="h-36 w-full rounded-t-lg overflow-hidden flex items-center justify-center bg-gray-100">
-                    <Image src={article.thumbnail} alt={article.title} width={400} height={144} className="object-cover w-full h-full" />
+                    {article.thumbnail ? (
+                      <Image 
+                        src={article.thumbnail} 
+                        alt={article.title} 
+                        width={400} 
+                        height={144} 
+                        className="object-cover w-full h-full" 
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center">
+                        <span className="text-gray-500 text-sm">Aucune image</span>
+                      </div>
+                    )}
                   </div>
                   <div className="p-5 flex-1 flex flex-col justify-between">
-                    <h3 className="text-lg font-bold text-gray-900 mb-1 group-hover:text-orange-700 transition-colors">{article.title}</h3>
+                    <h3 className="text-lg font-bold text-gray-900 mb-1 group-hover:text-orange-700 transition-colors">
+                      {article.title}
+                    </h3>
                     <div className="flex items-center gap-2 text-xs text-gray-500 mb-1">
-                      <span>{article.author}</span>
+                      <span>Par {article.author}</span>
                       <span>•</span>
-                      <span>Publié le {format(new Date(article.publishedAt), 'dd/MM/yyyy')}</span>
+                      <span>Publié le {format(parseISO(article.date), 'dd/MM/yyyy')}</span>
+                      <span>•</span>
+                      <span>{article.readTime} de lecture</span>
                     </div>
                     <p className="text-gray-600 text-sm mb-2">{article.description}</p>
                     <div className="flex flex-wrap gap-1 mt-2 mb-2">
-                      {article.tags && article.tags.map(tag => (
-                        <span key={tag} className="bg-orange-50 text-orange-600 px-2 py-0.5 rounded text-xs">#{tag}</span>
+                      {article.tags && article.tags.slice(0, 3).map((tag, index) => (
+                        <span key={index} className="bg-orange-50 text-orange-600 px-2 py-0.5 rounded text-xs">
+                          #{tag}
+                        </span>
                       ))}
+                      {article.tags && article.tags.length > 3 && (
+                        <span className="bg-gray-100 text-gray-500 px-2 py-0.5 rounded text-xs">
+                          +{article.tags.length - 3}
+                        </span>
+                      )}
                     </div>
                   </div>
                 </div>

@@ -19,9 +19,9 @@ export default function Header() {
       <div className="absolute inset-0 z-0">
         <BlogCarousel />
       </div>
-      <div className="min-h-screen bg-gradient-to-br from-[#1c1e22] via-[#130604] to-[#000000] pt-16 sm:pt-20 lg:pt-[100px] relative overflow-hidden z-10">
+      <div className="min-h-screen bg-gradient-to-br from-[#1c1e22] via-[#130604] to-[#000000] pt-16 sm:pt-20 lg:pt-[100px] relative overflow-visible z-10">
         {/* Logo IOI en arrière-plan */}
-        <div className="absolute right-0 top-0 w-[800px] h-full pointer-events-none select-none opacity-20 z-0 flex items-center justify-end">
+        <div className="hidden md:block absolute right-0 top-0 w-[800px] h-full pointer-events-none select-none opacity-20 z-0">
           <img
             src="/logo.png"
             alt="IOI Logo Background"
@@ -32,7 +32,7 @@ export default function Header() {
         
         {/* Main Content */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 lg:py-12 relative z-10">
-          <div className="grid lg:grid-cols-2 gap-8 sm:gap-10 lg:gap-12 items-center">
+          <div className="grid lg:grid-cols-2 gap-8 sm:gap-10 lg:gap-12 items-start lg:items-center">
             {/* Left Content */}
             <div className="space-y-6 sm:space-y-8">
               {/* Reviews Section */}
@@ -73,8 +73,8 @@ export default function Header() {
               </div>
 
               {/* Main Heading */}
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight">
-                Réinventons le digital ensemble. Bienvenue chez IOI.
+              <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white leading-tight mt-8 sm:mt-0">
+                Réinventons le digital ensemble.<br className="hidden sm:block" /> Bienvenue chez IOI.
               </h1>
 
               {/* Description */}

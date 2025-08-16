@@ -58,7 +58,7 @@ export default function Component() {
         </div>
 
         {/* Team Photos Section */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+        {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {(aboutHistory.teamSpotlight ?? []).map((member, index) => (
             <div
               key={index}
@@ -71,14 +71,13 @@ export default function Component() {
                 height={member.image.height ?? 500}
                 className="object-cover w-full h-[300px] sm:h-[360px] lg:h-[420px]"
               />
-              {/* Name Overlay */}
               <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-3 sm:p-4">
                 <h3 className="text-white text-base sm:text-lg lg:text-xl font-semibold mb-0.5">{member.name}</h3>
                 <p className="text-slate-200 text-xs sm:text-sm">{member.role}</p>
               </div>
             </div>
           ))}
-        </div>
+        </div> */}
       </div>
     </div>
   );
